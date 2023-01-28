@@ -31,7 +31,7 @@
 			<?php
 			if (($this->session->userdata('level')) == 1 || ($this->session->userdata('level') == 3)) {
 			?>
-				<li class="active">
+				<li>
 					<a href="<?php echo base_url() ?>student/register">
 						<i class="fa fa-edit"></i> <span>Register</span>
 					</a>
@@ -89,7 +89,7 @@
 				</a>
 			</li>
 
-			<li>
+			<li class="active">
 				<a href="<?php echo base_url() ?>student/studentOnline">
 					<i class="fa fa-users"></i> <span>Result Register</span>
 				</a>
@@ -116,310 +116,64 @@
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Registration
-			<small>registration Form</small>
+			Student
+			<small>List Students</small>
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-home"></i> Home</a></li>
-			<li class="active">Register</li>
+			<li class="active">Student</li>
 		</ol>
 	</section>
 
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-xs-7">
-				<!-- <div class="box"> -->
+			<div class="col-xs-12">
 				<div class="box box-primary">
-					<div class="box-header with-border">
-						<h3 class="box-title">Form Registration</h3>
+					<div class="box-header">
+						<!-- <h3 class="box-title">List Prices</h3> -->
 					</div>
-
-					<!-- form start -->
-					<form role="form" id="example" name="example" class="form-horizontal" action="<?php echo base_url() ?>student/registerDb" method="post" enctype="multipart/form-data">
-						<div class="box-body">
-							<div class="form-group">
-								<label for="name" class="col-sm-3 control-label">Full Name</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="name" placeholder="Enter Name" name="name" required>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="birthday" class="col-sm-3 control-label">Birthday</label>
-								<div class="col-sm-9">
-									<div class="row">
-										<div class="col-xs-6">
-											<select class="form-control select2" style="width: 100%;" name="date" required>
-												<option selected="selected" disabled="disabled" value="">-- Choose Date --</option>
-												<?php
-												for ($i = 1; $i <= 31; $i++) {
-												?>
-													<option value="<?= $i ?>"><?= $i ?></option>
-												<?php
-												}
-												?>
-											</select>
-										</div>
-										<div class="col-xs-6">
-											<select class="form-control select2" style="width: 100%;" name="month" required>
-												<option selected="selected" disabled="disabled" value="">-- Choose month --</option>
-												<?php
-												$months = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
-												foreach ($months as $month) {
-												?>
-													<option value="<?= $month ?>"><?= $month ?></option>
-												<?php
-												}
-												?>
-											</select>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="phone" class="col-sm-3 control-label">Phone Number</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="phone" placeholder="Enter Phone" name="phone" required>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="category" class="col-sm-3 control-label">Category</label>
-								<div class="col-sm-9">
-									<select class="form-control select2" style="width: 100%;" name="category" id="category" onchange="changeCategory()" required>
-										<option selected="selected" disabled="disabled" value="">-- Choose Category --</option>
-										<option value="PRIVATE">PRIVATE</option>
-										<option value="REGULAR">REGULAR</option>
-									</select>
-								</div>
-							</div>
-
-							<div id="privatediv" style="display:none;">
-								<div class="form-group">
-									<label for="programprv" class="col-sm-3 control-label">Level</label>
-									<div class="col-sm-9">
-										<select class="form-control select2" style="width: 100%;" name="programprv" id="programprv" onchange="showDetail()">
-											<option selected="selected" disabled="disabled" value="">-- Choose Level --</option>
-											<?php
-											foreach ($listPrice->result() as $row) {
-												if ($row->level == "Private") {
-											?>
-													<option value="<?= $row->id ?>"><?= $row->program ?></option>
-											<?php
-												}
-											}
-											?>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="attendance" class="col-sm-3 control-label">Attendance</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" value="" id="attendance" name="attendance" data-role="tagsinput">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="priceattn" name="priceattn">
-									</div>
-								</div>
-							</div>
-
-							<div id="regulardiv" style="display:none;">
-								<div class="form-group">
-									<label for="program" class="col-sm-3 control-label">Level</label>
-									<div class="col-sm-9">
-										<select class="form-control select2" style="width: 100%;" name="program" id="program" onchange="showDetail()">
-											<option selected="selected" disabled="disabled" value="">-- Choose Level --</option>
-											<?php
-											foreach ($listPrice->result() as $row) {
-												if ($row->level != "Private") {
-											?>
-													<option value="<?= $row->id ?>"><?= $row->program ?></option>
-											<?php
-												}
-											}
-											?>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label id="labelattn" for="attendance" class="col-sm-3 control-label">Attendance</label>
-									<div class="col-sm-9">
-										<input type="number" class="form-control" id="attendancereg" name="attendancereg">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label id="labelprice" for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="priceattnreg" name="priceattnreg" readonly>
-									</div>
-								</div>
-							</div>
-
-							<div id="dpayment" style="display: none">
-								<div class="form-group">
-									<label for="registration" class="col-sm-3 control-label"></label>
-									<div class="col-sm-9">
-										<div class="checkbox">
-											<label>
-												<input type="checkbox" id="registration" name="registration" onclick="checkRegistration()">
-												Registration
-											</label>
-										</div>
-										<div class="checkbox">
-											<label>
-												<input type="checkbox" id="pointbook" name="pointbook" onclick="checkPointbook()">
-												Point Book
-											</label>
-										</div>
-										<div class="checkbox">
-											<label>
-												<input type="checkbox" id="book" name="book" onclick="checkBook()">
-												Book
-											</label>
-										</div>
-										<div class="checkbox">
-											<label>
-												<input type="checkbox" id="agenda" name="agenda" onclick="checkAgenda()">
-												Agenda
-											</label>
-										</div>
-										<div class="checkbox">
-											<label>
-												<input type="checkbox" id="exercise" name="exercise" onclick="checkExercise()">
-												Belum Bisa
-											</label>
-										</div>
-										<div class="checkbox">
-											<label>
-												<input type="checkbox" id="course" name="course" onclick="checkCourse()">
-												Course
-											</label>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div id="divpayment" style="display: none">
-								<div class="form-group">
-									<label for="total" class="col-sm-3 control-label">Total Amount</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="amount" name="amount" readonly>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="method" class="col-sm-3 control-label">Payment Method</label>
-									<div class="col-sm-9">
-										<select class="form-control select2" style="width: 100%;" name="method" id="method" onchange="changeMethod()" required>
-											<option selected="selected" value="CASH">Cash</option>
-											<option value="SWITCHING CARD">Switching Card</option>
-											<option value="BANK TRANSFER">Bank Transfer</option>
-											<option value="DEBIT">Debit</option>
-											<option value="CREDIT">Credit</option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group" id="dtrfdate" style="display: none">
-									<label for="inputPassword3" class="col-sm-3 control-label">Transfer Date</label>
-									<div class="col-sm-9">
-										<div class="input-group date">
-											<div class="input-group-addon">
-												<i class="fa fa-calendar"></i>
-											</div>
-											<input type="text" class="form-control pull-right" id="datepicker" name="trfdate" id="trfdate">
-										</div>
-									</div>
-								</div>
-
-								<div class="form-group" id="dbank" style="display: none">
-									<label for="method" class="col-sm-3 control-label">Bank</label>
-									<div class="col-sm-9">
-										<select class="form-control select2" style="width: 100%;" name="bank" id="bank" onchange="changeBank()">
-											<option selected="selected" disabled="disabled" value="">-- Choose Bank --</option>
-											<option value="BCA CARD">BCA Card</option>
-											<option value="VISA CARD">Visa Card</option>
-											<option value="VISA BCA">Visa BCA</option>
-											<option value="MASTER CARD">Master Card</option>
-											<option value="MAESTRO CARD">Maestro Card</option>
-											<option value="JCB">JCB</option>
-											<option value="AMERICAN EXPRESS">American Express</option>
-											<option value="OTHER">Other</option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group" id="dnumber" style="display: none">
-									<label for="number" class="col-sm-3 control-label">Number</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="number" name="number">
-									</div>
-								</div>
-
-								<div class="form-group" id="dcut" style="display: none">
-									<label for="cash" class="col-sm-3 control-label">Bank Payment Cut</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="paymentcut" name="paymentcut" readonly>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="cash" class="col-sm-3 control-label">Cash</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="cash" name="cash">
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="cashback" class="col-sm-3 control-label">Cashback</label>
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="cashback" name="cashback" readonly>
-									</div>
-								</div>
-							</div>
-
-							<input type="hidden" class="form-control" id="vid" name="vid" value="">
-							<input type="hidden" class="form-control" id="vamount" name="vamount">
-							<input type="hidden" class="form-control" id="vregistration" name="vregistration" value="">
-							<input type="hidden" class="form-control" id="vpointbook" name="vpointbook">
-							<input type="hidden" class="form-control" id="vbook" name="vbook" value="">
-							<input type="hidden" class="form-control" id="vagenda" name="vagenda">
-							<input type="hidden" class="form-control" id="vexercise" name="vexercise">
-							<input type="hidden" class="form-control" id="vcourse" name="vcourse">
-							<input type="hidden" class="form-control" id="countattn" name="countattn">
-
-							<div class="form-group">
-								<label for="registration" class="col-sm-3 control-label"></label>
-								<div class="col-sm-9">
-									<button type="submit" class="btn btn-primary">Submit</button>
-									<a href="<?= base_url() ?>student/register"><button type="button" class="btn btn-warning">Clear</button></a>
-									<a id="voucherdiv" style="display:none;" data-toggle="modal" data-target="#voucherModal" href="#" class="btn btn-primary pull-right"><i class="fa fa-credit-card"></i>&nbsp;Use Voucher</a>
-								</div>
-							</div>
-
+					<br>
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="table-responsive">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Name</th>
+										<th>Telephone</th>
+										<th>Birthday</th>
+										<th class="notPrintable">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									foreach ($listStudent->result() as $row) {
+									?>
+										<tr class="status<?= $row->status ?>">
+											<td><?= $row->id ?></td>
+											<td><?= $row->name ?></td>
+											<td><?= $row->phone ?></td>
+											<td><?= $row->birthday ?></td>
+											<td>
+												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')"><i class="fa fa-pencil"></i></a>
+											</td>
+										</tr>
+									<?php
+									}
+									?>
+								</tbody>
+							</table>
 						</div>
-						<!-- /.box-body -->
-
-						<!-- <div class="box-footer">
-                
-              </div> -->
-						<!-- /.box-footer -->
-					</form>
-
+					</div>
+					<!-- /.box-body -->
 				</div>
-				<!-- /.box-body -->
+				<!-- /.box -->
+
+
 			</div>
 			<!-- /.col -->
-
 		</div>
 		<!-- /.row -->
 	</section>
@@ -427,53 +181,243 @@
 </div>
 <!-- /.content-wrapper -->
 
-<div class="modal modal-default fade" id="voucherModal">
+<div class="modal fade" id="showModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title">Choose Voucher</h4>
-			</div>
-			<div class="modal-body">
-				<table id="example5" class="table table-bordered table-striped table-hover">
-					<thead>
-						<tr>
-							<th>Voucher Code</th>
-							<th>Voucher Type</th>
-							<th>Amount</th>
-							<th>Usable</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						foreach ($listVoucher->result() as $row) {
-						?>
-							<tr>
-								<td id="voucherid"><?= $row->id ?></td>
-								<td><?= $row->type ?></td>
-								<td id="voucheramount">Rp <?= number_format($row->amount, 0, ".", ".") ?></td>
-								<td><?= $row->isused ?></td>
-							</tr>
-						<?php
-						}
-						?>
-					</tbody>
-				</table>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-			</div>
+			<form action="<?= base_url() ?>student/updateStudentOnline" method="post" class="form-horizontal">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Update Student</h4>
+				</div>
+				<div class="modal-body">
+					<p id="textModal"></p>
+					<input type="hidden" name="idstudent" id="idModal" style="color:#000">
+
+					<div class="form-group">
+						<label for="category" class="col-sm-3 control-label">Category</label>
+						<div class="col-sm-9">
+							<select class="form-control select2" style="width: 100%;" name="category" id="category" onchange="changeCategory()" required>
+								<option selected="selected" disabled="disabled" value="">-- Choose Category --</option>
+								<option value="PRIVATE">PRIVATE</option>
+								<option value="REGULAR">REGULAR</option>
+							</select>
+						</div>
+					</div>
+
+					<div id="privatediv" style="display:none;">
+						<div class="form-group">
+							<label for="programprv" class="col-sm-3 control-label">Level</label>
+							<div class="col-sm-9">
+								<select class="form-control select2" style="width: 100%;" name="programprv" id="programprv" onchange="showDetail()">
+									<option selected="selected" disabled="disabled" value="">-- Choose Level --</option>
+									<?php
+									foreach ($listPrice->result() as $row) {
+										if ($row->level == "Private") {
+									?>
+											<option value="<?= $row->id ?>"><?= $row->program ?></option>
+									<?php
+										}
+									}
+									?>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="attendance" class="col-sm-3 control-label">Attendance</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" value="" id="attendance" name="attendance" data-role="tagsinput">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="priceattn" name="priceattn">
+							</div>
+						</div>
+					</div>
+
+					<div id="regulardiv" style="display:none;">
+						<div class="form-group">
+							<label for="program" class="col-sm-3 control-label">Level</label>
+							<div class="col-sm-9">
+								<select class="form-control select2" style="width: 100%;" name="program" id="program" onchange="showDetail()">
+									<option selected="selected" disabled="disabled" value="">-- Choose Level --</option>
+									<?php
+									foreach ($listPrice->result() as $row) {
+										if ($row->level != "Private") {
+									?>
+											<option value="<?= $row->id ?>"><?= $row->program ?></option>
+									<?php
+										}
+									}
+									?>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label id="labelattn" for="attendance" class="col-sm-3 control-label">Attendance</label>
+							<div class="col-sm-9">
+								<input type="number" class="form-control" id="attendancereg" name="attendancereg">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label id="labelprice" for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="priceattnreg" name="priceattnreg" readonly>
+							</div>
+						</div>
+					</div>
+
+					<div id="dpayment" style="display: none;">
+						<div class="form-group">
+							<label for="registration" class="col-sm-3 control-label"></label>
+							<div class="col-sm-9">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="registration" name="registration" onclick="checkRegistration()">
+										Registration
+									</label>
+								</div>
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="pointbook" name="pointbook" onclick="checkPointbook()">
+										Point Book
+									</label>
+								</div>
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="book" name="book" onclick="checkBook()">
+										Book
+									</label>
+								</div>
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="agenda" name="agenda" onclick="checkAgenda()">
+										Agenda
+									</label>
+								</div>
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="exercise" name="exercise" onclick="checkExercise()">
+										Belum Bisa
+									</label>
+								</div>
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" id="course" name="course" onclick="checkCourse()">
+										Course
+									</label>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div id="divpayment" style="display: none;">
+						<div class="form-group">
+							<label for="total" class="col-sm-3 control-label">Total Amount</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="amount" name="amount" readonly>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="method" class="col-sm-3 control-label">Payment Method</label>
+							<div class="col-sm-9">
+								<select class="form-control select2" style="width: 100%;" name="method" id="method" onchange="changeMethod()" required>
+									<option selected="selected" value="CASH">Cash</option>
+									<option value="SWITCHING CARD">Switching Card</option>
+									<option value="BANK TRANSFER">Bank Transfer</option>
+									<option value="DEBIT">Debit</option>
+									<option value="CREDIT">Credit</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group" id="dtrfdate" style="display: none;">
+							<label for="inputPassword3" class="col-sm-3 control-label">Transfer Date</label>
+							<div class="col-sm-9">
+								<div class="input-group date">
+									<div class="input-group-addon">
+										<i class="fa fa-calendar"></i>
+									</div>
+									<input type="text" class="form-control pull-right" id="datepicker" name="trfdate" id="trfdate">
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group" id="dbank" style="display: none;">
+							<label for="method" class="col-sm-3 control-label">Bank</label>
+							<div class="col-sm-9">
+								<select class="form-control select2" style="width: 100%;" name="bank" id="bank" onchange="changeBank()">
+									<option selected="selected" disabled="disabled" value="">-- Choose Bank --</option>
+									<option value="BCA CARD">BCA Card</option>
+									<option value="VISA CARD">Visa Card</option>
+									<option value="VISA BCA">Visa BCA</option>
+									<option value="MASTER CARD">Master Card</option>
+									<option value="MAESTRO CARD">Maestro Card</option>
+									<option value="JCB">JCB</option>
+									<option value="AMERICAN EXPRESS">American Express</option>
+									<option value="OTHER">Other</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group" id="dnumber" style="display: none;">
+							<label for="number" class="col-sm-3 control-label">Number</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="number" name="number">
+							</div>
+						</div>
+
+						<div class="form-group" id="dcut" style="display: none;">
+							<label for="cash" class="col-sm-3 control-label">Bank Payment Cut</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="paymentcut" name="paymentcut" readonly>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="cash" class="col-sm-3 control-label">Cash</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="cash" name="cash">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="cashback" class="col-sm-3 control-label">Cashback</label>
+							<div class="col-sm-9">
+								<input type="text" class="form-control" id="cashback" name="cashback" readonly>
+							</div>
+						</div>
+					</div>
+
+					<input type="hidden" class="form-control" id="vid" name="vid" value="">
+					<input type="hidden" class="form-control" id="vamount" name="vamount">
+					<input type="hidden" class="form-control" id="vregistration" name="vregistration" value="">
+					<input type="hidden" class="form-control" id="vpointbook" name="vpointbook">
+					<input type="hidden" class="form-control" id="vbook" name="vbook" value="">
+					<input type="hidden" class="form-control" id="vagenda" name="vagenda">
+					<input type="hidden" class="form-control" id="vexercise" name="vexercise">
+					<input type="hidden" class="form-control" id="vcourse" name="vcourse">
+					<input type="hidden" class="form-control" id="countattn" name="countattn">
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary pull-left">Submit</button>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+					<!-- <a href=""><button type="button" class="btn btn-outline">Delete</button></a> -->
+				</div>
+			</form>
 		</div>
 		<!-- /.modal-content -->
 	</div>
 	<!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-
-<?php
-$totalpay = 0;
-?>
 
 <script type="text/javascript">
 	var oldvoucher = 0;
@@ -1128,4 +1072,10 @@ $totalpay = 0;
 		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 		alert('Add registration successful.');
 	});
+
+	function showModalData(id, name) {
+		$('.modal-title').html('Update student ' + name);
+		$('#idModal').val(id);
+		console.log(name);
+	}
 </script>

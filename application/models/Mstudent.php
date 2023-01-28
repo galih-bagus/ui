@@ -1,9 +1,15 @@
 <?php
-	//File products_model.php
-	class Mstudent extends CI_Model  {
-		function __construct() { parent::__construct(); } function getAllStudent() {
+//File products_model.php
+class Mstudent extends CI_Model
+{
+	function __construct()
+	{
+		parent::__construct();
+	}
+	function getAllStudent()
+	{
 		//select semua data yang ada pada table msProduct $this--->db->select("*");
-        $this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, lpr.id, lpr.program, lpr.course, lpr.level, lpr.monthpay");
+		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, lpr.id, lpr.program, lpr.course, lpr.level, lpr.monthpay");
 		$this->db->from("student s");
 		//$this->db->join("price p", "s.priceid = p.id", "left outer");
 		$this->db->join("last_payment_regular lpr", "s.id = lpr.id_student", "left outer");
@@ -66,8 +72,8 @@
 		$result = $query->result();
 		return $result;
 	}*/
-	
-	
+
+
 	function getLatePaymentStudentPrivate()
 	{
 		$query = $this->db->query("SELECT s.id, s.name, s.condition, s.adjusment, p.program, p.course, py.method, pd.id as id_detail_pd,  MAX(pd.monthpay) as monthpay, p.level
@@ -91,7 +97,7 @@
 		$result = $query->result();
 		return $result;
 	}
-	
+
 
 	function addStudent($data)
 	{
@@ -105,16 +111,17 @@
 	function updateStudent($data, $where)
 	{
 		$this->db->where($where);
-        $this->db->update('student', $data);
+		$this->db->update('student', $data);
 	}
 
 	function deleteStudent($id)
 	{
 		$this->db->where('id', $id);
-        $this->db->delete('student');
+		$this->db->delete('student');
 	}
 
-	function getStudentPayment() {
+	function getStudentPayment()
+	{
 		$this->db->select("py.id, py.method, py.number, py.bank, py.total, py.paydate, py.trfdate, 
 						   pd.paymentid, pd.studentid, pd.voucherid, pd.category, pd.monthpay, pd.amount, pd.explanation,
 						   s.name, s.status, p.program");
@@ -125,7 +132,8 @@
 		$this->db->where("paydate BETWEEN '2019-07-01' AND '2019-09-31'");
 		return $this->db->get();
 	}
-	function getStudentDetailPayment($id) {
+	function getStudentDetailPayment($id)
+	{
 		$this->db->select("py.id, py.method, py.number, py.bank, py.total, py.paydate, py.trfdate, 
 						   pd.paymentid, pd.studentid, pd.voucherid, pd.category, pd.monthpay, pd.amount, pd.explanation,
 						   s.name, s.status, p.program");
@@ -136,6 +144,14 @@
 		$this->db->where("s.id", $id);
 		return $this->db->get();
 	}
-}
 
-?>
+	function getOnlineStudent()
+	{
+		$this->db->select("*");
+		$this->db->from("student");
+		$this->db->where('status =', 'ACTIVE');
+		$this->db->where('is_online =', 1);
+		$this->db->order_by('id', 'asc');
+		return $this->db->get();
+	}
+}

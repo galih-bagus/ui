@@ -1,6 +1,8 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Report extends CI_Controller  {
-	function __construct(){
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+class Report extends CI_Controller
+{
+	function __construct()
+	{
 		parent::__construct();
 		$this->load->model("mexpense");
 		$this->load->model("mexpdetail");
@@ -8,7 +10,7 @@ class Report extends CI_Controller  {
 		$this->load->model("mpaydetail");
 		$this->load->model("mstudent");
 		$this->load->model("mreport");
-		if($this->session->userdata('status') != "login"){
+		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("user"));
 		}
 	}
@@ -28,11 +30,11 @@ class Report extends CI_Controller  {
 			$this->load->view('v_footer');
 		} else {
 			$var = $this->input->post('startdate');
-			$parts = explode('/',$var);
+			$parts = explode('/', $var);
 			$startdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$var = $this->input->post('enddate');
-			$parts = explode('/',$var);
+			$parts = explode('/', $var);
 			$enddate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$data['listExpdetail'] = $this->mreport->getExpense($startdate, $enddate);
@@ -60,29 +62,29 @@ class Report extends CI_Controller  {
 			// $parts = explode('/',$var);
 			// $enddate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
-			$listLateStudent = $this->mreport->getLatePayment($month,$year);
+			$listLateStudent = $this->mreport->getLatePayment($month, $year);
 			foreach ($listLateStudent as $key => $student) {
-				$monthpay = date("m",strtotime($student->monthpay));
+				$monthpay = date("m", strtotime($student->monthpay));
 				// if (($monthpay < date('m')) || ($student->monthpay == '')) {
-					if ($student->condition == "DEFAULT") {
-						$data = array(
-							'penalty' => ($student->course * 10 / 100)
-							);
-					} else {
-						$data = array(
-							'penalty' => ($student->adjusment * 10 / 100)
-							);
-					}
-					$where['id'] = $student->id;
-					$this->mstudent->updateStudent($data, $where);
+				if ($student->condition == "DEFAULT") {
+					$data = array(
+						'penalty' => ($student->course * 10 / 100)
+					);
+				} else {
+					$data = array(
+						'penalty' => ($student->adjusment * 10 / 100)
+					);
+				}
+				$where['id'] = $student->id;
+				$this->mstudent->updateStudent($data, $where);
 				// } else {
-					// $data = array(
-						// 'penalty' => 0
-						// );
-					// $where['id'] = $student->id;
-					// $this->mstudent->updateStudent($data, $where);
+				// $data = array(
+				// 'penalty' => 0
+				// );
+				// $where['id'] = $student->id;
+				// $this->mstudent->updateStudent($data, $where);
 
-					// unset($listLateStudent[$key]);
+				// unset($listLateStudent[$key]);
 				// }
 			}
 
@@ -90,9 +92,7 @@ class Report extends CI_Controller  {
 			$this->load->view('v_header');
 			$this->load->view('v_reportlate', $data);
 			$this->load->view('v_footer');
-
 		}
-
 	}
 
 	public function showGeneral()
@@ -103,11 +103,11 @@ class Report extends CI_Controller  {
 			$this->load->view('v_footer');
 		} else {
 			$var = $this->input->post('startdate');
-			$parts = explode('/',$var);
+			$parts = explode('/', $var);
 			$startdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$var = $this->input->post('enddate');
-			$parts = explode('/',$var);
+			$parts = explode('/', $var);
 			$enddate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$listGeneral = $this->mreport->getGeneral($startdate, $enddate);
@@ -188,11 +188,11 @@ class Report extends CI_Controller  {
 			$this->load->view('v_footer');
 		} else {
 			$var = $this->input->post('startdate');
-			$parts = explode('/',$var);
+			$parts = explode('/', $var);
 			$startdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$var = $this->input->post('enddate');
-			$parts = explode('/',$var);
+			$parts = explode('/', $var);
 			$enddate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$listDetail = $this->mreport->getDetail($startdate, $enddate);
@@ -208,7 +208,7 @@ class Report extends CI_Controller  {
 			$count = 0;
 			foreach ($listDetail as $key => $detail) {
 				$detail->registration = 0;
-    			$detail->book = 0;
+				$detail->book = 0;
 				$detail->agenda = 0;
 				$detail->course = 0;
 				$counter = $counter + 1;
@@ -329,15 +329,16 @@ class Report extends CI_Controller  {
 			$this->load->view('v_footer');
 		} else {
 			$poststartdate = $this->input->post('startdate');
-			$parts = explode('/',$poststartdate);
+			$parts = explode('/', $poststartdate);
 			$startdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
 			$postenddate = $this->input->post('enddate');
-			$parts = explode('/',$postenddate);
+			$parts = explode('/', $postenddate);
 			$enddate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 
-			$data['listTransaction'] = $this->mreport->getTransaction($startdate,$enddate);
-			$data['listDetailPayment'] = $this->mreport->getDetailPayment($startdate,$enddate);
+
+			$data['listTransaction'] = $this->mreport->getTransaction($startdate, $enddate);
+			$data['listDetailPayment'] = $this->mreport->getDetailPayment($startdate, $enddate);
 			$this->load->view('v_header');
 			$this->load->view('v_reporttrans', $data);
 			$this->load->view('v_footer');
@@ -349,12 +350,11 @@ class Report extends CI_Controller  {
 	{
 		if (strpos($program, "Private") !== false) {
 			//redirect(base_url("escpos/example/reprintprivate.php?id=".$id));
-			redirect(base_url("cetak/printprivate/".$id));
+			redirect(base_url("cetak/printprivate/" . $id));
 		} else {
 			//redirect(base_url("escpos/example/reprintregular.php?id=".$id));
-			redirect(base_url("cetak/printregular/".$id));
+			redirect(base_url("cetak/printregular/" . $id));
 		}
-
 	}
 
 
@@ -368,11 +368,11 @@ class Report extends CI_Controller  {
 	public function deletePaymentDb($paymentid)
 	{
 		$data = array(
-				'method' => "CANCEL",
-				'number' => "",
-				'bank' => "",
-				'trfdate' => "0000-00-00",
-				'total' => 0
+			'method' => "CANCEL",
+			'number' => "",
+			'bank' => "",
+			'trfdate' => "0000-00-00",
+			'total' => 0
 		);
 		$where['id'] = $paymentid;
 		$this->mpayment->updatePayment($data, $where);
@@ -380,11 +380,11 @@ class Report extends CI_Controller  {
 		$listPayDetail = $this->mpaydetail->getPaydetailByPaymentId($paymentid);
 		foreach ($listPayDetail->result() as $payDetail) {
 			$data = array(
-					'voucherid' => "",
-					'category' => "CANCEL",
-					'monthpay' => "0000-00-00",
-					'amount' => 0
-					);
+				'voucherid' => "",
+				'category' => "CANCEL",
+				'monthpay' => "0000-00-00",
+				'amount' => 0
+			);
 			$where['id'] = $payDetail->id;
 			$this->mpaydetail->updatePaydetail($data, $where);
 		}
@@ -393,7 +393,4 @@ class Report extends CI_Controller  {
 		$nexturl = "report/showtrans";
 		redirect(base_url($nexturl));
 	}
-
-
 }
-?>
