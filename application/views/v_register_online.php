@@ -28,6 +28,15 @@
 
 	<!-- Google Font -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+
+	<style type="text/css">
+		.signature-pad {
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			width: 100%;
+			height: 260px;
+		}
+	</style>
 </head>
 
 <body class="hold-transition login-page">
@@ -58,37 +67,38 @@
 			<form action="<?php echo base_url() ?>OnlineRegistration/store" method="post">
 				<div class="form-group has-feedback">
 					<label for="">Full Name</label>
-					<input type="text" class="form-control" placeholder="Enter Name" name="name" required>
+					<input type="text" class="form-control" placeholder="Enter Name" name="name" value="<?php echo set_value('name'); ?>" required>
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
 					<label for="">Phone Number</label>
-					<input type="text" class="form-control" placeholder="Enter Phone" name="phone" required>
+					<input type="text" class="form-control" placeholder="Enter Phone" name="phone" value="<?php echo set_value('phone'); ?>" required>
 					<span class="glyphicon glyphicon-phone form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
 					<label for="">Address</label>
-					<input type="text" class="form-control" placeholder="Enter Address" name="address" required>
+					<input type="text" class="form-control" placeholder="Enter Address" name="address" value="<?php echo set_value('address'); ?>" required>
 					<span class="glyphicon glyphicon-home form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
 					<label for="">School</label>
-					<input type="text" class="form-control" placeholder="Enter School" name="school" required>
+					<input type="text" class="form-control" placeholder="Enter School" name="school" value="<?php echo set_value('school'); ?>" required>
 					<span class="glyphicon glyphicon-list-alt form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
 					<label for="">Grade</label>
-					<input type="text" class="form-control" placeholder="Enter Grade" name="grade" required>
+					<input type="text" class="form-control" placeholder="Enter Grade" name="grade" value="<?php echo set_value('grade'); ?>" required>
 					<span class="glyphicon glyphicon-blackboard form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
-					<label for="">Birthday Date</label>
+					<label for="">Birth Day</label>
 					<select class="form-control select2" style="width: 100%;" name="date" required>
 						<option selected="selected" disabled="disabled" value="">-- Choose Date --</option>
 						<?php
 						for ($i = 1; $i <= 31; $i++) {
+							$selected = set_value('date') == $i ? 'selected' : '';
 						?>
-							<option value="<?= $i ?>"><?= $i ?></option>
+							<option value="<?= $i ?>" <?= $selected ?>><?= $i ?></option>
 						<?php
 						}
 						?>
@@ -96,18 +106,52 @@
 					<!-- <span class="glyphicon glyphicon-phone form-control-feedback"></span> -->
 				</div>
 				<div class="form-group has-feedback">
-					<label for="">Birthday Moth</label>
+					<label for="">Birth Month</label>
 					<select class="form-control select2" style="width: 100%;" name="month" required>
 						<option selected="selected" disabled="disabled" value="">-- Choose month --</option>
 						<?php
 						$months = array("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December");
 						foreach ($months as $month) {
+							$selected = set_value('month') == $month ? 'selected' : '';
 						?>
-							<option value="<?= $month ?>"><?= $month ?></option>
+							<option value="<?= $month ?>" <?= $selected ?>><?= $month ?></option>
 						<?php
 						}
 						?>
 					</select>
+					<!-- <span class="glyphicon glyphicon-phone form-control-feedback"></span> -->
+				</div>
+				<div class="form-group has-feedback">
+					<label for="">Birth Year</label>
+					<input type="number" class="form-control" placeholder="Enter Birthday Year" name="year" value="<?php echo set_value('year'); ?>" required>
+					<span class="glyphicon glyphicon-calendar form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<label for="">How Do You Now U&I English Course</label>
+					<select class="form-control select2" style="width: 100%;" name="know" required>
+						<option selected="selected" disabled="disabled" value="">-- Choose one --</option>
+						<?php
+						$options = array("Friend", "Family", "Passing By", "Website", "Other");
+						foreach ($options as $opt) {
+							$selected = set_value('know') == $opt ? 'selected' : '';
+						?>
+							<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
+						<?php
+						}
+						?>
+					</select>
+					<!-- <span class="glyphicon glyphicon-phone form-control-feedback"></span> -->
+				</div>
+				<div class="form-group has-feedback">
+					<label for="">Signature</label>
+					<div style="color:red">
+						<?php echo form_error('signature'); ?>
+					</div>
+					<canvas id="signature-pad" class="signature-pad"></canvas>
+					<input type="hidden" name="signature" id="signature">
+					<button type="button" class="btn btn-default btn-sm" id="undo"><i class="fa fa-undo"></i> Undo</button>
+					<button type="button" class="btn btn-danger btn-sm" id="clear"><i class="fa fa-eraser"></i> Clear</button>
+					<button type="button" class="btn btn-primary btn-sm" id="save-png"><i class="fa fa-save"></i> Save</button>
 					<!-- <span class="glyphicon glyphicon-phone form-control-feedback"></span> -->
 				</div>
 				<div class="row">
@@ -134,6 +178,7 @@
 	<script src="<?php echo base_url() ?>assets/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<!-- iCheck -->
 	<script src="<?php echo base_url() ?>assets/plugins/iCheck/icheck.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
 	<script>
 		$(function() {
 			$('input').iCheck({
@@ -141,6 +186,49 @@
 				radioClass: 'iradio_square-blue',
 				increaseArea: '20%' // optional
 			});
+		});
+		var canvas = document.getElementById('signature-pad');
+
+		// Adjust canvas coordinate space taking into account pixel ratio,
+		// to make it look crisp on mobile devices.
+		// This also causes canvas to be cleared.
+		function resizeCanvas() {
+			// When zoomed out to less than 100%, for some very strange reason,
+			// some browsers report devicePixelRatio as less than 1
+			// and only part of the canvas is cleared then.
+			var ratio = Math.max(window.devicePixelRatio || 1, 1);
+			canvas.width = canvas.offsetWidth * ratio;
+			canvas.height = canvas.offsetHeight * ratio;
+			canvas.getContext("2d").scale(ratio, ratio);
+		}
+
+		window.onresize = resizeCanvas;
+		resizeCanvas();
+
+		var signaturePad = new SignaturePad(canvas, {
+			backgroundColor: 'rgb(255, 255, 255)' // necessary for saving image as JPEG; can be removed is only saving as PNG or SVG
+		});
+
+		document.getElementById('save-png').addEventListener('click', function() {
+			if (signaturePad.isEmpty()) {
+				alert("Tanda Tangan Anda Kosong! Silahkan tanda tangan terlebih dahulu.");
+			} else {
+				var data = signaturePad.toDataURL('upload/signature');
+				$("#signature").val(data);
+				console.log(data);
+			}
+		});
+
+		document.getElementById('clear').addEventListener('click', function() {
+			signaturePad.clear();
+		});
+
+		document.getElementById('undo').addEventListener('click', function() {
+			var data = signaturePad.toData();
+			if (data) {
+				data.pop(); // remove the last dot or line
+				signaturePad.fromData(data);
+			}
 		});
 	</script>
 </body>

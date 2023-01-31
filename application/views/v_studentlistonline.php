@@ -91,7 +91,13 @@
 
 			<li class="active">
 				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Result Register</span>
+					<i class="fa fa-users"></i> <span>Prospective Student</span>
+				</a>
+			</li>
+
+			<li>
+				<a href="<?php echo base_url() ?>teacher">
+					<i class="fa fa-users"></i> <span>Teacher</span>
 				</a>
 			</li>
 
@@ -117,7 +123,7 @@
 	<section class="content-header">
 		<h1>
 			Student
-			<small>List Students</small>
+			<small>Prospective Student</small>
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-home"></i> Home</a></li>
@@ -144,20 +150,26 @@
 										<th>Name</th>
 										<th>Telephone</th>
 										<th>Birthday</th>
+										<th>Speaking</th>
+										<th>Written</th>
 										<th class="notPrintable">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php
+									$no = 1;
 									foreach ($listStudent->result() as $row) {
 									?>
 										<tr class="status<?= $row->status ?>">
-											<td><?= $row->id ?></td>
+											<td><?= $no++ ?></td>
 											<td><?= $row->name ?></td>
 											<td><?= $row->phone ?></td>
 											<td><?= $row->birthday ?></td>
+											<td><?= $row->speaking ?></td>
+											<td><?= $row->written ?></td>
 											<td>
-												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')"><i class="fa fa-pencil"></i></a>
+												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>
+												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')">Payment</a>
 											</td>
 										</tr>
 									<?php
@@ -188,7 +200,7 @@
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title">Update Student</h4>
+					<h4 class="modal-title">Payment New Student</h4>
 				</div>
 				<div class="modal-body">
 					<p id="textModal"></p>
@@ -204,6 +216,7 @@
 							</select>
 						</div>
 					</div>
+
 
 					<div id="privatediv" style="display:none;">
 						<div class="form-group">
@@ -223,6 +236,31 @@
 								</select>
 							</div>
 						</div>
+
+						<div class="form-group">
+							<label for="day" class="col-sm-3 control-label">Day</label>
+							<div class="col-sm-9">
+								<select class="form-control select2" style="width: 100%;" name="date">
+									<option selected="selected" disabled="disabled" value="">-- Choose Date --</option>
+									<?php
+									for ($i = 1; $i <= 31; $i++) {
+										$selected = set_value('date') == $i ? 'selected' : '';
+									?>
+										<option value="<?= $i ?>" <?= $selected ?>><?= $i ?></option>
+									<?php
+									}
+									?>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="time" class="col-sm-3 control-label">Time</label>
+							<div class="col-sm-9">
+								<input type="time" class="form-control" name="time">
+							</div>
+						</div>
+
 
 						<div class="form-group">
 							<label for="attendance" class="col-sm-3 control-label">Attendance</label>
@@ -255,6 +293,30 @@
 									}
 									?>
 								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="day" class="col-sm-3 control-label">Day</label>
+							<div class="col-sm-9">
+								<select class="form-control select2" style="width: 100%;" name="date">
+									<option selected="selected" disabled="disabled" value="">-- Choose Date --</option>
+									<?php
+									for ($i = 1; $i <= 31; $i++) {
+										$selected = set_value('date') == $i ? 'selected' : '';
+									?>
+										<option value="<?= $i ?>" <?= $selected ?>><?= $i ?></option>
+									<?php
+									}
+									?>
+								</select>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="time" class="col-sm-3 control-label">Time</label>
+							<div class="col-sm-9">
+								<input type="time" class="form-control" name="time">
 							</div>
 						</div>
 
@@ -388,12 +450,14 @@
 							</div>
 						</div>
 
-						<div class="form-group">
+						<input type="hidden" class="form-control" id="cashback" name="cashback" readonly value="0">
+
+						<!-- <div class="form-group">
 							<label for="cashback" class="col-sm-3 control-label">Cashback</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control" id="cashback" name="cashback" readonly>
 							</div>
-						</div>
+						</div> -->
 					</div>
 
 					<input type="hidden" class="form-control" id="vid" name="vid" value="">
@@ -405,6 +469,98 @@
 					<input type="hidden" class="form-control" id="vexercise" name="vexercise">
 					<input type="hidden" class="form-control" id="vcourse" name="vcourse">
 					<input type="hidden" class="form-control" id="countattn" name="countattn">
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary pull-left">Submit</button>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+					<!-- <a href=""><button type="button" class="btn btn-outline">Delete</button></a> -->
+				</div>
+			</form>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+<div class="modal fade" id="showResult">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form action="<?= base_url() ?>student/resultTest" method="post" class="form-horizontal">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Result Test Student</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<p id="textModal"></p>
+						<input type="hidden" name="idstudent" id="idModalResult" style="color:#000">
+
+						<div class="col-sm-2">
+							<label for="category" class="col-sm-3 control-label">Category</label>
+						</div>
+						<div class="col-sm-10">
+							<select class="form-control select2" style="width: 100%;" name="" id="categoryResult" onchange="changeCategoryResult()" required>
+								<option disabled="disabled" value="">-- Choose Category --</option>
+								<option value="PRIVATE">PRIVATE</option>
+								<option value="REGULAR">REGULAR</option>
+							</select>
+						</div>
+						<div class="col-sm-2" style="margin-top: 15px;">
+							<label for="level" class="col-sm-3 control-label">Level</label>
+						</div>
+						<div class="col-sm-10" style="margin-top: 15px;">
+							<select class="form-control select2" style="width: 100%;" name="" id="levelResult" required>
+								<option disabled="disabled" value="">-- Choose Level --</option>
+								<?php
+								foreach ($listPrice->result() as $row) {
+								?>
+									<option value="<?= $row->id ?>"><?= $row->program ?></option>
+								<?php
+								}
+								?>
+							</select>
+						</div>
+						<div class="col-sm-2" style="margin-top: 15px;">
+							<label for="written" class="col-sm-3 control-label">Written</label>
+						</div>
+						<div class="col-sm-2" style="margin-top: 15px;">
+							<input type="number" max="100" class="form-control" value="" id="written" name="written" required>
+						</div>
+						<div class="col-sm-2" style="margin-top: 15px;">
+							<label for="speaking" class="col-sm-3 control-label">Speaking</label>
+						</div>
+						<div class="col-sm-6" style="margin-top: 15px;">
+							<select class="form-control select2" style="width: 100%;" id="speaking" name="speaking" required>
+								<option disabled="disabled" value="">-- Choose Score --</option>
+								<?php
+								$options = array("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E");
+								foreach ($options as $opt) {
+									$selected = set_value('speaking') == $opt ? 'selected' : '';
+								?>
+									<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
+								<?php
+								}
+								?>
+							</select>
+						</div>
+						<div class="col-sm-2" style="margin-top: 15px;">
+							<label for="level" class="col-sm-3 control-label">Teacher</label>
+						</div>
+						<div class="col-sm-10" style="margin-top: 15px;">
+							<select class="form-control select2" style="width: 100%;" name="id_teacher" id="id_teacher" required>
+								<option disabled="disabled" value="">-- Choose Teacher --</option>
+								<?php
+								foreach ($teacher->result() as $row) {
+								?>
+									<option value="<?= $row->id ?>"><?= $row->name ?></option>
+								<?php
+								}
+								?>
+							</select>
+						</div>
+					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-primary pull-left">Submit</button>
@@ -628,6 +784,16 @@
 		}
 	}
 
+	function changeCategoryResult() {
+		if (document.getElementById("categoryResult").value == "PRIVATE") {
+			$("#resultprivatediv").show(750);
+			$("#resultregulardiv").hide(750);
+		} else {
+			$("#resultprivatediv").hide(750);
+			$("#resultregulardiv").show(750);
+		}
+	}
+
 	function showDetail() {
 		document.getElementById("registration").checked = false;
 		document.getElementById("pointbook").checked = false;
@@ -659,6 +825,10 @@
 		<?php
 		}
 		?>
+	}
+
+	function showDetailResult() {
+		console.log('asd');
 	}
 
 	function checkRegistration() {
@@ -1076,6 +1246,40 @@
 	function showModalData(id, name) {
 		$('.modal-title').html('Update student ' + name);
 		$('#idModal').val(id);
-		console.log(name);
+	}
+
+	function showModalResult(id, name, written, speaking, priceid) {
+		$('.modal-title').html('Result Student Test ' + name);
+		$('#idModalResult').val(id);
+		$('#written').val(written);
+		$('#speaking').val(speaking);
+		// $.ajax({
+		// 	url: '<?php echo base_url(); ?>/mahasiswa/edit',
+		// 	method: 'post',
+		// 	data: {
+		// 		nim: nim
+		// 	},
+		// 	success: function(data) {
+		// 		$('#myModal').modal("show");
+		// 		$('#tampil_modal').html(data);
+		// 		document.getElementById("judul").innerHTML = 'Edit Data';
+		// 	}
+		// });
+		$.ajax({
+			url: '<?php echo base_url(); ?>student/getPrice/' + priceid,
+			type: 'GET',
+			dataType: 'json',
+			error: function() {
+				console.log('Something is wrong');
+			},
+			success: function(data) {
+				// $("tbody").append("<tr><td>" + title + "</td><td>" + description + "</td></tr>");
+				var category = data[0].program != 'Private' ? 'REGULAR' : 'PRIVATE';
+				$('#levelResult').val(data[0].id);
+				$('#categoryResult').val(category);
+				// $("#categoryResult").select2("val", category);
+				// $("#categoryResult").select2().select2('val', 'REGULAR');
+			}
+		});
 	}
 </script>

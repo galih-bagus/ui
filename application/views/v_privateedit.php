@@ -91,7 +91,13 @@
 
 			<li>
 				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Result Register</span>
+					<i class="fa fa-users"></i> <span>Prospective Student</span>
+				</a>
+			</li>
+
+			<li>
+				<a href="<?php echo base_url() ?>teacher">
+					<i class="fa fa-users"></i> <span>Teacher</span>
 				</a>
 			</li>
 
@@ -669,9 +675,9 @@ foreach ($listPaydetail->result() as $row) {
 		document.getElementById("level").value = $(this).find("#program").text();
 
 		// <?php
-				//   foreach ($listPrice->result() as $price) { 
-				// 
-				?>
+			//   foreach ($listPrice->result() as $price) { 
+			// 
+			?>
 		//   if (document.getElementById("spriceid").value == <?= $price->id ?>) {
 		//     document.getElementById("priceattn").value = parseInt(<?= $price->priceperday ?>);
 		//     document.getElementById("priceattn").value = "Rp " + FormatDuit(document.getElementById("priceattn").value);
@@ -690,9 +696,9 @@ foreach ($listPaydetail->result() as $row) {
 		//     olddiscn = Math.round(parseInt(discount) * parseInt(amount) / 100);
 		//   }
 		// <?php
-				//   }
-				// 
-				?>
+			//   }
+			// 
+			?>
 
 		$("#voucherdiv").show(750);
 	});

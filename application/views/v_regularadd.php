@@ -100,7 +100,13 @@ $url = base_url() . "cetak/printregular/";
 
 			<li>
 				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Result Register</span>
+					<i class="fa fa-users"></i> <span>Prospective Student</span>
+				</a>
+			</li>
+
+			<li>
+				<a href="<?php echo base_url() ?>teacher">
+					<i class="fa fa-users"></i> <span>Teacher</span>
 				</a>
 			</li>
 

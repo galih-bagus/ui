@@ -100,7 +100,7 @@ $url = base_url() . "cetak/printregular/";
 
 			<li>
 				<a href="<?php echo base_url() ?>student/studentOnline">
-					<i class="fa fa-users"></i> <span>Result Register</span>
+					<i class="fa fa-users"></i> <span>Prospective Student</span>
 				</a>
 			</li>
 
@@ -438,28 +438,28 @@ $url = base_url() . "cetak/printregular/";
 							</thead>
 							<!-- <tbody>
                   <?php
-									foreach ($listStudent->result() as $row) {
-									?>
+					foreach ($listStudent->result() as $row) {
+					?>
                   <tr>
                     <td id="id"><?= $row->sid ?></td>
                     <td id="priceid" style="display:none;"><?= $row->priceid ?></td>
                     <td id="name"><?= $row->name ?></td>
                     <td id="program"><?= $row->program ?></td>
                     <?php
-										if ($row->condition == "DEFAULT") {
-										?>
+						if ($row->condition == "DEFAULT") {
+					?>
                     <td><span class="badge bg-yellow">Default: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>
                     <?php
-										} elseif ($row->condition == "CHANGE") {
-										?>
+						} elseif ($row->condition == "CHANGE") {
+					?>
                     <td><span class="badge bg-light-blue">Change: Rp <?= number_format($row->adjusment, 0, ".", ".") ?></span></td>
                     <?php
-										}
-										?>
+						}
+					?>
                   </tr>
                   <?php
-									}
-									?>
+					}
+					?>
                   </tbody>-->
 
 						</table>

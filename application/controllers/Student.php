@@ -9,6 +9,7 @@ class Student extends CI_Controller
 		$this->load->model("mpayment");
 		$this->load->model("mpaydetail");
 		$this->load->model("mvoucher");
+		$this->load->model("mteacher");
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("login"));
 		}
@@ -298,6 +299,7 @@ class Student extends CI_Controller
 		$data['listStudent'] = $this->mstudent->getOnlineStudent();
 		$data['listPrice'] = $this->mprice->getAllPrice();
 		$data['listVoucher'] = $this->mvoucher->getAllVoucher();
+		$data['teacher'] = $this->mteacher->index();
 		$this->load->view('v_header');
 		$this->load->view('v_studentlistonline', $data);
 		$this->load->view('v_footer');
@@ -322,6 +324,7 @@ class Student extends CI_Controller
 		$where['id'] = $this->input->post('idstudent');
 		$form = array(
 			'priceId' => $program,
+			'is_complete' => '1'
 		);
 		$this->mstudent->updateStudent($form, $where);
 
@@ -440,30 +443,50 @@ class Student extends CI_Controller
 		}
 	}
 
+	public function resultTest()
+	{
+		$where['id'] = $this->input->post('idstudent');
+		$form = array(
+			'written' => $this->input->post('written'),
+			'speaking' => $this->input->post('speaking'),
+			'id_teacher' => $this->input->post('id_teacher'),
+		);
+		$this->mstudent->updateStudent($form, $where);
+		redirect(base_url('student/studentOnline'));
+	}
+
 	public function sendWa()
 	{
-		$number = $_GET['number'];
-		echo $number;
-		// $curl = curl_init();
+		// $number = $_GET['number'];
+		// echo $number;
+		$curl = curl_init();
 
-		// curl_setopt_array($curl, array(
-		// 	CURLOPT_URL => 'https://demomd.bermainapi.com/send-message',
-		// 	CURLOPT_RETURNTRANSFER => true,
-		// 	CURLOPT_ENCODING => '',
-		// 	CURLOPT_MAXREDIRS => 10,
-		// 	CURLOPT_TIMEOUT => 0,
-		// 	CURLOPT_FOLLOWLOCATION => true,
-		// 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		// 	CURLOPT_CUSTOMREQUEST => 'POST',
-		// 	CURLOPT_POSTFIELDS => 'api_key=829168a9c2c987bc48cdbda143435455&sender=6285171238567&number=6282141385552&message=text%20message%20sadaisd',
-		// 	CURLOPT_HTTPHEADER => array(
-		// 		'Content-Type: application/x-www-form-urlencoded'
-		// 	),
-		// ));
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => 'https://wa.primtech-api.com/send-message',
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => '',
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 0,
+			CURLOPT_FOLLOWLOCATION => true,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => 'POST',
+			CURLOPT_POSTFIELDS => 'api_key=951ec214775acc0d605304d33338531c&sender=6282143403501&number=6282264619988&message=text%20message%20sadaisd%0aTest',
+			CURLOPT_HTTPHEADER => array(
+				'Content-Type: application/x-www-form-urlencoded'
+			),
+		));
 
-		// $response = curl_exec($curl);
+		$response = curl_exec($curl);
 
-		// curl_close($curl);
-		// echo $response;
+		curl_close($curl);
+		echo $response;
+	}
+
+	public function getPrice($id)
+	{
+		$price = $this->mprice->getPriceById($id);
+		echo json_encode($price->result());
+		// json_encode('asd');
+		// echo 'asd';
 	}
 }

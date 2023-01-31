@@ -13,6 +13,7 @@ class Mstudent extends CI_Model
 		$this->db->from("student s");
 		//$this->db->join("price p", "s.priceid = p.id", "left outer");
 		$this->db->join("last_payment_regular lpr", "s.id = lpr.id_student", "left outer");
+		$this->db->where("is_complete", "1");
 		$this->db->order_by('sid', 'asc');
 		return $this->db->get();
 	}
@@ -151,6 +152,7 @@ class Mstudent extends CI_Model
 		$this->db->from("student");
 		$this->db->where('status =', 'ACTIVE');
 		$this->db->where('is_online =', 1);
+		$this->db->where("is_complete", "0");
 		$this->db->order_by('id', 'asc');
 		return $this->db->get();
 	}
