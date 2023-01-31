@@ -209,12 +209,26 @@
 														$var = $row->paydate;
 														$parts = explode('-', $var);
 														$paydate = $parts[2] . '/' . $parts[1];
+														$paydetail = $this->mpaydetail->getPaymentByPaymentId($row->id);
+														$this->db->select("paydetail.*, s.name");
+														$this->db->from("paydetail");
+														$this->db->join("student as s", 's.id = paydetail.studentid');
+														$this->db->where('paymentid', $row->id);
+														$count = $this->db->count_all_results();
 														?>
 														<td style="display: none;"><?= $no++ ?></td>
 														<td><?= $paydate ?></td>
 														<td><?= $row->id ?></td>
-														<td style="display: none;"><?= $row->name ?></td>
-														<td><?= $row->name ?> <span style="display: none;"><?= $row->method ?></span></td>
+														<td style="display: none;">
+															<?php foreach ($paydetail->result() as $key => $value) { ?>
+																<?= $value->name ?> <?= ($key + 1 < $count) ? '+' : '' ?>
+															<?php } ?>
+														</td>
+														<td>
+															<?php foreach ($paydetail->result() as $key => $value) { ?>
+																<?= $value->name ?> <?= ($key + 1 < $count) ? '+' : '' ?> <span style="display: none;"><?= $row->method ?></span>
+															<?php } ?>
+														</td>
 														<td><?= $row->method ?></td>
 														<td style="display: none ;">
 															<?php if ($row->method == 'CASH') { ?>

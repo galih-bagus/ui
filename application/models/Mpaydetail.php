@@ -1,9 +1,15 @@
 <?php
-	//File products_model.php
-	class Mpaydetail extends CI_Model  {
-		function __construct() { parent::__construct(); } function getAllPaydetail($id) {
+//File products_model.php
+class Mpaydetail extends CI_Model
+{
+	function __construct()
+	{
+		parent::__construct();
+	}
+	function getAllPaydetail($id)
+	{
 		//select semua data yang ada pada table msProduct $this--->db->select("*");
-        $this->db->select("*");
+		$this->db->select("*");
 		$this->db->from("paydetail");
 		return $this->db->get();
 	}
@@ -39,19 +45,19 @@
 	function updatePaydetail($data, $where)
 	{
 		$this->db->where($where);
-        $this->db->update('paydetail', $data);
+		$this->db->update('paydetail', $data);
 	}
 
 	function deletePaydetail($id)
 	{
 		$this->db->where('id', $id);
-        $this->db->delete('paydetail');
+		$this->db->delete('paydetail');
 	}
 
 	function deletePaydetailByPaymentId($id)
 	{
 		$this->db->where('paymentid', $id);
-        $this->db->delete('paydetail');
+		$this->db->delete('paydetail');
 	}
 	function getLastPaydetail()
 	{
@@ -74,6 +80,13 @@
 		$this->db->where('id_student', $id);
 		return $this->db->get();
 	}
-}
 
-?>
+	function getPaymentByPaymentId($id)
+	{
+		$this->db->select("paydetail.*, s.name");
+		$this->db->from("paydetail");
+		$this->db->join("student as s", 's.id = paydetail.studentid');
+		$this->db->where('paymentid', $id);
+		return $this->db->get();
+	}
+}
