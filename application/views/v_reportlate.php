@@ -141,11 +141,11 @@
 						<h3 class="box-title">Late Payment Report</h3>
 					</div>
 					<!-- /.box-header -->
-					<form role="form" id="example" name="example" class="form-horizontal" action="<?php echo base_url() ?>report/showLate" method="post" enctype="multipart/form-data">
+					<form role="form" id="example" name="example" class="form-horizontal" method="post" enctype="multipart/form-data">
 						<div class="box-body">
 							<div class="col-sm-12">
 								<div class="row">
-									<div class="col-xs-5">
+									<div class="col-xs-4">
 										<div class="form-group">
 											<label for="inputPassword3" class="col-sm-3 control-label">Month Late</label>
 											<div class="col-sm-8">
@@ -168,7 +168,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="col-xs-5">
+									<div class="col-xs-4">
 										<div class="form-group">
 											<label for="inputPassword3" class="col-sm-3 control-label">Year Late</label>
 											<div class="col-sm-8">
@@ -185,7 +185,10 @@
 										</div>
 									</div>
 									<div class="col-xs-2">
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-primary">Search Report</button>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-primary" id="search">Search Report</a>
+									</div>
+									<div class="col-xs-2">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-primary" id="send">Send Wa</a>
 									</div>
 								</div>
 
@@ -199,6 +202,7 @@
 												<th>Program</th>
 												<th>Level</th>
 												<th>Last Payment</th>
+												<th>Send Wa</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -226,6 +230,7 @@
 														}
 														?>
 														<td><?= $monthpay ?></td>
+														<td><input type="checkbox" name="sendwa[]" id="" value="<?= $row->id ?>.<?= $monthpay ?>"></td>
 													</tr>
 											<?php
 												}
@@ -249,3 +254,11 @@
 	<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<script>
+	$('#search').click(function() {
+		$("#example").attr("action", '<?php echo base_url() ?>report/showLate').submit();
+	});
+	$('#send').click(function() {
+		$("#example").attr("action", '<?php echo base_url() ?>student/send').submit();
+	});
+</script>

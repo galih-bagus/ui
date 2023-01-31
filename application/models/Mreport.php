@@ -101,7 +101,13 @@ class Mreport extends CI_Model
 		// $this->db->where('paydate <=', $enddate);
 		// return $this->db->get();
 
-		$query = $this->db->query("SELECT s.name, py.*, p.program
+		$query = $this->db->query("SELECT s.name, py.*, p.program, 
+		(SELECT SUM(amount) FROM paydetail WHERE category ='AGENDA' AND studentid = s.id AND paymentid = py.id) as agenda,
+		(SELECT SUM(amount) FROM paydetail WHERE category ='COURSE' AND studentid = s.id AND paymentid = py.id) as course,
+		(SELECT SUM(amount) FROM paydetail WHERE category ='POINT BOOK' AND studentid = s.id AND paymentid = py.id) as point_book,
+		(SELECT SUM(amount) FROM paydetail WHERE category ='BOOK' AND studentid = s.id AND paymentid = py.id) as book,
+		(SELECT SUM(amount) FROM paydetail WHERE category ='REGISTRATION' AND studentid = s.id AND paymentid = py.id) as regist,
+		(SELECT SUM(amount) FROM paydetail WHERE studentid = s.id AND paymentid = py.id) as grandTotal
 								   FROM student s
 								   LEFT OUTER JOIN price p ON s.priceid = p.id
 								   LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid

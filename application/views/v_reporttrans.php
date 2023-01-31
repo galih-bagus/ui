@@ -179,18 +179,28 @@
 									<table id="example1" class="table table-bordered table-striped table-hover">
 										<thead>
 											<tr>
+												<th style="display: none;">No</th>
 												<th>Date</th>
-												<th>Nota</th>
-												<th>Keterangan</th>
+												<th><span style="display: none;">No</span> Nota</th>
+												<th style="display: none;">Nama</th>
+												<th class="notPrintable">Keterangan</th>
 												<th class="notPrintable">Method</th>
-												<th class="notPrintable">Total Pay</th>
-												<th style="display: none;">Debit</th>
+												<th style="display: none;">Cara Bayar</th>
 												<th style="display: none;">Level</th>
+												<th style="display: none;">Bulan</th>
+												<th style="display: none;">Register Fee</th>
+												<th style="display: none;">Book</th>
+												<th style="display: none;">Agenda Book</th>
+												<th style="display: none;">Point Book</th>
+												<th style="display: none;">Course Fee</th>
+												<th style="display: none;">Excercise Book</th>
+												<th>Total Pay</th>
 												<th class="notPrintable">Action</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php
+											$no = 1;
 											if (isset($listTransaction)) {
 												foreach ($listTransaction as $row) {
 											?>
@@ -200,13 +210,28 @@
 														$parts = explode('-', $var);
 														$paydate = $parts[2] . '/' . $parts[1];
 														?>
+														<td style="display: none;"><?= $no++ ?></td>
 														<td><?= $paydate ?></td>
 														<td><?= $row->id ?></td>
+														<td style="display: none;"><?= $row->name ?></td>
 														<td><?= $row->name ?> <span style="display: none;"><?= $row->method ?></span></td>
 														<td><?= $row->method ?></td>
-														<td>Rp <?= number_format($row->total, 0, ".", ".") ?></td>
-														<td style="display: none;">Rp <?= number_format($row->total, 0, ".", ".") ?></td>
+														<td style="display: none ;">
+															<?php if ($row->method == 'CASH') { ?>
+																<font color='red'><?= $row->method ?></font>
+															<?php } else { ?>
+																<font color='blue'><?= $row->method ?></font>
+															<?php } ?>
+														</td>
 														<td style="display: none;"><?= $row->program ?></td>
+														<td style="display: none;"><?= date('F', strtotime($row->paydate)) ?></td>
+														<td style="display: none;">Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
+														<td style="display: none;">Rp <?= number_format($row->book, 0, ".", ".") ?></td>
+														<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
+														<td style="display: none;">Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
+														<td style="display: none;">Rp <?= number_format($row->course, 0, ".", ".") ?></td>
+														<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
+														<td>Rp <?= number_format($row->grandTotal, 0, ".", ".") ?></td>
 														<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
 															<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
 														</td>

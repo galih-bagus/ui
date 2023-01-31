@@ -455,10 +455,8 @@ class Student extends CI_Controller
 		redirect(base_url('student/studentOnline'));
 	}
 
-	public function sendWa()
-	{
-		// $number = $_GET['number'];
-		// echo $number;
+	public function sendWa($number, $message)
+	{;
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -470,7 +468,7 @@ class Student extends CI_Controller
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => 'POST',
-			CURLOPT_POSTFIELDS => 'api_key=951ec214775acc0d605304d33338531c&sender=6282143403501&number=6282264619988&message=text%20message%20sadaisd%0aTest',
+			CURLOPT_POSTFIELDS => 'api_key=951ec214775acc0d605304d33338531c&sender=6282143403501&number=' . $number . '&message=' . $message . '',
 			CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/x-www-form-urlencoded'
 			),
@@ -482,11 +480,31 @@ class Student extends CI_Controller
 		echo $response;
 	}
 
+	public function send()
+	{
+		$form = $this->input->post('sendwa');
+		foreach ($form as $key => $value) {
+			$arrForm = explode(".", $value);
+			$id = $arrForm[0];
+			$date = $arrForm[1];
+			$arrDate = explode(" ", $date);
+			$student = $this->mstudent->getStudentById($id)->row();
+			$phone = (int)$student->phone;
+			$cekNo = substr((int)$student->phone, 0, 2);
+			if ($cekNo != '62') {
+				$number = (int)(62 . $phone);
+			} else {
+				$number = $phone;
+			}
+			$message = 'Selamat pagi. Kami dari u%26i english course mau mengingatkan bahwa tagihan untuk kursus bulan ' . $arrDate[0] . ' Tahun ' . $arrDate[1] . ' An. ' . $student->name . ' belum terbayarkan. Harap untuk segera melunasi biaya kursus. Terima kasih';
+			$this->sendwa($number, $message);
+		}
+		redirect(base_url('report/showLate'));
+	}
+
 	public function getPrice($id)
 	{
 		$price = $this->mprice->getPriceById($id);
 		echo json_encode($price->result());
-		// json_encode('asd');
-		// echo 'asd';
 	}
 }
