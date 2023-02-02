@@ -183,7 +183,7 @@
 												<th>Date</th>
 												<th><span style="display: none;">No</span> Nota</th>
 												<th style="display: none;">Nama</th>
-												<th class="notPrintable">Keterangan</th>
+												<th class="notPrintable">Notes</th>
 												<th class="notPrintable">Method</th>
 												<th style="display: none;">Cara Bayar</th>
 												<th style="display: none;">Level</th>
@@ -238,7 +238,11 @@
 															<?php } ?>
 														</td>
 														<td style="display: none;"><?= $row->program ?></td>
-														<td style="display: none;"><?= date('F', strtotime($row->paydate)) ?></td>
+														<td style="display: none;">
+															<?php foreach ($paydetail->result() as $key => $value) { ?>
+																<?= date('F', strtotime($value->monthpay)) ?> <?= ($key + 1 < $count) ? '+' : '' ?>
+															<?php } ?>
+														</td>
 														<td style="display: none;">Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
 														<td style="display: none;">Rp <?= number_format($row->book, 0, ".", ".") ?></td>
 														<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>

@@ -127,8 +127,8 @@
 					<span class="glyphicon glyphicon-calendar form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
-					<label for="">How Do You Now U&I English Course</label>
-					<select class="form-control select2" style="width: 100%;" name="know" required>
+					<label for="">How Do You Know U&I English Course</label>
+					<select class="form-control select2" style="width: 100%;" name="know" onchange="selectOther()" id="know" required>
 						<option selected="selected" disabled="disabled" value="">-- Choose one --</option>
 						<?php
 						$options = array("Friend", "Family", "Passing By", "Website", "Other");
@@ -140,6 +140,11 @@
 						}
 						?>
 					</select>
+					<!-- <span class="glyphicon glyphicon-phone form-control-feedback"></span> -->
+				</div>
+				<div class="form-group has-feedback" id="others">
+					<label for="">Other</label>
+					<input type="text" class="form-control" placeholder="Enter Other" name="others" value="<?php echo set_value('others'); ?>">
 					<!-- <span class="glyphicon glyphicon-phone form-control-feedback"></span> -->
 				</div>
 				<div class="form-group has-feedback">
@@ -230,6 +235,16 @@
 				signaturePad.fromData(data);
 			}
 		});
+
+		$('#others').hide();
+		function selectOther() {
+			var know = $('#know').val();
+			if (know == 'Other') {
+				$('#others').show();
+			} else {
+				$('#others').hide();
+			}
+		}
 	</script>
 </body>
 

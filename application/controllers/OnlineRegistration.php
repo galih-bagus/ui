@@ -53,7 +53,7 @@ class OnlineRegistration extends CI_Controller
 				'condition' => "DEFAULT",
 				'is_online' => true,
 				'is_complete' => '0',
-				'know' => $this->input->post('know'),
+				'know' => $this->input->post('know') != 'Other' ? $this->input->post('know') : $this->input->post('others'),
 				'signature' => $file,
 			);
 			$latestRecordStudent = $this->mstudent->addStudent($data);

@@ -9,9 +9,9 @@ class Mstudent extends CI_Model
 	function getAllStudent()
 	{
 		//select semua data yang ada pada table msProduct $this--->db->select("*");
-		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, lpr.id, lpr.program, lpr.course, lpr.level, lpr.monthpay");
+		$this->db->select("s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, lpr.id, p.program, lpr.course, lpr.level, lpr.monthpay");
 		$this->db->from("student s");
-		//$this->db->join("price p", "s.priceid = p.id", "left outer");
+		$this->db->join("price p", "s.priceid = p.id", "left outer");
 		$this->db->join("last_payment_regular lpr", "s.id = lpr.id_student", "left outer");
 		$this->db->where("is_complete", "1");
 		$this->db->order_by('sid', 'asc');

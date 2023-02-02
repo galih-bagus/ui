@@ -190,6 +190,9 @@
 									<div class="col-xs-2">
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-primary" id="send">Send Wa</a>
 									</div>
+									<!-- <div class="col-xs-2">
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="btn btn-primary" id="send">Send Wa</a>
+									</div> -->
 								</div>
 
 								<div class="table-responsive">
@@ -202,7 +205,7 @@
 												<th>Program</th>
 												<th>Level</th>
 												<th>Last Payment</th>
-												<th>Send Wa</th>
+												<th>Send Wa <input type="checkbox" id="checkAll" value=""></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -230,7 +233,7 @@
 														}
 														?>
 														<td><?= $monthpay ?></td>
-														<td><input type="checkbox" name="sendwa[]" id="" value="<?= $row->id ?>.<?= $monthpay ?>"></td>
+														<td><input type="checkbox" name="sendwa[]" id="" class="sendwa" value="<?= $row->id ?>.<?= $monthpay ?>"></td>
 													</tr>
 											<?php
 												}
@@ -260,5 +263,12 @@
 	});
 	$('#send').click(function() {
 		$("#example").attr("action", '<?php echo base_url() ?>student/send').submit();
+	});
+	$('#checkAll').change(function() {
+		if ($(this).is(':checked')) {
+			$('.sendwa').prop('checked',true);
+		} else {
+			$('.sendwa').prop('checked',false);
+		}
 	});
 </script>

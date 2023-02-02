@@ -107,7 +107,7 @@ class Mreport extends CI_Model
 		(SELECT SUM(amount) FROM paydetail WHERE category ='POINT BOOK' AND studentid = s.id AND paymentid = py.id) as point_book,
 		(SELECT SUM(amount) FROM paydetail WHERE category ='BOOK' AND studentid = s.id AND paymentid = py.id) as book,
 		(SELECT SUM(amount) FROM paydetail WHERE category ='REGISTRATION' AND studentid = s.id AND paymentid = py.id) as regist,
-		(SELECT SUM(amount) FROM paydetail WHERE studentid = s.id AND paymentid = py.id) as grandTotal
+		(SELECT SUM(amount) FROM paydetail WHERE paymentid = py.id) as grandTotal
 								   FROM student s
 								   LEFT OUTER JOIN price p ON s.priceid = p.id
 								   LEFT OUTER JOIN paydetail pd ON s.id = pd.studentid
