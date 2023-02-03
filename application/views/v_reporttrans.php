@@ -182,12 +182,13 @@
 												<th style="display: none;">No</th>
 												<th>Date</th>
 												<th><span style="display: none;">No</span> Nota</th>
-												<th style="display: none;">Nama</th>
+												<th style="display: none;">Name</th>
 												<th class="notPrintable">Notes</th>
 												<th class="notPrintable">Method</th>
-												<th style="display: none;">Cara Bayar</th>
+												<th style="display: none;">Payment Method</th>
+												<th style="display: none;">Date/TC</th>
 												<th style="display: none;">Level</th>
-												<th style="display: none;">Bulan</th>
+												<th style="display: none;">Month</th>
 												<th style="display: none;">Register Fee</th>
 												<th style="display: none;">Book</th>
 												<th style="display: none;">Agenda Book</th>
@@ -210,6 +211,10 @@
 														$parts = explode('-', $var);
 														$paydate = $parts[2] . '/' . $parts[1];
 														$paydetail = $this->mpaydetail->getPaymentByPaymentId($row->id);
+														$prv = $row->explanation;
+														$exPrv = explode(' ', $prv);
+														echo $exPrv[0];
+
 														$this->db->select("paydetail.*, s.name");
 														$this->db->from("paydetail");
 														$this->db->join("student as s", 's.id = paydetail.studentid');
@@ -221,12 +226,12 @@
 														<td><?= $row->id ?></td>
 														<td style="display: none;">
 															<?php foreach ($paydetail->result() as $key => $value) { ?>
-																<?= $value->name ?> <?= ($key + 1 < $count) ? '+' : '' ?>
+																<?= $value->name ?> <?= ($key + 1 < $count) ? '+ <br>' : '' ?>
 															<?php } ?>
 														</td>
 														<td>
 															<?php foreach ($paydetail->result() as $key => $value) { ?>
-																<?= $value->name ?> <?= ($key + 1 < $count) ? '+' : '' ?> <span style="display: none;"><?= $row->method ?></span>
+																<?= $value->name ?> <?= ($key + 1 < $count) ? '+ <br>' : '' ?> 
 															<?php } ?>
 														</td>
 														<td><?= $row->method ?></td>
@@ -237,11 +242,20 @@
 																<font color='blue'><?= $row->method ?></font>
 															<?php } ?>
 														</td>
+														<td style="display: none ;">
+															<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number?>
+														</td>
 														<td style="display: none;"><?= $row->program ?></td>
 														<td style="display: none;">
-															<?php foreach ($paydetail->result() as $key => $value) { ?>
-																<?= date('F', strtotime($value->monthpay)) ?> <?= ($key + 1 < $count) ? '+' : '' ?>
-															<?php } ?>
+															<?php if ($row->level != 'Private'){
+															foreach ($paydetail->result() as $key => $value) { ?>
+																<?= date('M', strtotime($value->monthpay)) ?> <?= ($key + 1 < $count) ? ',' : '' ?>
+															<?php 
+																}
+															}else{
+																echo trim($exPrv[0], "()");
+															}
+															?>
 														</td>
 														<td style="display: none;">Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
 														<td style="display: none;">Rp <?= number_format($row->book, 0, ".", ".") ?></td>
