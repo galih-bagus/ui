@@ -91,6 +91,10 @@
           }
         ]
     });
+		var table=$("#exporttrans").DataTable({
+        // dom: 'Bfrtip',
+        // "aaSorting": []
+    });
     $('.buttons-excel').attr('class', 'btn btn-success');
 	$('.buttons-print').attr('class', 'btn btn-primary');
 	$('.buttons-copy').attr('class', 'btn btn-warning');

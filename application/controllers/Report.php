@@ -339,6 +339,8 @@ class Report extends CI_Controller
 
 			$data['listTransaction'] = $this->mreport->getTransaction($startdate, $enddate);
 			$data['listDetailPayment'] = $this->mreport->getDetailPayment($startdate, $enddate);
+			$data['from'] = $startdate;
+			$data['to'] = $enddate;
 			$this->load->view('v_header');
 			$this->load->view('v_reporttrans', $data);
 			$this->load->view('v_footer');
@@ -400,9 +402,12 @@ class Report extends CI_Controller
     header("Content-type: application/vnd-ms-excel");
      
     // membuat nama file ekspor "export-to-excel.xls"
-    header("Content-Disposition: attachment; filename=export-to-excel.xls");
+    header("Content-Disposition: attachment; filename=UI Payment System.xls");
      
     // tambahkan table
-    include 'data.php';
+		$from = $_GET['from']; //2022-11-01
+		$to = $_GET['to']; //2022-11-02
+		$data['listTransaction'] = $this->mreport->getTransaction($from, $to);
+		$this->load->view('v_exportexcel', $data);
 	}
 }
