@@ -324,8 +324,10 @@ class Report extends CI_Controller
 	public function showTrans()
 	{
 		if ($this->input->post('startdate') == "") {
+			$data['from'] = '';
+			$data['to'] = '';
 			$this->load->view('v_header');
-			$this->load->view('v_reporttrans');
+			$this->load->view('v_reporttrans', $data);
 			$this->load->view('v_footer');
 		} else {
 			$poststartdate = $this->input->post('startdate');
@@ -398,13 +400,13 @@ class Report extends CI_Controller
 
 	public function exportExcel()
 	{
-    // fungsi header dengan mengirimkan raw data excel
-    header("Content-type: application/vnd-ms-excel");
-     
-    // membuat nama file ekspor "export-to-excel.xls"
-    header("Content-Disposition: attachment; filename=UI Payment System.xls");
-     
-    // tambahkan table
+		// fungsi header dengan mengirimkan raw data excel
+		// header("Content-type: application/vnd-ms-excel");
+
+		// membuat nama file ekspor "export-to-excel.xls"
+		// header("Content-Disposition: attachment; filename=UI Payment System.xls");
+
+		// tambahkan table
 		$from = $_GET['from']; //2022-11-01
 		$to = $_GET['to']; //2022-11-02
 		$data['listTransaction'] = $this->mreport->getTransaction($from, $to);
