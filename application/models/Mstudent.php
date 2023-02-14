@@ -156,4 +156,12 @@ class Mstudent extends CI_Model
 		$this->db->order_by('id', 'asc');
 		return $this->db->get();
 	}
+
+	
+	function getInactiveStudent()
+	{
+		$this->db->select("*");
+		$this->db->from("student_inactive");
+		return $this->db->get();
+	}
 }
