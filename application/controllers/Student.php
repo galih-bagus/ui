@@ -511,34 +511,10 @@ class Student extends CI_Controller
 	public function updateInactive()
 	{
 		$student = $this->mstudent->getInactiveStudent();
-		// foreach($student->result() as $key => $value){
-			// $where = $value->studentid;
-			// $id = 004301;
-			// $data = array(
-			// 	'status' => 'INACTIVE',
-			// );
-			$where = '004301';
-			$data = array(
-				'nama' => 'nama',
-				'alamat' => '$alamat',
-				'pekerjaan' => '$pekerjaan'
-			);
-			echo json_encode($data);
-			// $this->mstudent->updateStudent($form, $where);
-			// $this->db->set('status',"INACTIVE")
-      //    ->where('id',$id)
-      //   ->update('student');
-			// $this->mstudent->updateStudent($data, $id);
-			// if($this->mstudent->updateStudent($form, $where)) // call the method from the controller
-			// {				
-			// 	echo 'berhasil';
-			// }
-			// else
-			// {
-			// 	echo $form;
-
-			// }
-		// }
-		// echo json_encode($student->result());
+		foreach ($student->result() as $key => $value) {
+			$where = $value->studentid;
+			$this->db->where('id', $where);
+			$this->db->update('student', array('status' => 'INACTIVE'));
+		}
 	}
 }
