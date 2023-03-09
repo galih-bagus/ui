@@ -133,4 +133,11 @@ class Mreport extends CI_Model
 		$this->db->where('py.paydate <=', $enddate);
 		return $this->db->get();
 	}
+
+	function getAllPayment($startdate, $enddate){
+		$query = $this->db->query("SELECT * FROM payment WHERE paydate >= '" . $startdate . "'
+		AND paydate <= '" . $enddate . "'");
+		$result = $query->result();
+		return $result;
+	}
 }

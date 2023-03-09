@@ -83,10 +83,11 @@ class Mpaydetail extends CI_Model
 
 	function getPaymentByPaymentId($id)
 	{
-		$this->db->select("paydetail.*, s.name, p.program");
+		$this->db->select("paydetail.*, s.name, p.program, payment.total as grand_total");
 		$this->db->from("paydetail");
 		$this->db->join("student as s", 's.id = paydetail.studentid');
 		$this->db->join("price as p", 'p.id = s.priceid');
+		$this->db->join("payment", 'paydetail.paymentid = payment.id');
 		$this->db->where('paymentid', $id);
 		return $this->db->get();
 	}

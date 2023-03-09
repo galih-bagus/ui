@@ -26,157 +26,83 @@
 		</tr>
 	</thead>
 	<tbody>
-		<?php
-		$no = 1;
-		$arr = [
-			"id_siswa" => [],
-			"date" => []
-		];
-		if (isset($listTransaction)) {
-			foreach ($listTransaction as $row) {
-				$var = $row->paydate;
-				$parts = explode('-', $var);
-				$paydate = $parts[2] . '/' . $parts[1];
-				$paydetail = $this->mpaydetail->getPaymentByPaymentId($row->id);
-				$prv = $row->explanation;
-				$query = $this->db->query("SELECT COUNT(*) as countpy
-											FROM paydetail
-											WHERE paymentid = '" . $row->id . "'");
-				$result = $query->num_rows();
-				$this->db->select("paydetail.*, s.name, p.program");
-				$this->db->from("paydetail");
-				$this->db->join("student as s", 's.id = paydetail.studentid');
-				$this->db->join("price as p", 'p.id = s.priceid');
-				$this->db->where('paymentid', $row->id);
-				$count = $this->db->count_all_results();
-				foreach ($paydetail->result() as $key => $value) {
-					if ($result < 1) {
-						if ($key + 1 == $count) {
+		<?php 
+		foreach ($listTransaction as $key => $value) { 
+			$queryDetail = $this->db->query("SELECT pd.*, s.name, p.program, p.level, s.id as student_id,
+										(SELECT SUM(amount) FROM paydetail WHERE category ='AGENDA' AND studentid = s.id AND paymentid = py.id) as agenda,
+										(SELECT SUM(amount) FROM paydetail WHERE category ='COURSE' AND studentid = s.id AND paymentid = py.id) as course,
+										(SELECT SUM(amount) FROM paydetail WHERE category ='POINT BOOK' AND studentid = s.id AND paymentid = py.id) as point_book,
+										(SELECT SUM(amount) FROM paydetail WHERE category ='BOOK' AND studentid = s.id AND paymentid = py.id) as book,
+										(SELECT SUM(amount) FROM paydetail WHERE category ='REGISTRATION' AND studentid = s.id AND paymentid = py.id) as regist,
+										(SELECT SUM(amount) FROM paydetail WHERE category ='EXERCISE' AND studentid = s.id AND paymentid = py.id) as exercise
+										FROM paydetail pd
+										INNER JOIN student s ON pd.studentid = s.id
+										INNER JOIN price p ON p.id = s.priceid
+										INNER JOIN payment py ON py.id = pd.paymentid
+										WHERE pd.paymentid = '" . $value->id . "'
+										
+										GROUP BY MONTH(pd.monthpay),student_id");
+			$resultDetail = $queryDetail->result();
+			$var = $value->paydate;
+			$parts = explode('-', $var);
+			$paydate = $parts[2] . '/' . $parts[1];
+			// echo '<pre>';
+			// || ($valueDetail->monthpay == null && $valueDetail->point_book != 0) || ($valueDetail->monthpay == null && $valueDetail->regist != 0) || ($valueDetail->monthpay == null && $valueDetail->exercise != 0) || ($valueDetail->monthpay == null && $valueDetail->book != 0)
+			foreach ($resultDetail as $keyDetail => $valueDetail) {
+				if ($valueDetail->monthpay != null || (($valueDetail->monthpay == null && $valueDetail->category == 'BOOK')) || (($valueDetail->monthpay == null && $valueDetail->category == 'POINT BOOK')) || (($valueDetail->monthpay == null && $valueDetail->category == 'AGENDA')) || (($valueDetail->monthpay == null && $valueDetail->category == 'REGISTRATION')) /* || (($valueDetail->monthpay == null && $valueDetail->category == 'EXERCISE'))  */) {
 		?>
-							<tr>
-								<!-- <td><?= $no++ ?></td> -->
-								<td><?= $paydate ?></td>
-								<td><?= $row->id ?></td>
-								<td>
-									<?= $value->name ?>
-								</td>
-								<td>
-									<?php if ($row->method == 'CASH') { ?>
-										<font><?= $row->method ?></font>
-									<?php } else { ?>
-										<font color='blue'><?= $row->method ?></font>
-									<?php } ?>
-								</td>
-								<td>
-									<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number ?>
-								</td>
-								<td><?= $row->program ?></td>
-								<td>
-									<?php if ($row->level != 'Private') {
-										if ($value->monthpay == $var) {
-											echo "<font color='black'>" . date('M', strtotime($value->monthpay)) . "</font>";
-										} else {
-											echo "<font color='red'>" . date('M', strtotime($value->monthpay)) . "</font>";
-										}
-									} else {
-										echo $prv;
-									}
-									?>
-								</td>
-								<td>Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->book, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->exercise, 0, ".", ".") ?></td>
-								<td style="background-color: greenyellow;">Rp <?= number_format($row->grandTotal, 0, ".", ".") ?></td>
-							</tr>
-						<?php
+			<tr>
+				<td><?= $paydate ?></td>
+				<td><?= $value->id ?></td>
+				<td><?= $valueDetail->name.'-'.$valueDetail->student_id ?></td>
+				<td>
+					<?php if ($value->method == 'CASH') { ?>
+						<font><?= $value->method ?></font>
+					<?php } else { ?>
+						<font color='blue'><?= $value->method ?></font>
+					<?php } ?>
+				</td>
+				<td>
+					<?= $value->method == 'BANK TRANSFER' ? $value->trfdate : $value->number ?>
+				</td>
+				<td>
+					<?= $valueDetail->program ?>
+				</td>
+				<td>
+					<?php if ($valueDetail->level != 'Private') {
+						$month = $valueDetail->monthpay != null ? date('M', strtotime($valueDetail->monthpay)) : '';
+						if ($valueDetail->monthpay == $var) {
+							echo "<font color='black'>" . $month . "</font>";
+						} else {
+							echo "<font color='red'>" . $month . "</font>";
 						}
 					} else {
-						if ($key + 1 == $count) { ?>
-							<tr>
-								<!-- <td><?= $no++ ?></td> -->
-								<td><?= $paydate ?></td>
-								<td><?= $count != 1 ? '' : $row->id ?></td>
-								<td>
-									<?= $value->name ?>
-								</td>
-								<td>
-									<?php if ($row->method == 'CASH') { ?>
-										<font><?= $row->method ?></font>
-									<?php } else { ?>
-										<font color='blue'><?= $row->method ?></font>
-									<?php } ?>
-								</td>
-								<td>
-									<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number ?>
-								</td>
-								<td><?= $value->program ?></td>
-								<td>
-									<?php if ($row->level != 'Private') {
-										if ($value->monthpay == $var) {
-											echo "<font color='black'>" . date('M', strtotime($value->monthpay)) . "</font>";
-										} else {
-											echo "<font color='red'>" . date('M', strtotime($value->monthpay)) . "</font>";
-										}
-									} else {
-										echo $prv;
-									}
-									?>
-								</td>
-								<td>Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->book, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->exercise, 0, ".", ".") ?></td>
-								<td style="background-color: greenyellow;">Rp <?= number_format($row->grandTotal, 0, ".", ".") ?></td>
-							</tr>
-
-						<?php		} else { ?>
-							<tr>
-								<!-- <td></td> -->
-								<td><?= $paydate ?></td>
-								<td><?= $row->id ?></td>
-								<td>
-									<?= $value->name ?>
-								</td>
-								<td>
-									<?php if ($row->method == 'CASH') { ?>
-										<font><?= $row->method ?></font>
-									<?php } else { ?>
-										<font color='blue'><?= $row->method ?></font>
-									<?php } ?>
-								</td>
-								<td>
-									<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number ?>
-								</td>
-								<td><?= $value->program ?></td>
-								<td>
-									<?php if ($row->level != 'Private') {
-										if ($value->monthpay == $var) {
-											echo "<font color='black'>" . date('M', strtotime($value->monthpay)) . "</font>";
-										} else {
-											echo "<font color='red'>" . date('M', strtotime($value->monthpay)) . "</font>";
-										}
-									} else {
-										echo $prv;
-									}
-									?>
-								</td>
-								<td>Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->book, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format($row->exercise, 0, ".", ".") ?></td>
-								<td>Rp <?= number_format(0, 0, ".", ".") ?></td>
-							</tr>
-		<?php
-						}
+						echo $valueDetail->explanation;
 					}
-				}
+					?>
+				</td>
+				<td>
+					Rp <?= number_format($valueDetail->regist, 0, ".", ".") ?>
+				</td>
+				<td>
+					Rp <?= number_format($valueDetail->book, 0, ".", ".") ?>
+				</td>
+				<td>
+					Rp <?= number_format($valueDetail->agenda, 0, ".", ".") ?>
+				</td>
+				<td>
+					Rp <?= number_format($valueDetail->point_book, 0, ".", ".") ?>
+				</td>
+				<td>Rp <?= number_format($valueDetail->category == 'COURSE' ? $valueDetail->amount : 0, 0, ".", ".") ?></td>
+				<td>
+					Rp <?= number_format($valueDetail->exercise, 0, ".", ".") ?>
+				</td>
+				<td style="background-color: greenyellow;">
+					Rp <?= number_format($value->total, 0, ".", ".") ?>
+				</td>
+			</tr>
+		<?php 
+			}
 			}
 		}
 		?>

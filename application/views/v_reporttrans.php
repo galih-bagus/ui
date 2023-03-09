@@ -267,7 +267,7 @@
 																		<td style="display: none;">Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
 																		<td style="display: none;">Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
 																		<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-																		<td>Rp <?= number_format($row->grandTotal, 0, ".", ".") ?></td>
+																		<td>Rp <?= number_format($row->total, 0, ".", ".") ?></td>
 																		<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
 																			<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
 																		</td>
@@ -311,7 +311,7 @@
 																	<td style="display: none;">Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
 																	<td style="display: none;">Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
 																	<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-																	<td>Rp <?= number_format($row->grandTotal, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format($row->total, 0, ".", ".") ?></td>
 																	<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
 																	<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
 																	</td>

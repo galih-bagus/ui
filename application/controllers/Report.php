@@ -401,15 +401,17 @@ class Report extends CI_Controller
 	public function exportExcel()
 	{
 		// fungsi header dengan mengirimkan raw data excel
-		header("Content-type: application/vnd-ms-excel");
+		// header("Content-type: application/vnd-ms-excel");
 
 		// membuat nama file ekspor "export-to-excel.xls"
-		header("Content-Disposition: attachment; filename=UI Payment System.xls");
+		// header("Content-Disposition: attachment; filename=UI Payment System.xls");
 
 		// tambahkan table
 		$from = $_GET['from']; //2022-11-01
 		$to = $_GET['to']; //2022-11-02
-		$data['listTransaction'] = $this->mreport->getTransaction($from, $to);
+		$data['listTransaction'] = $this->mreport->getAllPayment($from, $to);
+		// echo '<pre>';
+		// var_dump($data);
 		$this->load->view('v_exportexcel', $data);
 	}
 }
