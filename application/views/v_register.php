@@ -312,14 +312,20 @@
 										</div>
 										<div class="checkbox">
 											<label>
-												<input type="checkbox" id="exercise" name="exercise" onclick="checkExercise()">
-												Belum Bisa
+												<input type="checkbox" id="booklet" name="booklet" onclick="checkBooklet()">
+												Booklet
 											</label>
 										</div>
 										<div class="checkbox">
 											<label>
 												<input type="checkbox" id="course" name="course" onclick="checkCourse()">
 												Course
+											</label>
+										</div>
+										<div class="checkbox">
+											<label>
+												<input type="checkbox" id="others" name="others" onclick="checkOthers()">
+												Others
 											</label>
 										</div>
 									</div>
@@ -411,7 +417,8 @@
 							<input type="hidden" class="form-control" id="vpointbook" name="vpointbook">
 							<input type="hidden" class="form-control" id="vbook" name="vbook" value="">
 							<input type="hidden" class="form-control" id="vagenda" name="vagenda">
-							<input type="hidden" class="form-control" id="vexercise" name="vexercise">
+							<input type="hidden" class="form-control" id="vbooklet" name="vbooklet">
+							<input type="hidden" class="form-control" id="vothers" name="vothers">
 							<input type="hidden" class="form-control" id="vcourse" name="vcourse">
 							<input type="hidden" class="form-control" id="countattn" name="countattn">
 
@@ -707,8 +714,9 @@ $totalpay = 0;
 		document.getElementById("pointbook").checked = false;
 		document.getElementById("book").checked = false;
 		document.getElementById("agenda").checked = false;
-		document.getElementById("exercise").checked = false;
+		document.getElementById("booklet").checked = false;
 		document.getElementById("course").checked = false;
+		document.getElementById("others").checked = false;
 
 		//document.getElementById("method").selectedIndex = 0;
 		$("#method").val("CASH").change();
@@ -923,10 +931,11 @@ $totalpay = 0;
 		?>
 	}
 
-	function checkExercise() {
+	function checkBooklet() {
 		if (document.getElementById("amount").value != "") {
 			var amount = document.getElementById("amount").value.replace(/\./g, '');
 			amount = amount.replace("Rp ", "");
+			console.log(amount);
 		} else {
 			var amount = 0;
 		}
@@ -937,32 +946,32 @@ $totalpay = 0;
 		?>
 			if (document.getElementById("category").value == "REGULAR") {
 				if (document.getElementById("program").value == <?= $price->id ?>) {
-					var checkBox = document.getElementById("exercise");
+					var checkBox = document.getElementById("booklet");
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->agenda ?>);
+						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->booklet ?>);
 						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vexercise").value = parseInt(<?= $price->agenda ?>);
+						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->agenda ?>);
+						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->booklet ?>);
 						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vexercise").value = parseInt(<?= $price->agenda ?>);
+						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
 					}
 				}
 			} else {
 				if (document.getElementById("programprv").value == <?= $price->id ?>) {
-					var checkBox = document.getElementById("agenda");
+					var checkBox = document.getElementById("booklet");
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->agenda ?>);
+						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->booklet ?>);
 						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vexercise").value = parseInt(<?= $price->agenda ?>);
+						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->agenda ?>);
+						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->booklet ?>);
 						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vexercise").value = parseInt(<?= $price->agenda ?>);
+						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
 					}
 				}
 			}
@@ -973,7 +982,56 @@ $totalpay = 0;
 
 	}
 
+	function checkOthers() {
+		if (document.getElementById("amount").value != "") {
+			var amount = document.getElementById("amount").value.replace(/\./g, '');
+			amount = amount.replace("Rp ", "");
+			console.log(amount);
+		} else {
+			var amount = 0;
+		}
 
+
+		<?php
+		foreach ($listPrice->result() as $price) {
+		?>
+			if (document.getElementById("category").value == "REGULAR") {
+				if (document.getElementById("program").value == <?= $price->id ?>) {
+					var checkBox = document.getElementById("others");
+					if (checkBox.checked == true) {
+						$("#divpayment").show(750);
+						$("#voucherdiv").show(750);
+						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->others ?>);
+						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+						document.getElementById("vothers").value = parseInt(<?= $price->others ?>);
+					} else {
+						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->others ?>);
+						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+						document.getElementById("vothers").value = parseInt(<?= $price->others ?>);
+					}
+				}
+			} else {
+				if (document.getElementById("programprv").value == <?= $price->id ?>) {
+					var checkBox = document.getElementById("others");
+					if (checkBox.checked == true) {
+						$("#divpayment").show(750);
+						$("#voucherdiv").show(750);
+						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->others ?>);
+						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+						document.getElementById("vothers").value = parseInt(<?= $price->others ?>);
+					} else {
+						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->others ?>);
+						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+						document.getElementById("vothers").value = parseInt(<?= $price->others ?>);
+					}
+				}
+			}
+		<?php
+		}
+		?>
+
+
+	}
 
 
 	function checkCourse() {

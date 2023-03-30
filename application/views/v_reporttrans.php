@@ -187,7 +187,7 @@
 										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-primary">Search Report</button>
 									</div>
 									<div class="col-xs-2">
-										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo base_url()."report/exportExcel?from=".$from."&to=".$to ?>" class="btn btn-success">Export</a>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="<?php echo base_url() . "report/exportExcel?from=" . $from . "&to=" . $to ?>" class="btn btn-success">Export</a>
 									</div>
 								</div>
 								<div class="table-responsive">
@@ -217,10 +217,10 @@
 										<tbody>
 											<?php
 											$no = 1;
-											$arr = [ 
+											$arr = [
 												"id_siswa" => [],
 												"date" => []
-											 ];
+											];
 											if (isset($listTransaction)) {
 												foreach ($listTransaction as $row) {
 													$var = $row->paydate;
@@ -239,80 +239,36 @@
 													$this->db->join("price as p", 'p.id = s.priceid');
 													$this->db->where('paymentid', $row->id);
 													$count = $this->db->count_all_results();
-														foreach ($paydetail->result() as $key => $value) { 
-															if ($result < 1) {
-																if($key + 1 == $count){
-															?>
-																	<tr>
-																		<td style="display: none;"><?= $no++ ?></td>
-																		<td><?= $paydate ?></td>
-																		<td><?= $row->id ?></td>
-																		<td style="display: none;">
-																			<?= $value->name ?>
-																		</td>
-																		<td>
-																				<?= $value->name ?> 
-																		</td>
-																		<td><?= $row->method ?></td>
-																		<td style="display: none ;">
-																			<?php if ($row->method == 'CASH') { ?>
-																				<font color='red'><?= $row->method ?></font>
-																			<?php } else { ?>
-																				<font color='blue'><?= $row->method ?></font>
-																			<?php } ?>
-																		</td>
-																		<td style="display: none ;">
-																			<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number?>
-																		</td>
-																		<td style="display: none;"><?= $row->program ?></td>
-																		<td style="display: none;">
-																			<?php if ($row->level != 'Private'){
-																				echo date('M', strtotime($value->monthpay));
-																			}else{
-																				echo trim($exPrv[0], "()");
-																			}
-																			?>
-																		</td>
-																		<td style="display: none;">Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
-																		<td style="display: none;">Rp <?= number_format($row->book, 0, ".", ".") ?></td>
-																		<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-																		<td style="display: none;">Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
-																		<td style="display: none;">Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
-																		<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-																		<td>Rp <?= number_format($row->total, 0, ".", ".") ?></td>
-																		<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
-																			<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
-																		</td>
-																	</tr>
-															<?php
-																}
-														} else{ if($key + 1 == $count){?>
+													foreach ($paydetail->result() as $key => $value) {
+														if ($result < 1) {
+															if ($key + 1 == $count) {
+											?>
 																<tr>
-																	<td style="display: none;"></td>
+																	<td style="display: none;"><?= $no++ ?></td>
 																	<td><?= $paydate ?></td>
 																	<td><?= $row->id ?></td>
+																	<td style="display: none;">
+																		<?= $value->name ?>
+																	</td>
 																	<td>
 																		<?= $value->name ?>
 																	</td>
-																	<td style="display: none;">
-																			<?= $value->name ?> 
-																	</td>
 																	<td><?= $row->method ?></td>
-																	<td style="display: none;">
+																	<td style="display: none ;">
 																		<?php if ($row->method == 'CASH') { ?>
 																			<font color='red'><?= $row->method ?></font>
 																		<?php } else { ?>
 																			<font color='blue'><?= $row->method ?></font>
 																		<?php } ?>
 																	</td>
-																	<td style="display: none;">
-																		<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number?>
+																	<td style="display: none ;">
+																		<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number ?>
 																	</td>
-																	<td style="display: none;"><?= $value->program ?></td>
+																	<td style="display: none;"><?= $row->program ?></td>
 																	<td style="display: none;">
-																		<?php if ($row->level != 'Private'){
+																		<?php if ($row->level != 'Private') {
 																			echo date('M', strtotime($value->monthpay));
-																		}else{
+																		} else {
 																			echo trim($exPrv[0], "()");
 																		}
 																		?>
@@ -325,53 +281,98 @@
 																	<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
 																	<td>Rp <?= number_format($row->total, 0, ".", ".") ?></td>
 																	<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
-																	<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
+																		<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
 																	</td>
 																</tr>
-												 
-														<?php		}else{?>
-															<tr style="display: none;">
-																<td></td>
-																<td><?= $paydate ?></td>
-																<td><?= $row->id ?></td>
-																<td>
-																	<?= $value->name ?>
-																</td>
-																<td>
-																		<?= $value->name ?> 
-																</td>
-																<td><?= $row->method ?></td>
-																<td>
-																	<?php if ($row->method == 'CASH') { ?>
-																		<font color='red'><?= $row->method ?></font>
-																	<?php } else { ?>
-																		<font color='blue'><?= $row->method ?></font>
-																	<?php } ?>
-																</td>
-																<td>
-																	<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number?>
-																</td>
-																<td><?= $value->program ?></td>
-																<td>
-																	<?php if ($row->level != 'Private'){
-																		echo date('M', strtotime($value->monthpay));
-																	}else{
-																		echo trim($exPrv[0], "()");
-																	}
-																	?>
-																</td>
-																<td>Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
-																<td>Rp <?= number_format($row->book, 0, ".", ".") ?></td>
-																<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-																<td>Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
-																<td>Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
-																<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
-																<td>Rp <?= number_format(0, 0, ".", ".") ?></td>
-																<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
-																<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
-																</td>
-															</tr>
-													<?php 
+															<?php
+															}
+														} else {
+															if ($key + 1 == $count) { ?>
+																<tr>
+																	<td style="display: none;"></td>
+																	<td><?= $paydate ?></td>
+																	<td><?= $row->id ?></td>
+																	<td>
+																		<?= $value->name ?>
+																	</td>
+																	<td style="display: none;">
+																		<?= $value->name ?>
+																	</td>
+																	<td><?= $row->method ?></td>
+																	<td style="display: none;">
+																		<?php if ($row->method == 'CASH') { ?>
+																			<font color='red'><?= $row->method ?></font>
+																		<?php } else { ?>
+																			<font color='blue'><?= $row->method ?></font>
+																		<?php } ?>
+																	</td>
+																	<td style="display: none;">
+																		<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number ?>
+																	</td>
+																	<td style="display: none;"><?= $value->program ?></td>
+																	<td style="display: none;">
+																		<?php if ($row->level != 'Private') {
+																			echo date('M', strtotime($value->monthpay));
+																		} else {
+																			echo trim($exPrv[0], "()");
+																		}
+																		?>
+																	</td>
+																	<td style="display: none;">Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
+																	<td style="display: none;">Rp <?= number_format($row->book, 0, ".", ".") ?></td>
+																	<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
+																	<td style="display: none;">Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
+																	<td style="display: none;">Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
+																	<td style="display: none;">Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format($row->total, 0, ".", ".") ?></td>
+																	<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+																		<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
+																	</td>
+																</tr>
+
+															<?php		} else { ?>
+																<tr style="display: none;">
+																	<td></td>
+																	<td><?= $paydate ?></td>
+																	<td><?= $row->id ?></td>
+																	<td>
+																		<?= $value->name ?>
+																	</td>
+																	<td>
+																		<?= $value->name ?>
+																	</td>
+																	<td><?= $row->method ?></td>
+																	<td>
+																		<?php if ($row->method == 'CASH') { ?>
+																			<font color='red'><?= $row->method ?></font>
+																		<?php } else { ?>
+																			<font color='blue'><?= $row->method ?></font>
+																		<?php } ?>
+																	</td>
+																	<td>
+																		<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number ?>
+																	</td>
+																	<td><?= $value->program ?></td>
+																	<td>
+																		<?php if ($row->level != 'Private') {
+																			echo date('M', strtotime($value->monthpay));
+																		} else {
+																			echo trim($exPrv[0], "()");
+																		}
+																		?>
+																	</td>
+																	<td>Rp <?= number_format($row->regist, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format($row->book, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format($row->point_book, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format($value->category == 'COURSE' ? $value->amount : 0, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
+																	<td>Rp <?= number_format(0, 0, ".", ".") ?></td>
+																	<td><a data-toggle="modal" data-target="#delModal<?php echo $row->id; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
+																		<a data-toggle="modal" data-target="#showModal<?php echo $row->id; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a>
+																	</td>
+																</tr>
+											<?php
 															}
 														}
 													}
@@ -478,7 +479,7 @@ if (isset($listTransaction)) {
 											}
 											?>
 											<td><?= $category ?></td>
-											<td>Rp <?= number_format($payment->amount, 0, ".", ".") ?></td>
+											<td>Rp <?= number_format($payment->total, 0, ".", ".") ?></td>
 											<?php
 											if ($payment->voucherid == "" || $payment->voucherid == "0") {
 												$voucherid = "NO";
