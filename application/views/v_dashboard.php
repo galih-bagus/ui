@@ -22,7 +22,7 @@
 		<!-- sidebar menu: : style can be found in sidebar.less -->
 		<ul class="sidebar-menu" data-widget="tree">
 			<li class="header">MAIN NAVIGATION</li>
-			<li class="active">
+			<li>
 				<a href="<?php echo base_url() ?>dashboard">
 					<i class="fa fa-dashboard"></i> <span>Dashboard</span>
 				</a>
@@ -37,7 +37,7 @@
 					</a>
 				</li>
 
-				<li class="treeview">
+				<li class="treeview active">
 					<a href="#">
 						<i class="fa fa-money"></i> <span>Payment</span>
 						<span class="pull-right-container">
@@ -45,7 +45,7 @@
 						</span>
 					</a>
 					<ul class="treeview-menu">
-						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
+						<li class="active"><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addother"><i class="fa fa-circle-o"></i> <span>Other Payment</span></a></li>
 						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
@@ -111,6 +111,19 @@
 				<a href="<?php echo base_url() ?>price">
 					<i class="fa fa-dollar"></i> <span>Price</span>
 				</a>
+			</li>
+
+			<li class="treeview ">
+				<a href="#">
+					<i class="fa fa-money"></i> <span>Payment Bills</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li class=""><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
+					<li class="<?= $this->uri->segment(3) == 'addRegularBill' ? 'active' :'' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
+				</ul>
 			</li>
 		</ul>
 	</section>

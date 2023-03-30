@@ -37,7 +37,7 @@
 					</a>
 				</li>
 
-				<li class="treeview">
+				<li class="treeview active">
 					<a href="#">
 						<i class="fa fa-money"></i> <span>Payment</span>
 						<span class="pull-right-container">
@@ -45,7 +45,7 @@
 						</span>
 					</a>
 					<ul class="treeview-menu">
-						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
+						<li class="active"><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addother"><i class="fa fa-circle-o"></i> <span>Other Payment</span></a></li>
 						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
@@ -101,7 +101,7 @@
 				</a>
 			</li>
 
-			<li class="active">
+			<li>
 				<a href="<?php echo base_url() ?>voucher">
 					<i class="fa fa-credit-card"></i> <span>Voucher</span>
 				</a>
@@ -112,6 +112,7 @@
 					<i class="fa fa-dollar"></i> <span>Price</span>
 				</a>
 			</li>
+
 			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
 				<a href="#">
 					<i class="fa fa-money"></i> <span>Payment Bills</span>
@@ -128,90 +129,109 @@
 	</section>
 	<!-- /.sidebar -->
 </aside>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Add Voucher
-			<small>add Voucher Form</small>
+			Price
+			<small>List Prices</small>
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-home"></i> Home</a></li>
-			<li><a href="#">Voucher</a></li>
-			<li class="active">Add Voucher</li>
+			<li class="active">Price</li>
 		</ol>
 	</section>
 
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-xs-7">
-				<!-- <div class="box"> -->
+			<div class="col-xs-12">
 				<div class="box box-primary">
-					<!-- <div class="box-header with-border">
-              <h3 class="box-title">Add Price Form</h3>
-            </div> -->
+					<div class="box-header">
+						<!-- <h3 class="box-title">List Prices</h3> -->
+
+					</div>
 					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="table-responsive">
+							<table id="example1" class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th>Program</th>
+										<th>Level</th>
+										<th>Point Book</th>
+										<th>Registration</th>
+										<th>Book</th>
+										<th>Agenda</th>
+										<th>Course</th>
+										<th>Price/Day</th>
+										<th class="notPrintable">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									foreach ($listPrice->result() as $row) {
+									?>
+										<tr>
+											<td><?= $row->program ?></td>
+											<td><?= $row->level ?></td>
+											<td>Rp <?= number_format($row->pointbook, 0, ".", ".") ?></td>
+											<td>Rp <?= number_format($row->registration, 0, ".", ".") ?></td>
+											<td>Rp <?= number_format($row->book, 0, ".", ".") ?></td>
+											<td>Rp <?= number_format($row->agenda, 0, ".", ".") ?></td>
+											<td>Rp <?= number_format($row->course, 0, ".", ".") ?></td>
+											<td>Rp <?= number_format($row->priceperday, 0, ".", ".") ?></td>
+											<td>
+												<a href="<?= base_url() ?>billing/studentByClass/<?= $row->id ?>" class="btn btn-success btn-xs"><i class="fa fa-eye"></i></a>
+											</td>
+										</tr>
+									<?php
+									}
+									?>
+								</tbody>
 
-					<!-- /.box-header -->
-					<!-- form start -->
-					<form role="form" id="example" name="example" class="form-horizontal" action="<?php echo base_url() ?>voucher/addVoucherDb" method="post" enctype="multipart/form-data">
-						<div class="box-body">
-							<div class="form-group">
-								<label for="code" class="col-sm-3 control-label">Voucher Code</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="code" name="code">
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="program" class="col-sm-3 control-label">Voucher Type</label>
-								<div class="col-sm-9">
-									<select class="form-control select2" style="width: 100%;" name="type" required>
-										<option selected="selected" disabled="disabled" value="">-- Choose Voucher Type --</option>
-										<option value="MGM">(MGM) Member Get Member</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="level" class="col-sm-3 control-label">Voucher Amount</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="amount" placeholder="Enter Voucher Amount" name="amount" required>
-								</div>
-							</div>
-							<!-- /.box-body -->
-
-							<div class="box-footer">
-								<button type="submit" class="btn btn-primary pull-right">Submit</button>
-								<a href="<?= base_url() ?>voucher"><button type="button" class="btn btn-default">Cancel</button></a>
-							</div>
-							<!-- /.box-footer -->
-					</form>
+							</table>
+						</div>
+					</div>
+					<!-- /.box-body -->
 				</div>
+				<!-- /.box -->
+
+
 			</div>
-			<!-- /.box-body -->
-
-
-
+			<!-- /.col -->
 		</div>
-		<!-- /.col -->
-</div>
-<!-- /.row -->
-</section>
-<!-- /.content -->
+		<!-- /.row -->
+	</section>
+	<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#amount").maskMoney({
-			prefix: 'Rp ',
-			thousands: '.',
-			decimal: ',',
-			precision: 0
-		});
-	});
-</script>
+<?php
+foreach ($listPrice->result() as $row) {
+?>
+	<div class="modal modal-danger fade" id="delModal<?php echo $row->id; ?>">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Delete Price</h4>
+				</div>
+				<div class="modal-body">
+					<p>Are you sure to delete <?= $row->program ?> program?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+					<a href="<?= base_url() ?>price/deletePriceDb/<?= $row->id ?>"><button type="button" class="btn btn-outline">Delete</button></a>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+<?php
+}
+?>

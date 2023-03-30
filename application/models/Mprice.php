@@ -16,6 +16,14 @@
 		return $this->db->get();
 	}
 
+	function getPriceRegular()
+	{
+		$this->db->select("*");
+		$this->db->from("price");
+		$this->db->where('program !=', 'Private');
+		return $this->db->get();
+	}
+
 	function addPrice($data)
 	{
 		$this->db->insert('price', $data);

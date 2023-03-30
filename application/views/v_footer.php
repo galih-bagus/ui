@@ -63,6 +63,10 @@
   })
 
   $(function () {
+    $('#example3').DataTable()
+  })
+
+  $(function () {
     $('#example5').DataTable()
   })
   

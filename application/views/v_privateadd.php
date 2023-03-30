@@ -121,6 +121,18 @@ $url = base_url() . "cetak/printprivate/";
 					<i class="fa fa-dollar"></i> <span>Price</span>
 				</a>
 			</li>
+			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
+				<a href="#">
+					<i class="fa fa-money"></i> <span>Payment Bills</span>
+					<span class="pull-right-container">
+						<i class="fa fa-angle-left pull-right"></i>
+					</span>
+				</a>
+				<ul class="treeview-menu">
+					<li class="<?= $this->uri->segment(2) == 'data' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
+					<li class="<?= $this->uri->segment(2) == 'addRegularBill' || $this->uri->segment(2) == 'studentByClass' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
+				</ul>
+			</li>
 		</ul>
 	</section>
 	<!-- /.sidebar -->
@@ -340,6 +352,8 @@ $url = base_url() . "cetak/printprivate/";
 									<label for="registration" class="col-sm-3 control-label"></label>
 									<div class="col-sm-9">
 										<button type="submit" class="btn btn-primary">Submit</button>
+
+										<button type="button" id="saveBill" class="btn btn-success">Add Bill</button>
 										<a href="<?= base_url() ?>payment/addprivate"><button type="button" class="btn btn-danger">Cancel</button></a>
 									</div>
 								</div>
@@ -629,6 +643,61 @@ $url = base_url() . "cetak/printprivate/";
 		}
 	});
 
+	$(document).ready(function() {
+		$('#saveBill').click(function() {
+			if (confirm('Are you sure you want to save to billing data?') == true) {
+				savedBill();
+			} else {
+
+			}
+
+		});
+
+	});
+
+	function savedBill() {
+		const student = [],
+			price = [],
+			subtotal = [],
+			attendance = [];
+		const dataPush = [];
+		$('#paytab tbody tr').each(function() {
+			var tmpData = {};
+			var numOfAttn = $(this).find("td").eq(1).html();
+			var stdId = $(this).find("td").eq(7).html();
+			var itemPrice = $(this).find("td").eq(9).html();
+			var itemsubTotal = $(this).find("td").eq(5).html().substring(3).replace('Rp ');
+			tmpData = {
+				"studentid": stdId,
+				"data": {
+					"attendance": numOfAttn,
+					"price": itemPrice,
+					"subtotal": itemsubTotal,
+				}
+			};
+			dataPush.push(tmpData);
+		});
+		jQuery.ajax({
+			type: "POST",
+			url: "<?= base_url('/billing/savePrivateBill'); ?>",
+			dataType: 'html',
+			data: {
+				data: dataPush,
+				// student: student,
+				// attendance: attendance,
+				// price: price,
+				// subtotal: subtotal,
+			},
+			success: function(res) {
+				alert('Success add to billing');
+				location.href = "<?= base_url() ?>billing/addRegularBill";
+			},
+			error: function() {
+				alert('data not saved');
+			}
+		});
+	}
+
 	function addDetail() {
 		var x = document.getElementById("studentid").value;
 		if (x == "") {
@@ -691,6 +760,15 @@ $url = base_url() . "cetak/printprivate/";
 
 		var td = document.createElement("td");
 		var txt = document.createTextNode(attntxttab);
+		td.appendChild(txt);
+		td.style.display = 'none';
+		tr.appendChild(td);
+
+		//get price per day
+		var tmpPrice = priceperdaytab.replace('Rp ', '')
+		tmpPrice = tmpPrice.replace('.', '')
+		var td = document.createElement("td");
+		var txt = document.createTextNode(tmpPrice);
 		td.appendChild(txt);
 		td.style.display = 'none';
 		tr.appendChild(td);

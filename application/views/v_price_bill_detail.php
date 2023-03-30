@@ -101,7 +101,7 @@
 				</a>
 			</li>
 
-			<li class="active">
+			<li>
 				<a href="<?php echo base_url() ?>voucher">
 					<i class="fa fa-credit-card"></i> <span>Voucher</span>
 				</a>
@@ -112,6 +112,7 @@
 					<i class="fa fa-dollar"></i> <span>Price</span>
 				</a>
 			</li>
+
 			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
 				<a href="#">
 					<i class="fa fa-money"></i> <span>Payment Bills</span>
@@ -119,8 +120,8 @@
 						<i class="fa fa-angle-left pull-right"></i>
 					</span>
 				</a>
-				<ul class="treeview-menu">
-					<li class="<?= $this->uri->segment(2) == 'data' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
+				<ul class="treeview-menu ">
+					<li class="active"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
 					<li class="<?= $this->uri->segment(2) == 'addRegularBill' || $this->uri->segment(2) == 'studentByClass' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
 				</ul>
 			</li>
@@ -128,90 +129,140 @@
 	</section>
 	<!-- /.sidebar -->
 </aside>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Add Voucher
-			<small>add Voucher Form</small>
+			Billing Data
+			<small>Detail Billing Data</small>
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-home"></i> Home</a></li>
-			<li><a href="#">Voucher</a></li>
-			<li class="active">Add Voucher</li>
+			<li class="active">Billing</li>
 		</ol>
 	</section>
 
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-xs-7">
-				<!-- <div class="box"> -->
-				<div class="box box-primary">
-					<!-- <div class="box-header with-border">
-              <h3 class="box-title">Add Price Form</h3>
-            </div> -->
-					<!-- /.box-header -->
 
-					<!-- /.box-header -->
-					<!-- form start -->
-					<form role="form" id="example" name="example" class="form-horizontal" action="<?php echo base_url() ?>voucher/addVoucherDb" method="post" enctype="multipart/form-data">
+			<?php
+			if ($type == 'sistem') {
+			?>
+				<div class="col-xs-12">
+					<div class="box box-primary">
+						<div class="box-header">
+							<!-- <h3 class="box-title">List Prices</h3> -->
+
+						</div>
+						<!-- /.box-header -->
 						<div class="box-body">
-							<div class="form-group">
-								<label for="code" class="col-sm-3 control-label">Voucher Code</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="code" name="code">
-								</div>
-							</div>
+							<div class="table-responsive">
+								<table id="example3" class="table table-bordered table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Student Name</th>
+											<th>Price</th>
+											<th>Category</th>
+											<th>Payment For</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										foreach ($detail as $row) {
+										?>
+											<tr>
+												<td><?= $row->name ?></td>
+												<td>Rp <?= number_format($row->price, 0, ".", ".") ?></td>
+												<td><?= $row->category ?></td>
+												<td><?= $row->payment ?></td>
+												<td><?= $row->status ?></td>
+											</tr>
+										<?php
+										}
+										?>
+									</tbody>
 
-							<div class="form-group">
-								<label for="program" class="col-sm-3 control-label">Voucher Type</label>
-								<div class="col-sm-9">
-									<select class="form-control select2" style="width: 100%;" name="type" required>
-										<option selected="selected" disabled="disabled" value="">-- Choose Voucher Type --</option>
-										<option value="MGM">(MGM) Member Get Member</option>
-									</select>
-								</div>
+								</table>
 							</div>
+						</div>
+						<!-- /.box-body -->
+					</div>
+					<!-- /.box -->
 
-							<div class="form-group">
-								<label for="level" class="col-sm-3 control-label">Voucher Amount</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="amount" placeholder="Enter Voucher Amount" name="amount" required>
-								</div>
-							</div>
-							<!-- /.box-body -->
 
-							<div class="box-footer">
-								<button type="submit" class="btn btn-primary pull-right">Submit</button>
-								<a href="<?= base_url() ?>voucher"><button type="button" class="btn btn-default">Cancel</button></a>
-							</div>
-							<!-- /.box-footer -->
-					</form>
 				</div>
-			</div>
-			<!-- /.box-body -->
+			<?php
+			} else {
+			?>
+				<div class="col-xs-12">
+					<div class="box box-primary">
+						<div class="box-header">
+							<!-- <h3 class="box-title">List Prices</h3> -->
+
+						</div>
+						<!-- /.box-header -->
+						<div class="box-body">
+							<div class="table-responsive">
+								<table id="example2" class="table table-bordered table-striped table-hover">
+									<thead>
+										<tr>
+											<th>Student Name</th>
+											<th>Transaction Id</th>
+											<th>Price</th>
+											<th>Category</th>
+											<th>Payment For</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php
+										foreach ($detail as $row) {
+										?>
+											<tr>
+												<td><?= $row->name ?></td>
+												<td><?= $row->unique_code ?></td>
+												<td>Rp <?= number_format($row->price, 0, ".", ".") ?></td>
+												<td><?= $row->category ?></td>
+												<td><?= $row->payment ?></td>
+												<td><?= $row->status ?></td>
+											</tr>
+										<?php
+										}
+										?>
+									</tbody>
+
+								</table>
+							</div>
+						</div>
+						<?php
+						if ($detail[0]->status == 'To Be Confirm') {
+						?>
+							<div class="box-footer">
+								<form action="<?= base_url() . "billing/confirmBilling" ?>" method="POST">
+									<input type="hidden" readonly name="unique_code" value="<?= $detail[0]->unique_code ?>">
+									<button type="submit" class="btn btn-primary">Confirm</button>
+								</form>
+							</div>
+						<?php
+						}
+						?>
+						<!-- /.box-body -->
+					</div>
+					<!-- /.box -->
 
 
+				</div>
+			<?php
+			}
+			?>
 
+			<!-- /.col -->
 		</div>
-		<!-- /.col -->
-</div>
-<!-- /.row -->
-</section>
-<!-- /.content -->
+		<!-- /.row -->
+	</section>
+	<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#amount").maskMoney({
-			prefix: 'Rp ',
-			thousands: '.',
-			decimal: ',',
-			precision: 0
-		});
-	});
-</script>

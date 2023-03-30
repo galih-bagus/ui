@@ -101,7 +101,7 @@
 				</a>
 			</li>
 
-			<li class="active">
+			<li>
 				<a href="<?php echo base_url() ?>voucher">
 					<i class="fa fa-credit-card"></i> <span>Voucher</span>
 				</a>
@@ -112,6 +112,7 @@
 					<i class="fa fa-dollar"></i> <span>Price</span>
 				</a>
 			</li>
+
 			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
 				<a href="#">
 					<i class="fa fa-money"></i> <span>Payment Bills</span>
@@ -128,90 +129,130 @@
 	</section>
 	<!-- /.sidebar -->
 </aside>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Add Voucher
-			<small>add Voucher Form</small>
+			Billing Data
+			<small>List Billing Data</small>
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-home"></i> Home</a></li>
-			<li><a href="#">Voucher</a></li>
-			<li class="active">Add Voucher</li>
+			<li class="active">Billing</li>
 		</ol>
 	</section>
 
 	<!-- Main content -->
 	<section class="content">
 		<div class="row">
-			<div class="col-xs-7">
-				<!-- <div class="box"> -->
-				<div class="box box-primary">
-					<!-- <div class="box-header with-border">
-              <h3 class="box-title">Add Price Form</h3>
-            </div> -->
-					<!-- /.box-header -->
-
-					<!-- /.box-header -->
-					<!-- form start -->
-					<form role="form" id="example" name="example" class="form-horizontal" action="<?php echo base_url() ?>voucher/addVoucherDb" method="post" enctype="multipart/form-data">
-						<div class="box-body">
-							<div class="form-group">
-								<label for="code" class="col-sm-3 control-label">Voucher Code</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="code" name="code">
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="program" class="col-sm-3 control-label">Voucher Type</label>
-								<div class="col-sm-9">
-									<select class="form-control select2" style="width: 100%;" name="type" required>
-										<option selected="selected" disabled="disabled" value="">-- Choose Voucher Type --</option>
-										<option value="MGM">(MGM) Member Get Member</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="level" class="col-sm-3 control-label">Voucher Amount</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="amount" placeholder="Enter Voucher Amount" name="amount" required>
-								</div>
-							</div>
-							<!-- /.box-body -->
-
-							<div class="box-footer">
-								<button type="submit" class="btn btn-primary pull-right">Submit</button>
-								<a href="<?= base_url() ?>voucher"><button type="button" class="btn btn-default">Cancel</button></a>
-							</div>
-							<!-- /.box-footer -->
-					</form>
-				</div>
+			<div class="col-md-12">
+				<h3>
+					Billing Created
+				</h3>
 			</div>
-			<!-- /.box-body -->
+			<div class="col-xs-12">
+				<div class="box box-primary">
+					<div class="box-header">
+						<!-- <h3 class="box-title">List Prices</h3> -->
+
+					</div>
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="table-responsive">
+							<table id="example3" class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th>Amount</th>
+										<th>Class Type</th>
+										<th>Created By</th>
+										<th>Created At</th>
+										<th class="notPrintable">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									foreach ($from_sistem as $row) {
+									?>
+										<tr>
+											<td>Rp <?= number_format($row->total_price, 0, ".", ".") ?></td>
+											<td><?= $row->class_type ?></td>
+											<td><?= $row->created_by ?></td>
+											<td><?= $row->created_at ?></td>
+											<td>
+												<a href="<?= base_url() ?>billing/detail/<?= $row->id ?>" class="btn btn-success btn-xs"><i class="fa fa-eye"></i></a>
+											</td>
+										</tr>
+									<?php
+									}
+									?>
+								</tbody>
+
+							</table>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
 
 
+			</div>
+			<!-- /.col -->
+			<div class="col-md-12">
+				<h3>
+					Waiting For Confirmation
+				</h3>
+			</div>
+			<div class="col-xs-12">
+				<div class="box box-primary">
+					<div class="box-header">
+						<!-- <h3 class="box-title">List Prices</h3> -->
 
+					</div>
+					<!-- /.box-header -->
+					<div class="box-body">
+						<div class="table-responsive">
+							<table id="example2" class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th>Transaction ID</th>
+										<th>Amount</th>
+										<th>Created By</th>
+										<th>Status</th>
+										<th class="notPrintable">Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									foreach ($from_parent as $row) {
+									?>
+										<tr>
+											<td><?= $row->unique_code ?></td>
+											<td>Rp <?= number_format($row->amount, 0, ".", ".") ?></td>
+											<td><?= $row->name ?></td>
+											<td><?= $row->status ?></td>
+											<td>
+												<a href="<?= base_url() ?>billing/detailHistory/<?= $row->unique_code ?>" class="btn btn-success btn-xs"><i class="fa fa-eye"></i></a>
+											</td>
+										</tr>
+									<?php
+									}
+									?>
+								</tbody>
+
+							</table>
+						</div>
+					</div>
+					<!-- /.box-body -->
+				</div>
+				<!-- /.box -->
+
+
+			</div>
+			<!-- /.col -->
 		</div>
-		<!-- /.col -->
-</div>
-<!-- /.row -->
-</section>
-<!-- /.content -->
+		<!-- /.row -->
+	</section>
+	<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#amount").maskMoney({
-			prefix: 'Rp ',
-			thousands: '.',
-			decimal: ',',
-			precision: 0
-		});
-	});
-</script>
