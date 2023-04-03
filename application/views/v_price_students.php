@@ -168,10 +168,28 @@
 													</label>
 												</div>
 											</th>
-											<th>Point Book</th>
-											<th>Registration</th>
-											<th>Book</th>
-											<th>Agenda</th>
+											<th>
+												<div class="checkbox" style="margin-top: 5px!important; margin-bottom:0px!important;">
+													<label>
+														<input type="checkbox" checked id="checkAllPb"> <b>Point Book</b>
+													</label>
+												</div>
+											</th>
+
+											<th>
+												<div class="checkbox" style="margin-top: 5px!important; margin-bottom:0px!important;">
+													<label>
+														<input type="checkbox" checked id="checkAllBook"> <b>Book</b>
+													</label>
+												</div>
+											</th>
+											<th>
+												<div class="checkbox" style="margin-top: 5px!important; margin-bottom:0px!important;">
+													<label>
+														<input type="checkbox" checked id="checkAllAgenda"> <b>Agenda</b>
+													</label>
+												</div>
+											</th>
 											<th>Total</th>
 										</tr>
 									</thead>
@@ -183,7 +201,7 @@
 										?>
 											<tr>
 												<td>
-													<input type="hidden" readonly name="student_id[]" value="<?= $row->id ?>">
+													<input type="hidden" readonly name="student_id[]" value="<?= $row->sid ?>">
 													<?= $row->name ?>
 												</td>
 												<td style="width:170px;">
@@ -192,7 +210,7 @@
 														<option value="">Mounth Pay</option>
 														<?php
 														for ($month = 1; $month <= 12; $month++) {
-															$monthName = date("F", mktime(0, 0, 0, $month, 1));
+															$monthName = date("F", mktime(0, 0, 0, $month + 1, 1));
 															$year = date("Y");
 															$numMounth = $month < 10 ? '0' . $month : $month;
 															$valOption = $numMounth . '-' . $year;
@@ -208,18 +226,20 @@
 													<input type="hidden" name="course[<?= $no ?>][]" readonly value="0">
 													<input type="checkbox" value="1" checked name="course[<?= $no ?>][]" id="checkedCourse<?= $no ?>">
 												</td>
-												<td>
-													<div class="col-xs-12"><input type="number" name="pointBook[]" id="pointbook<?= $no ?>" class="form-control" value="0"></div>
+												<td style="text-align: center;">
+													<input type="hidden" name="pointBook[<?= $no ?>][]" readonly value="0">
+													<input type="checkbox" value="1" checked name="pointBook[<?= $no ?>][]" id="pointbook<?= $no ?>">
 												</td>
-												<td>
-													<div class="col-xs-12"><input type="number" name="registration[]" id="registration<?= $no ?>" class="form-control" value="0"></div>
+												<td style="text-align: center;">
+													<input type="hidden" name="book[<?= $no ?>][]" readonly value="0">
+													<input type="checkbox" value="1" checked name="book[<?= $no ?>][]" id="book<?= $no ?>">
 												</td>
-												<td>
-													<div class="col-xs-12"><input type="number" name="book[]" id="book<?= $no ?>" class="form-control" value="0"></div>
+												<td style="text-align: center;">
+													<input type="hidden" name="agenda[<?= $no ?>][]" readonly value="0">
+													<input type="checkbox" value="1" checked name="agenda[<?= $no ?>][]" id="agenda<?= $no ?>">
 												</td>
-												<td>
-													<div class="col-xs-12"><input type="number" name="agenda[]" id="agenda<?= $no ?>" class="form-control" value="0"></div>
-												</td>
+
+
 												<td>
 													<input type="hidden" id="valTotal<?= $no ?>" name="totalBill[]" value="0">
 													<h4 id="total<?= $no ?>">Rp. 0</h4>
@@ -261,7 +281,6 @@
 <script type="text/javascript">
 	var course = "<?= $detail->course; ?>";
 	var pointbook = "<?= $detail->pointbook; ?>";
-	var registration = "<?= $detail->registration; ?>";
 	var book = "<?= $detail->book; ?>";
 	var agenda = "<?= $detail->agenda; ?>";
 
@@ -271,64 +290,98 @@
 		for (let id = 1; id <= len; id++) {
 			var tmpTotal = parseInt($('#valTotal' + id).val());
 			var tmpCourse = 0;
-			var tmpPointBook = parseInt($('#pointbook' + id).val() != '' ? $('#pointbook' + id).val() : 0);
-			var tmpRegistration = parseInt($('#registration' + id).val() != '' ? $('#registration' + id).val() : 0);
-			var tmpBook = parseInt($('#book' + id).val() != '' ? $('#book' + id).val() : 0);
-			var tmpAgenda = parseInt($('#agenda' + id).val() != '' ? $('#agenda' + id).val() : 0);
+			var tmpPointBook = 0;
+			var tmpBook = 0;
+			var tmpAgenda = 0;
 			if ($('#checkedCourse' + id).is(':checked')) {
 				tmpCourse += parseInt(course);
 			} else {
 				tmpCourse -= parseInt(course);
 			}
-			$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse);
-			$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse));
+			if ($('#pointbook' + id).is(':checked')) {
+				tmpPointBook += parseInt(pointbook);
+			} else {
+				tmpPointBook -= parseInt(pointbook);
+			}
+			if ($('#book' + id).is(':checked')) {
+				tmpBook += parseInt(book);
+			} else {
+				tmpBook -= parseInt(book);
+			}
+			if ($('#agenda' + id).is(':checked')) {
+				tmpAgenda += parseInt(agenda);
+			} else {
+				tmpAgenda -= parseInt(agenda);
+			}
+			$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse);
+			$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse));
 			$('#checkedCourse' + id).change(function() {
 				if (this.checked) {
-					tmpCourse = parseInt(course);
+					tmpTotal += parseInt(course);
 				} else {
-					tmpCourse = 0;
+					tmpTotal -=  parseInt(course);
 				}
-				console.log(tmpCourse);
-				$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse);
-				$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse));
+				
+				$('#valTotal' + id).val(tmpTotal);
+				$('#total' + id).text(formatCurrency(tmpTotal));
+			});
+			$('#pointbook' + id).change(function() {
+				if (this.checked) {
+					tmpTotal += parseInt(pointbook);
+				} else {
+					tmpTotal -= parseInt(pointbook);
+				}
+				
+				$('#valTotal' + id).val(tmpTotal);
+				$('#total' + id).text(formatCurrency(tmpTotal));
+			});
+			$('#book' + id).change(function() {
+				if (this.checked) {
+					tmpTotal += parseInt(book);
+				} else {
+					tmpTotal -= parseInt(book);
+				}
+				
+				$('#valTotal' + id).val(tmpTotal);
+				$('#total' + id).text(formatCurrency(tmpTotal));
+			});
+			$('#agenda' + id).change(function() {
+				if (this.checked) {
+					tmpTotal += parseInt(agenda);
+				} else {
+					tmpTotal -= parseInt(agenda);
+				}
+				
+				$('#valTotal' + id).val(tmpTotal);
+				$('#total' + id).text(formatCurrency(tmpTotal));
 			});
 
-			$('#pointbook' + id).keyup(function() {
-				tmpPointBook = 0;
-				if ($(this).val() != '') {
-					tmpPointBook += (parseInt($(this).val()) * pointbook);
-				}
-				$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse);
-				$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse));
-			});
-			$('#registration' + id).keyup(function() {
-				tmpRegistration = 0;
-				if ($(this).val() != '') {
-					tmpRegistration += (parseInt($(this).val()) * registration);
-				}
-				console.log(tmpRegistration);
-				$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse);
-				$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse));
-			});
-			$('#book' + id).keyup(function() {
-				tmpBook = 0;
-				if ($(this).val() != '') {
-					tmpBook += (parseInt($(this).val()) * book);
-				}
-				console.log(tmpBook);
-				$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse);
-				$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse));
-			});
-			$('#agenda' + id).keyup(function() {
-				tmpAgenda = 0;
-				if ($(this).val() != '') {
-					tmpAgenda += (parseInt($(this).val()) * agenda);
-				}
-				$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse);
-				$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpRegistration + tmpBook + tmpAgenda + tmpCourse));
-			});
+			// $('#pointbook' + id).keyup(function() {
+			// 	tmpPointBook = 0;
+			// 	if ($(this).val() != '') {
+			// 		tmpPointBook += (parseInt($(this).val()) * pointbook);
+			// 	}
+			// 	$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse);
+			// 	$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse));
+			// });
 
-
+			// $('#book' + id).keyup(function() {
+			// 	tmpBook = 0;
+			// 	if ($(this).val() != '') {
+			// 		tmpBook += (parseInt($(this).val()) * book);
+			// 	}
+			// 	console.log(tmpBook);
+			// 	$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse);
+			// 	$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse));
+			// });
+			// $('#agenda' + id).keyup(function() {
+			// 	tmpAgenda = 0;
+			// 	if ($(this).val() != '') {
+			// 		tmpAgenda += (parseInt($(this).val()) * agenda);
+			// 	}
+			// 	$('#valTotal' + id).val(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse);
+			// 	$('#total' + id).text(formatCurrency(tmpTotal + tmpPointBook + tmpBook + tmpAgenda + tmpCourse));
+			// });
 		}
 
 		$('#checkAll').click(function(event) {
@@ -338,15 +391,55 @@
 				if (this.checked) {
 					tmpTotal += parseInt(course);
 				} else {
-
 					tmpTotal -= parseInt(course);
 				}
 				$('#valTotal' + id).val(tmpTotal);
 				$('#total' + id).text(formatCurrency(tmpTotal));
 			}
 		});
+		$('#checkAllPb').click(function(event) {
+			for (let id = 1; id <= len; id++) {
+				var tmpTotal = parseInt($('#valTotal' + id).val());
+				$('#pointbook' + id).not(this).prop('checked', this.checked);
 
+				if (this.checked) {
+					tmpTotal += parseInt(pointbook);
+				} else {
+					tmpTotal -= parseInt(pointbook);
+				}
+				// console.log(tmpTotal);
+				$('#valTotal' + id).val(tmpTotal);
+				$('#total' + id).text(formatCurrency(tmpTotal));
+			}
+		});
+		$('#checkAllBook').click(function(event) {
+			for (let id = 1; id <= len; id++) {
+				var tmpTotal = parseInt($('#valTotal' + id).val());
+				$('#book' + id).not(this).prop('checked', this.checked);
+				if (this.checked) {
+					tmpTotal += parseInt(book);
+				} else {
 
+					tmpTotal -= parseInt(book);
+				}
+				$('#valTotal' + id).val(tmpTotal);
+				$('#total' + id).text(formatCurrency(tmpTotal));
+			}
+		});
+		$('#checkAllAgenda').click(function(event) {
+			for (let id = 1; id <= len; id++) {
+				var tmpTotal = parseInt($('#valTotal' + id).val());
+				$('#agenda' + id).not(this).prop('checked', this.checked);
+				if (this.checked) {
+					tmpTotal += parseInt(agenda);
+				} else {
+
+					tmpTotal -= parseInt(agenda);
+				}
+				$('#valTotal' + id).val(tmpTotal);
+				$('#total' + id).text(formatCurrency(tmpTotal));
+			}
+		});
 
 		function formatCurrency(total) {
 			var neg = false;

@@ -80,8 +80,34 @@ class Billing extends CI_Controller
 
     public function studentByClass($priceId)
     {
-        $data['studentList'] = $this->mbilling->getStudentByPriceId($priceId);
+        $listLateStudent = $this->mbilling->getStudentByPriceId($priceId);
+
+        foreach ($listLateStudent as $student) {
+            $monthpay = date("m", strtotime($student->monthpay));
+            if (($monthpay < date('m')) || ($student->monthpay == '')) {
+                if ($student->condition == "DEFAULT") {
+                    $data = array(
+                        'penalty' => ($student->course * 10 / 100)
+                    );
+                } else {
+                    $data = array(
+                        'penalty' => ($student->adjusment * 10 / 100)
+                    );
+                }
+                $where['id'] = $student->id;
+                $this->mstudent->updateStudent($data, $where);
+            } else {
+                $data = array(
+                    'penalty' => 0
+                );
+                $where['id'] = $student->id;
+                $this->mstudent->updateStudent($data, $where);
+            }
+        }
         $data['detail'] = $this->mprice->getPriceById($priceId)->row();
+        $data['studentList'] = $this->mbilling->getLastPayment($priceId)->result();
+        
+        
         $this->load->view('v_header');
         $this->load->view('v_price_students', $data);
         $this->load->view('v_footer');
@@ -156,7 +182,7 @@ class Billing extends CI_Controller
 
     public function saveRegularBill()
     {
-        var_dump(json_encode($this->input->post()));
+        // var_dump(json_encode($this->input->post()));
 
         for ($i = 0; $i < count($this->input->post('student_id')); $i++) {
             if ($this->input->post('totalBill')[$i]) {
@@ -169,7 +195,7 @@ class Billing extends CI_Controller
                     'updated_at' => date('Y-m-d H:i:s'),
                 );
                 $latestRecord = $this->mbilling->addBill($data);
-                var_dump($latestRecord['id']);
+                
                 if (count($this->input->post('course')[$i + 1]) > 1) {
                     $dataDetail = array(
                         'id_payment_bill' =>  $latestRecord['id'],
@@ -182,60 +208,47 @@ class Billing extends CI_Controller
                     );
                     $latestInput = $this->mbillingdetail->addBillDetail($dataDetail);
                 }
-                if (intval($this->input->post('book')[$i]) > 1) {
-                    $subPrice = intval($this->input->post('bookPrice')) * intval($this->input->post('book')[$i]);
+                if (count($this->input->post('book')[$i + 1]) > 1) {
+                    var_dump("input book");
                     $dataDetail = array(
                         'id_payment_bill' =>  $latestRecord['id'],
                         'student_id' => $this->input->post('student_id')[$i],
                         'category' => 'BOOK',
-                        'price' => $subPrice,
+                        'price' => intval($this->input->post('bookPrice')),
                         'unique_code' => '-',
-                        'payment' => "Payment BOOK(" . $this->input->post('book')[$i] . ")",
+                        'payment' => "Payment BOOK",
                         'status' => 'Waiting',
                     );
-                    $latestInput = $this->mbillingdetail->addBillDetail($dataDetail);
+                    $this->mbillingdetail->addBillDetail($dataDetail);
                 }
-                if (intval($this->input->post('registration')[$i])  != 0) {
-                    $subPrice = intval($this->input->post('registrationPrice')) * intval($this->input->post('registration')[$i]);
-                    $dataDetail = array(
-                        'id_payment_bill' =>  $latestRecord['id'],
-                        'student_id' => $this->input->post('student_id')[$i],
-                        'category' => 'REGISTRATION',
-                        'price' => $subPrice,
-                        'unique_code' => '-',
-                        'payment' => "REGISTRATION",
-                        'status' => 'Waiting',
-                    );
-                    $latestInput = $this->mbillingdetail->addBillDetail($dataDetail);
-                }
-                if (intval($this->input->post('pointBook')[$i]) != 0) {
-                    $subPrice = intval($this->input->post('pointbookPrice')) * intval($this->input->post('pointBook')[$i]);
+                if (count($this->input->post('pointBook')[$i + 1]) > 1) {
+                    var_dump("input pointbook");
                     $dataDetail = array(
                         'id_payment_bill' =>  $latestRecord['id'],
                         'student_id' => $this->input->post('student_id')[$i],
                         'category' => 'POINT BOOK',
-                        'price' => $subPrice,
+                        'price' => intval($this->input->post('pointbookPrice')),
                         'unique_code' => '-',
-                        'payment' => "POINT BOOK-Qty(" . $this->input->post('pointBook')[$i] . ")",
+                        'payment' => "POINT BOOK",
                         'status' => 'Waiting',
                     );
-                    $latestInput = $this->mbillingdetail->addBillDetail($dataDetail);
+                    $this->mbillingdetail->addBillDetail($dataDetail);
                 }
-                if (intval($this->input->post('agenda')[$i]) != 0) {
-                    $subPrice = intval($this->input->post('agendaPrice')) * intval($this->input->post('agenda')[$i]);
+                if (count($this->input->post('agenda')[$i + 1]) > 1) {
+                    var_dump("input agenda");
                     $dataDetail = array(
                         'id_payment_bill' =>  $latestRecord['id'],
                         'student_id' => $this->input->post('student_id')[$i],
                         'category' => 'AGENDA',
-                        'price' => $subPrice,
+                        'price' => intval($this->input->post('agendaPrice')),
                         'unique_code' => '-',
-                        'payment' => "AGENDA-Qty(" . $this->input->post('agenda')[$i] . ")",
+                        'payment' => "AGENDA",
                         'status' => 'Waiting',
                     );
-                    $latestInput = $this->mbillingdetail->addBillDetail($dataDetail);
+                    $this->mbillingdetail->addBillDetail($dataDetail);
                 }
             }
         }
-        redirect(base_url("billing/addRegularBill"));
+        // redirect(base_url("billing/addRegularBill"));
     }
 }
