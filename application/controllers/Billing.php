@@ -5,13 +5,13 @@ class Billing extends CI_Controller
     function __construct()
     {
         parent::__construct();
-        // $this->load->model("mpayment");
+        $this->load->model("mpayment");
         $this->load->model("mstudent");
         $this->load->model("mprice");
         $this->load->model("mbilling");
         $this->load->model("mbillingdetail");
         // $this->load->model("mvoucher");
-        // $this->load->model("mpaydetail");
+        $this->load->model("mpaydetail");
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("user"));
         }
@@ -59,6 +59,66 @@ class Billing extends CI_Controller
 
     public function confirmBilling()
     {
+        
+        $dt = $this->mbillingdetail->dataDetail('unique_code', $this->input->post('unique_code'));
+        foreach ($dt as $vl) {
+            $datePay = explode(" ", $vl->updated_at);
+            $latestRecord = [];
+            if ($vl->class_type == 'Reguler') {
+                $data = array(
+                    'paydate' => $datePay[0],
+                    'paytime' => $vl->updated_at,
+                    'method' => 'Transfer Bank from App',
+                    'number' => $vl->unique_code,
+                    'bank' => '',
+                    'total' => $vl->price,
+                    'username' => $this->session->userdata('nama')
+                );
+                $latestRecord = $this->mpayment->addPayment($data);
+            } else {
+                $data = array(
+                    'paydate' => $datePay[0],
+                    'paytime' => $datePay[1],
+                    'method' => 'Transfer Bank from App',
+                    'number' => $vl->unique_code,
+                    'bank' => '',
+                    'total' => $vl->price,
+                    'username' => $this->session->userdata('nama')
+                );
+                $latestRecord = $this->mpayment->addPayment($data);
+            }
+            if ($vl->category == "COURSE") {
+                $var = explode(' ',  $vl->payment);
+                $parts = explode('-', $var[1]);
+                $montharr = date_parse($parts[0]);
+                if ($montharr['month'] < 10) {
+                    $month = "0" . $montharr['month'];
+                } else {
+                    $month = $montharr['month'];
+                }
+                $monthpay = $parts[1] . '-' . $parts[0] . '-01';
+                $data = array(
+                    'paymentid' => $latestRecord['id'],
+                    'studentid' => $vl->student_id,
+                    'voucherid' => '',
+                    'category' => $vl->category,
+                    'monthpay' => $monthpay,
+                    'amount' => $vl->price
+                );
+                $input = $this->mpaydetail->addPaydetail($data);
+            } else {
+                $data = array(
+                    'paymentid' => $latestRecord['id'],
+                    'studentid' => $vl->student_id,
+                    'voucherid' => '',
+                    'category' => $vl->category,
+                    'amount' => $vl->price
+                );
+                $input = $this->mpaydetail->addPaydetail($data);
+            }
+        }
+
+        // die;
         $id = $this->input->post('unique_code');
         $data = array(
             'status' => 'Paid',
@@ -66,7 +126,6 @@ class Billing extends CI_Controller
         $where['unique_code'] = $id;
 
         $this->mbillingdetail->confirm($data, $where);
-
         redirect(base_url() . "billing/detailHistory/" . $id);
     }
 
@@ -106,8 +165,8 @@ class Billing extends CI_Controller
         }
         $data['detail'] = $this->mprice->getPriceById($priceId)->row();
         $data['studentList'] = $this->mbilling->getLastPayment($priceId)->result();
-        
-        
+
+
         $this->load->view('v_header');
         $this->load->view('v_price_students', $data);
         $this->load->view('v_footer');
@@ -195,7 +254,7 @@ class Billing extends CI_Controller
                     'updated_at' => date('Y-m-d H:i:s'),
                 );
                 $latestRecord = $this->mbilling->addBill($data);
-                
+
                 if (count($this->input->post('course')[$i + 1]) > 1) {
                     $dataDetail = array(
                         'id_payment_bill' =>  $latestRecord['id'],
