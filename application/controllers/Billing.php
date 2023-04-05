@@ -30,7 +30,7 @@ class Billing extends CI_Controller
         foreach ($history as $value) {
             $tmpStatus = $this->mbillingdetail->historyStatus($value->unique_code);
             $tmpHistory = $value;
-            $tmpHistory->status = $tmpStatus->status;
+            $tmpHistory->status = isset($tmpStatus->status) ? $tmpStatus->status : 'Submitted' ;
             array_push($tmpData, $tmpHistory);
         }
         $data['from_parent'] = $tmpData;
