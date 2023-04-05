@@ -15,6 +15,7 @@ class Billing extends CI_Controller
         if ($this->session->userdata('status') != "login") {
             redirect(base_url("user"));
         }
+        date_default_timezone_set("Asia/Jakarta");
     }
 
     public function index()
@@ -308,6 +309,6 @@ class Billing extends CI_Controller
                 }
             }
         }
-        // redirect(base_url("billing/addRegularBill"));
+        redirect(base_url("billing/addRegularBill"));
     }
 }
