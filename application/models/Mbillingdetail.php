@@ -40,6 +40,18 @@ class Mbillingdetail extends CI_Model
 		return $result;
 	}
 
+	function dataDetail($column, $kode)
+	{
+		$query = $this->db->query(
+			"SELECT payment_bill_detail.*, student.name, payment_bills.class_type,payment_bills.created_at,payment_bills.updated_at FROM payment_bill_detail 
+					JOIN payment_bills ON payment_bills.id=payment_bill_detail.id_payment_bill
+					JOIN student ON payment_bill_detail.student_id=student.id
+					WHERE payment_bill_detail.$column='$kode'"
+		);
+		$result = $query->result();
+		return $result;
+	}
+
 	function confirm($data, $where)
 	{
 		$this->db->where($where);

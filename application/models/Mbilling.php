@@ -18,14 +18,28 @@ class Mbilling extends CI_Model
 	function getStudentByPriceId($id)
 	{
 		$query = $this->db->query("SELECT s.id, s.name, s.condition, s.adjusment, lpr.program, lpr.course, lpr.monthpay
-								   FROM `last_payment_regular` lpr
-								   LEFT OUTER JOIN student s ON lpr.id_student=s.id
-								   WHERE s.status = 'ACTIVE'
-								   AND lpr.level <> 'Private'
+									FROM `last_payment_regular` lpr
+									LEFT OUTER JOIN student s ON lpr.id_student=s.id
+									WHERE s.status = 'ACTIVE'
+									AND lpr.level <> 'Private'
 								   AND s.priceid = " . $id . "
 								   ");
 		$result = $query->result();
 		return $result;
+	}
+
+	public function getLastPayment($id)
+	{
+		$this->db->select("s.id as sid, s.priceid, s.name, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level, MAX(pd.monthpay) as monthpay");
+		$this->db->from("student s");
+		$this->db->join("price p", "s.priceid = p.id", "left outer");
+		$this->db->join("paydetail pd", "s.id = pd.studentid", "left outer");
+		$this->db->where('p.level !=', 'Private');
+		$this->db->where('s.status =', 'ACTIVE');
+		$this->db->where('s.priceid =', $id);
+		$this->db->group_by('s.id');
+		$this->db->order_by('s.id', 'asc');
+		return $this->db->get();
 	}
 
 	function addBill($data)
@@ -44,6 +58,4 @@ class Mbilling extends CI_Model
 		$result = $query->result();
 		return $result;
 	}
-
-	
 }
