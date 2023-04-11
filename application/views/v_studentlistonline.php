@@ -154,8 +154,13 @@
 					<br>
 					<!-- /.box-header -->
 					<div class="box-body">
+						<div class="row">
+							<div class="col-xs-12" style="text-align: end;margin-bottom:20px">
+								<a href="<?php echo base_url() . 'student/exportStudentOnline' ?>" class="btn btn-success">Export Excel</a>
+							</div>
+						</div>
 						<div class="table-responsive">
-							<table id="example1" class="table table-bordered table-striped table-hover">
+							<table id="exporttrans" class="table table-bordered table-striped table-hover">
 								<thead>
 									<tr>
 										<th>ID</th>
@@ -229,11 +234,12 @@
 						</div>
 					</div>
 					<div class="form-group">
-							<label for="level" class="col-sm-3 control-label">Teacher</label>
+						<label for="level" class="col-sm-3 control-label">Teacher</label>
 						<div class="col-sm-9">
-						<select class="form-control select2" style="width: 100%;" name="id_teacher" id="id_teacher" required>
+							<select class="form-control select2" style="width: 100%;" name="id_teacher" id="id_teacher" required>
 								<option selected="selected" disabled="disabled" value="">-- Choose Teacher --</option>
 								<?php
+								$day = $this->db->query("SELECT * FROM day ORDER BY id ASC")->result();
 								foreach ($teacher->result() as $row) {
 								?>
 									<option value="<?= $row->id ?>"><?= $row->name ?></option>
@@ -268,12 +274,10 @@
 							<div class="col-sm-4">
 								<select class="form-control select2" style="width: 100%;" name="day1prv">
 									<option selected="selected" disabled="disabled" value="">-- Choose Day --</option>
-									<?php
-									$options = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-									foreach ($options as $opt) {
-										$selected = set_value('know') == $opt ? 'selected' : '';
+									<?php foreach ($day as $opt) {
+										// $selected = set_value('know') == $opt ? 'selected' : '';
 									?>
-										<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
+										<option value="<?= $opt->id ?>"><?= $opt->day ?></option>
 									<?php
 									}
 									?>
@@ -283,12 +287,10 @@
 							<div class="col-sm-4">
 								<select class="form-control select2" style="width: 100%;" name="day2prv">
 									<option selected="selected" disabled="disabled" value="">-- Choose Day --</option>
-									<?php
-									$options = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-									foreach ($options as $opt) {
-										$selected = set_value('know') == $opt ? 'selected' : '';
+									<?php foreach ($day as $opt) {
+										// $selected = set_value('know') == $opt ? 'selected' : '';
 									?>
-										<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
+										<option value="<?= $opt->id ?>"><?= $opt->day ?></option>
 									<?php
 									}
 									?>
@@ -298,8 +300,14 @@
 
 						<div class="form-group">
 							<label for="time" class="col-sm-3 control-label">Time</label>
-							<div class="col-sm-9">
-								<input type="time" class="form-control" name="timeprv">
+							<div class="col-sm-3">
+								<input type="number" class="form-control" name="timeprv">
+							</div>
+							<div class="col-sm-6">
+								<select name="ampmprv" id="" class="form-control">
+									<option value="AM">AM</option>
+									<option value="PM">PM</option>
+								</select>
 							</div>
 						</div>
 
@@ -343,12 +351,10 @@
 							<div class="col-sm-4">
 								<select class="form-control select2" style="width: 100%;" name="day1reg">
 									<option selected="selected" disabled="disabled" value="">-- Choose Day --</option>
-									<?php
-									$options = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-									foreach ($options as $opt) {
-										$selected = set_value('know') == $opt ? 'selected' : '';
+									<?php foreach ($day as $opt) {
+										// $selected = set_value('know') == $opt ? 'selected' : '';
 									?>
-										<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
+										<option value="<?= $opt->id ?>"><?= $opt->day ?></option>
 									<?php
 									}
 									?>
@@ -358,12 +364,10 @@
 							<div class="col-sm-4">
 								<select class="form-control select2" style="width: 100%;" name="day2reg">
 									<option selected="selected" disabled="disabled" value="">-- Choose Day --</option>
-									<?php
-									$options = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
-									foreach ($options as $opt) {
-										$selected = set_value('know') == $opt ? 'selected' : '';
+									<?php foreach ($day as $opt) {
+										// $selected = set_value('know') == $opt ? 'selected' : '';
 									?>
-										<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
+										<option value="<?= $opt->id ?>"><?= $opt->day ?></option>
 									<?php
 									}
 									?>
@@ -373,8 +377,14 @@
 
 						<div class="form-group">
 							<label for="time" class="col-sm-3 control-label">Time</label>
-							<div class="col-sm-9">
-								<input type="time" class="form-control" name="timereg">
+							<div class="col-sm-3">
+								<input type="number" class="form-control" name="timereg">
+							</div>
+							<div class="col-sm-6">
+								<select name="ampmreg" id="" class="form-control">
+									<option value="AM">AM</option>
+									<option value="PM">PM</option>
+								</select>
 							</div>
 						</div>
 
@@ -555,49 +565,62 @@
 						<p id="textModal"></p>
 						<input type="hidden" name="idstudent" id="idModalResult" style="color:#000">
 
-						<div class="col-sm-2">
-							<label for="category" class="col-sm-3 control-label">Category</label>
+						<div class="col-sm-4">
+							<label for="category" class="control-label">Category</label>
 						</div>
-						<div class="col-sm-10">
+						<div class="col-sm-8">
 							<select class="form-control select2" style="width: 100%;" name="" id="categoryResult" onchange="changeCategoryResult()" required>
 								<option disabled="disabled" value="">-- Choose Category --</option>
 								<option value="PRIVATE">PRIVATE</option>
 								<option value="REGULAR">REGULAR</option>
 							</select>
 						</div>
-						<div class="col-sm-2" style="margin-top: 15px;">
-							<label for="level" class="col-sm-3 control-label">Level</label>
+						<div class="col-sm-4" style="margin-top: 15px;">
+							<label for="placement_test_result" class="control-label">Placement Test Result</label>
 						</div>
-						<div class="col-sm-10" style="margin-top: 15px;">
-							<select class="form-control select2" style="width: 100%;" name="" id="levelResult" required>
-								<option disabled="disabled" value="">-- Choose Level --</option>
-								<?php
-								foreach ($listPrice->result() as $row) {
-								?>
-									<option value="<?= $row->id ?>"><?= $row->program ?></option>
-								<?php
-								}
-								?>
-							</select>
+						<div class="col-sm-8" style="margin-top: 15px;">
+							<input type="text" class="form-control" value="" id="placement_test_result" name="placement_test_result" required>
 						</div>
-						<div class="col-sm-2" style="margin-top: 15px;">
-							<label for="written" class="col-sm-3 control-label">Written</label>
+						<div class="col-sm-4" style="margin-top: 15px;">
+							<label for="kind_of_test" class="control-label">Kind Of Test</label>
+						</div>
+						<div class="col-sm-8" style="margin-top: 15px;">
+							<input type="text" class="form-control" value="" id="kind_of_test" name="kind_of_test" required>
+						</div>
+						<div class="col-sm-4" style="margin-top: 15px;">
+							<label for="written" class="control-label">Written</label>
 						</div>
 						<div class="col-sm-2" style="margin-top: 15px;">
 							<input type="number" max="100" class="form-control" value="" id="written" name="written" required>
 						</div>
 						<div class="col-sm-2" style="margin-top: 15px;">
-							<label for="speaking" class="col-sm-3 control-label">Speaking</label>
+							<label for="speaking" class="control-label">Speaking</label>
 						</div>
-						<div class="col-sm-6" style="margin-top: 15px;">
+						<div class="col-sm-4" style="margin-top: 15px;">
 							<select class="form-control select2" style="width: 100%;" id="speaking" name="speaking" required>
-								<option disabled="disabled" value="">-- Choose Score --</option>
+								<option disabled="disabled" value="" selected>-- Choose Score --</option>
 								<?php
 								$options = array("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E");
 								foreach ($options as $opt) {
 									$selected = set_value('speaking') == $opt ? 'selected' : '';
 								?>
 									<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
+								<?php
+								}
+								?>
+							</select>
+						</div>
+						<div class="col-sm-4" style="margin-top: 15px;">
+							<label for="staff" class="control-label">Staff</label>
+						</div>
+						<div class="col-sm-8" style="margin-top: 15px;">
+							<select class="form-control select2" style="width: 100%;" name="staff" id="staff" required>
+								<option disabled="disabled" value="" selected>-- Choose Staff --</option>
+								<?php
+								foreach ($staff->result() as $stf) {
+									$selected = set_value('staff') == $stf->id ? 'selected' : '';
+								?>
+									<option value="<?= $stf->id ?>" <?= $selected ?>><?= $stf->name ?></option>
 								<?php
 								}
 								?>

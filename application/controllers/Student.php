@@ -10,6 +10,7 @@ class Student extends CI_Controller
 		$this->load->model("mpaydetail");
 		$this->load->model("mvoucher");
 		$this->load->model("mteacher");
+		$this->load->model("mstaff");
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("login"));
 		}
@@ -322,6 +323,7 @@ class Student extends CI_Controller
 		$data['listPrice'] = $this->mprice->getAllPrice();
 		$data['listVoucher'] = $this->mvoucher->getAllVoucher();
 		$data['teacher'] = $this->mteacher->index();
+		$data['staff'] = $this->mstaff->index();
 		$this->load->view('v_header');
 		$this->load->view('v_studentlistonline', $data);
 		$this->load->view('v_footer');
@@ -336,17 +338,29 @@ class Student extends CI_Controller
 		$order   = array("Rp ", ".");
 		$replace = "";
 		$total = str_replace($order, $replace, $total);
+		$day1 = "";
+		$day2 = "";
+		$coursetime = "";
 
 		if ($this->input->post('category') == "PRIVATE") {
 			$program = $this->input->post('programprv');
+			$day1 = $this->input->post('day1prv');
+			$day2 = $this->input->post('day2prv');
+			$coursetime = $this->input->post('timeprv') . " " . $this->input->post('ampmprv');
 		} else {
 			$program = $this->input->post('program');
+			$day1 = $this->input->post('day1reg');
+			$day2 = $this->input->post('day2reg');
+			$coursetime = $this->input->post('timereg') . " " . $this->input->post('ampmreg');
 		}
 
 		$where['id'] = $this->input->post('idstudent');
 		$form = array(
 			'priceId' => $program,
-			'is_complete' => '1'
+			'is_complete' => '1',
+			'day1' => $day1,
+			'day2' => $day2,
+			'course_time' => $coursetime
 		);
 		$this->mstudent->updateStudent($form, $where);
 
@@ -442,6 +456,7 @@ class Student extends CI_Controller
 					'studentid' => $this->input->post('idstudent'),
 					'voucherid' => $this->input->post('vid'),
 					'category' => "COURSE",
+					'monthpay' => time("Y-m-d"),
 					'explanation' => $explanation,
 					'amount' => $this->input->post('vcourse')
 				);
@@ -471,7 +486,11 @@ class Student extends CI_Controller
 		$form = array(
 			'written' => $this->input->post('written'),
 			'speaking' => $this->input->post('speaking'),
+			'id_staff' => $this->input->post('staff'),
 			'id_teacher' => $this->input->post('id_teacher'),
+			'placement_test_result' => $this->input->post('placement_test_result'),
+			'kind_of_test' => $this->input->post('kind_of_test'),
+			'date_test' => date("Y-m-d"),
 		);
 		$this->mstudent->updateStudent($form, $where);
 		redirect(base_url('student/studentOnline'));
@@ -538,5 +557,17 @@ class Student extends CI_Controller
 			$this->db->where('id', $where);
 			$this->db->update('student', array('status' => 'INACTIVE'));
 		}
+	}
+
+	public function exportStudentOnline()
+	{
+		// fungsi header dengan mengirimkan raw data excel
+		header("Content-type: application/vnd-ms-excel");
+
+		// membuat nama file ekspor "export-to-excel.xls"
+		header("Content-Disposition: attachment; filename=U&I Prospective Student.xls");
+		$data['listStudent'] = $this->mstudent->getOnlineStudent();
+		$data['listPrice'] = $this->mprice->getAllPrice();
+		$this->load->view('v_exportprospectivestudent', $data);
 	}
 }
