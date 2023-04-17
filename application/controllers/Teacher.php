@@ -7,6 +7,7 @@ class Teacher extends CI_Controller
 		$this->load->model("mteacher");
 		$this->load->library('form_validation');
 		$this->load->library('session');
+		$this->load->library('bcrypt');
 		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("login"));
 		}
@@ -40,6 +41,8 @@ class Teacher extends CI_Controller
 			$time = date('Y-m-d h:i:s');
 			$data = array(
 				'name' => $this->input->post('name'),
+				'username' => $this->input->post('username'),
+				'password' => $this->bcrypt->hash_password('password')
 			);
 			$latestRecordStudent = $this->mteacher->store($data);
 			$this->session->set_flashdata('success', "Add Teacher Success");
@@ -69,6 +72,7 @@ class Teacher extends CI_Controller
 			$time = date('Y-m-d h:i:s');
 			$data = array(
 				'name' => $this->input->post('name'),
+				'username' => $this->input->post('username'),
 			);
 			$latestRecordStudent = $this->mteacher->update($data, $id);
 			$this->session->set_flashdata('success', "Add Teacher Success");

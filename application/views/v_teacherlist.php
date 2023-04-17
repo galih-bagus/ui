@@ -163,6 +163,7 @@
 									<tr>
 										<th>ID</th>
 										<th>Name</th>
+										<th>Username</th>
 										<th class="notPrintable">Action</th>
 									</tr>
 								</thead>
@@ -173,6 +174,7 @@
 										<tr>
 											<td><?= $row->id ?></td>
 											<td><?= $row->name ?></td>
+											<td><?= $row->username ?></td>
 											<td>
 												<a href="<?= base_url() ?>teacher/edit/<?= $row->id ?>" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
 												<a href="<?= base_url() ?>teacher/destroy/<?= $row->id ?>" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>

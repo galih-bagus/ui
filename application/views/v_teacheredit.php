@@ -156,13 +156,23 @@
 						<form action="<?= base_url() ?>teacher/update/<?= $data->id ?>" method="POST">
 							<div class="box-body">
 								<div class="form-group">
-									<label for="name" class="col-sm-3 control-label">Full Name <span style="color: red;">
+									<label for="name" class="col-sm-3 control-label">Full Name <span style="color: red;margin-bottom:20px;">
 
 											<?php echo form_error('name'); ?>
 										</span></label>
 
-									<div class="col-sm-9">
-										<input type="text" class="form-control" id="name" placeholder="Enter Name" name="name" value="<?php echo $data->name ?>">
+									<div class="col-sm-9" style="margin-bottom:20px;">
+										<input type="text" class="form-control" id="name" placeholder="Enter Name" name="name" value="<?php echo $data->name ?>" required>
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="username" class="col-sm-3 control-label">Username <span style="color: red;margin-bottom:20px;">
+
+											<?php echo form_error('username'); ?>
+										</span></label>
+
+									<div class="col-sm-9" style="margin-bottom:20px;">
+										<input type="text" class="form-control" id="username" placeholder="Username" name="username" value="<?php echo $data->username ?>" required>
 									</div>
 								</div>
 							</div>
