@@ -562,10 +562,10 @@ class Student extends CI_Controller
 	public function exportStudentOnline()
 	{
 		// fungsi header dengan mengirimkan raw data excel
-		header("Content-type: application/vnd-ms-excel");
+		// header("Content-type: application/vnd-ms-excel");
 
 		// membuat nama file ekspor "export-to-excel.xls"
-		header("Content-Disposition: attachment; filename=U&I Prospective Student.xls");
+		// header("Content-Disposition: attachment; filename=U&I Prospective Student.xls");
 		$data['listStudent'] = $this->mstudent->getOnlineStudent();
 		$data['listPrice'] = $this->mprice->getAllPrice();
 		$this->load->view('v_exportprospectivestudent', $data);
