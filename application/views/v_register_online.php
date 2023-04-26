@@ -71,6 +71,11 @@
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
+					<label for="">Parent Name</label>
+					<input type="text" class="form-control" placeholder="Enter Parent Name" name="parent_name" value="<?php echo set_value('parent_name'); ?>" required>
+					<span class="glyphicon glyphicon-user form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
 					<label for="">Phone Number</label>
 					<input type="text" class="form-control" placeholder="Enter Phone" name="phone" value="<?php echo set_value('phone'); ?>" required>
 					<span class="glyphicon glyphicon-phone form-control-feedback"></span>
@@ -237,6 +242,7 @@
 		});
 
 		$('#others').hide();
+
 		function selectOther() {
 			var know = $('#know').val();
 			if (know == 'Other') {

@@ -56,7 +56,19 @@ class OnlineRegistration extends CI_Controller
 				'know' => $this->input->post('know') != 'Other' ? $this->input->post('know') : $this->input->post('others'),
 				'signature' => $file,
 			);
-			$latestRecordStudent = $this->mstudent->addStudent($data);
+			$dataParent = [
+				'name' => $this->input->post('parent_name'),
+			];
+			$this->db->insert('student', $data);
+			$lastIdData = $this->db->insert_id();
+			$this->db->insert('parents', $dataParent);
+			$lastIdDataParent = $this->db->insert_id();
+			$dataParentStudent = [
+				'parent_id' => $lastIdDataParent,
+				'student_id' => $lastIdData,
+			];
+			$this->db->insert('parent_students', $dataParentStudent);
+			// $latestRecordStudent = $this->mstudent->addStudent($data);
 			$this->session->set_flashdata('success', "Registration Success");
 			redirect(base_url("OnlineRegistration"));
 		}
