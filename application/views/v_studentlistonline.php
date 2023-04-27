@@ -547,16 +547,16 @@
 						</div> -->
 					</div>
 
-					<input type="hidden" class="form-control" id="vid" name="vid" value="">
-					<input type="hidden" class="form-control" id="vamount" name="vamount">
-					<input type="hidden" class="form-control" id="vregistration" name="vregistration" value="">
-					<input type="hidden" class="form-control" id="vpointbook" name="vpointbook">
-					<input type="hidden" class="form-control" id="vbook" name="vbook" value="">
-					<input type="hidden" class="form-control" id="vagenda" name="vagenda">
-					<input type="hidden" class="form-control" id="vbooklet" name="vbooklet">
+					<input type="hidden" class="form-control" id="vid" name="vid" value="0">
+					<input type="hidden" class="form-control" id="vamount" name="vamount" value="0">
+					<input type="hidden" class="form-control" id="vregistration" name="vregistration" value="0">
+					<input type="hidden" class="form-control" id="vpointbook" name="vpointbook" value="0">
+					<input type="hidden" class="form-control" id="vbook" name="vbook" value="0">
+					<input type="hidden" class="form-control" id="vagenda" name="vagenda" value="0">
+					<input type="hidden" class="form-control" id="vbooklet" name="vbooklet" value="0">
 					<!-- <input type="hidden" class="form-control" id="vexercise" name="vexercise"> -->
-					<input type="hidden" class="form-control" id="vcourse" name="vcourse">
-					<input type="text" class="form-control" id="vother" name="vother" value="0">
+					<input type="hidden" class="form-control" id="vcourse" name="vcourse" value="0">
+					<input type="hidden" class="form-control" id="vother" name="vother" value="0">
 					<input type="hidden" class="form-control" id="countattn" name="countattn">
 				</div>
 				<div class="modal-footer">
@@ -708,6 +708,15 @@
 			$("#divpayment").hide(750);
 			$("#voucherdiv").hide(750);
 		}
+
+		document.getElementById("iother").value = 0
+		document.getElementById("vother").value = 0
+		document.getElementById("vbooklet").value = 0
+		document.getElementById("vagenda").value = 0
+		document.getElementById("vbook").value = 0
+		document.getElementById("vpointbook").value = 0
+		document.getElementById("vregistration").value = 0
+		document.getElementById("vcourse").value = 0
 	}
 
 	function changeCategoryResult() {
@@ -718,6 +727,15 @@
 			$("#resultprivatediv").hide(750);
 			$("#resultregulardiv").show(750);
 		}
+
+		document.getElementById("iother").value = 0
+		document.getElementById("vother").value = 0
+		document.getElementById("vbooklet").value = 0
+		document.getElementById("vagenda").value = 0
+		document.getElementById("vbook").value = 0
+		document.getElementById("vpointbook").value = 0
+		document.getElementById("vregistration").value = 0
+		document.getElementById("vcourse").value = 0
 	}
 
 	function showDetail() {
@@ -743,6 +761,15 @@
 		$("#divpayment").hide(750);
 		$("#voucherdiv").hide(750);
 
+		document.getElementById("iother").value = 0
+		document.getElementById("vother").value = 0
+		document.getElementById("vbooklet").value = 0
+		document.getElementById("vagenda").value = 0
+		document.getElementById("vbook").value = 0
+		document.getElementById("vpointbook").value = 0
+		document.getElementById("vregistration").value = 0
+		document.getElementById("vcourse").value = 0
+
 		<?php
 		foreach ($listPrice->result() as $price) {
 		?>
@@ -760,12 +787,6 @@
 	}
 
 	function checkRegistration() {
-		if (document.getElementById("amount").value != "") {
-			var amount = document.getElementById("amount").value.replace(/\./g, '');
-			amount = amount.replace("Rp ", "");
-		} else {
-			var amount = 0;
-		}
 
 		<?php
 		foreach ($listPrice->result() as $price) {
@@ -776,13 +797,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->registration ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vregistration").value = parseInt(<?= $price->registration ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->registration ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vregistration").value = parseInt(<?= $price->registration ?>);
+						document.getElementById("vregistration").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			} else {
@@ -791,13 +810,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->registration ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vregistration").value = parseInt(<?= $price->registration ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->registration ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vregistration").value = parseInt(<?= $price->registration ?>);
+						document.getElementById("vregistration").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			}
@@ -807,12 +824,6 @@
 	}
 
 	function checkPointbook() {
-		if (document.getElementById("amount").value != "") {
-			var amount = document.getElementById("amount").value.replace(/\./g, '');
-			amount = amount.replace("Rp ", "");
-		} else {
-			var amount = 0;
-		}
 
 		<?php
 		foreach ($listPrice->result() as $price) {
@@ -823,13 +834,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->pointbook ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vpointbook").value = parseInt(<?= $price->pointbook ?>);
+						grandTotal();
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->pointbook ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vpointbook").value = parseInt(<?= $price->pointbook ?>);
+						document.getElementById("vpointbook").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			} else {
@@ -838,13 +847,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->pointbook ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vpointbook").value = parseInt(<?= $price->pointbook ?>);
+						grandTotal();
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->pointbook ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vpointbook").value = parseInt(<?= $price->pointbook ?>);
+						document.getElementById("vpointbook").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			}
@@ -854,13 +861,6 @@
 	}
 
 	function checkBook() {
-		if (document.getElementById("amount").value != "") {
-			var amount = document.getElementById("amount").value.replace(/\./g, '');
-			amount = amount.replace("Rp ", "");
-		} else {
-			var amount = 0;
-		}
-
 		<?php
 		foreach ($listPrice->result() as $price) {
 		?>
@@ -870,13 +870,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->book ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vbook").value = parseInt(<?= $price->book ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->book ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vbook").value = parseInt(<?= $price->book ?>);
+						document.getElementById("vbook").value = parseInt(0);
+						grandTotal();
 					}
 				}
 			} else {
@@ -885,13 +883,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->book ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vbook").value = parseInt(<?= $price->book ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->book ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vbook").value = parseInt(<?= $price->book ?>);
+						document.getElementById("vbook").value = parseInt(0);
+						grandTotal();
 					}
 				}
 			}
@@ -901,13 +897,6 @@
 	}
 
 	function checkAgenda() {
-		if (document.getElementById("amount").value != "") {
-			var amount = document.getElementById("amount").value.replace(/\./g, '');
-			amount = amount.replace("Rp ", "");
-		} else {
-			var amount = 0;
-		}
-
 		<?php
 		foreach ($listPrice->result() as $price) {
 		?>
@@ -917,13 +906,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->agenda ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vagenda").value = parseInt(<?= $price->agenda ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->agenda ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vagenda").value = parseInt(<?= $price->agenda ?>);
+						document.getElementById("vagenda").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			} else {
@@ -932,13 +919,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->agenda ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vagenda").value = parseInt(<?= $price->agenda ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->agenda ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vagenda").value = parseInt(<?= $price->agenda ?>);
+						document.getElementById("vagenda").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			}
@@ -948,12 +933,6 @@
 	}
 
 	function checkBooklet() {
-		if (document.getElementById("amount").value != "") {
-			var amount = document.getElementById("amount").value.replace(/\./g, '');
-			amount = amount.replace("Rp ", "");
-		} else {
-			var amount = 0;
-		}
 
 		<?php
 		foreach ($listPrice->result() as $price) {
@@ -964,13 +943,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->booklet ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->booklet ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
+						document.getElementById("vbooklet").value = 0;
+						grandTotal()
 					}
 				}
 			} else {
@@ -979,13 +956,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->booklet ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->booklet ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vbooklet").value = parseInt(<?= $price->booklet ?>);
+						document.getElementById("vbooklet").value = 0;
+						grandTotal()
 					}
 				}
 			}
@@ -1009,10 +984,10 @@
 			subOther = document.getElementById("iother").value
 			document.getElementById("vother").value = isNaN(parseInt(subOther)) == false ? parseInt(subOther) : 0;
 			totalOther = document.getElementById("vother").value
-			total()
+			grandTotal()
 		} else {
 			document.getElementById("vother").value = 0;
-			total()
+			grandTotal()
 		}
 	}
 
@@ -1030,25 +1005,12 @@
 			subOther = document.getElementById("iother").value
 			document.getElementById("vother").value = isNaN(parseInt(subOther)) == false ? parseInt(subOther) : 0;
 			totalOther = document.getElementById("vother").value
-			total()
+			grandTotal()
 		} else {
 			document.getElementById("vother").value = 0;
-			total()
+			grandTotal()
 		}
 
-	}
-
-	function total() {
-		if (document.getElementById("amount").value != "") {
-			var amount = document.getElementById("amount").value.replace(/\./g, '');
-			amount = amount.replace("Rp ", "");
-		} else {
-			var amount = 0;
-		}
-		var totalOther = document.getElementById("vother").value
-		console.log(totalOther);
-		document.getElementById("amount").value = parseInt(totalOther);
-		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 	}
 
 	function checkExercise() {
@@ -1103,14 +1065,6 @@
 
 
 	function checkCourse() {
-		if (document.getElementById("amount").value != "") {
-			var amount = document.getElementById("amount").value.replace(/\./g, '');
-			amount = amount.replace("Rp ", "");
-		} else {
-			var amount = 0;
-		}
-
-
 		<?php
 		foreach ($listPrice->result() as $price) {
 		?>
@@ -1120,13 +1074,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->course ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vcourse").value = parseInt(<?= $price->course ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->course ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vcourse").value = parseInt(<?= $price->course ?>);
+						document.getElementById("vcourse").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			} else {
@@ -1135,13 +1087,11 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("amount").value = parseInt(amount) + parseInt(<?= $price->course ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 						document.getElementById("vcourse").value = parseInt(<?= $price->course ?>);
+						grandTotal()
 					} else {
-						document.getElementById("amount").value = parseInt(amount) - parseInt(<?= $price->course ?>);
-						document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-						document.getElementById("vcourse").value = parseInt(<?= $price->course ?>);
+						document.getElementById("vcourse").value = parseInt(0);
+						grandTotal()
 					}
 				}
 			}
@@ -1305,5 +1255,24 @@
 				// $("#categoryResult").select2().select2('val', 'REGULAR');
 			}
 		});
+	}
+
+
+	function grandTotal() {
+		if (document.getElementById("amount").value != "") {
+			var amount = document.getElementById("amount").value.replace(/\./g, '');
+			amount = amount.replace("Rp ", "");
+		} else {
+			var amount = 0;
+		}
+		var other = document.getElementById("vother").value
+		var booklet = document.getElementById("vbooklet").value
+		var agenda = document.getElementById("vagenda").value
+		var book = document.getElementById("vbook").value
+		var pointbook = document.getElementById("vpointbook").value
+		var registrasi = document.getElementById("vregistration").value
+		var course = document.getElementById("vcourse").value
+		document.getElementById("amount").value = parseInt(agenda) + parseInt(booklet) + parseInt(other) + parseInt(book) + parseInt(pointbook) + parseInt(registrasi) + parseInt(course);
+		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 	}
 </script>
