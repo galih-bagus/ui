@@ -45,7 +45,7 @@
 					<font color="red"><?= $error ?></font>
 				</p>
 			<?php else : ?>
-				<p class="login-box-msg">Sign in to start your asd</p>
+				<p class="login-box-msg">Sign in to start your session</p>
 			<?php endif; ?>
 
 			<form action="<?php echo base_url() ?>login/login" method="post">
