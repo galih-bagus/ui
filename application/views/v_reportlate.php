@@ -279,9 +279,9 @@
 	});
 	$('#checkAll').change(function() {
 		if ($(this).is(':checked')) {
-			$('.sendwa').prop('checked',true);
+			$('.sendwa').prop('checked', true);
 		} else {
-			$('.sendwa').prop('checked',false);
+			$('.sendwa').prop('checked', false);
 		}
 	});
 </script>
