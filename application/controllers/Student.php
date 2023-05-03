@@ -436,6 +436,17 @@ class Student extends CI_Controller
 			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		}
+		if (isset($_POST['booklet'])) {
+			$data = array(
+				'paymentid' => $latestRecordPayment['id'],
+				'studentid' => $this->input->post('idstudent'),
+				'voucherid' => $this->input->post('vid'),
+				'category' => "BOOKLET",
+				//'monthpay' => $monthpay,
+				'amount' => $this->input->post('vbooklet'),
+			);
+			$var = $this->mpaydetail->addPaydetail($data);
+		}
 		if (isset($_POST['course'])) {
 			if ($this->input->post('category') == "PRIVATE") {
 				$countattn = $this->input->post('countattn');
