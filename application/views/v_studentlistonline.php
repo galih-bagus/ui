@@ -169,6 +169,7 @@
 										<th>Birthday</th>
 										<th>Speaking</th>
 										<th>Written</th>
+										<th>Status</th>
 										<th class="notPrintable">Action</th>
 									</tr>
 								</thead>
@@ -177,15 +178,16 @@
 									$no = 1;
 									foreach ($listStudent->result() as $row) {
 									?>
-										<tr class="status<?= $row->status ?>">
+										<tr class="status<?= $row->status ?>" style="<?= $row->is_complete == '1' ? 'color:red' : "" ?>">
 											<td><?= $no++ ?></td>
 											<td><?= $row->name ?></td>
 											<td><?= $row->phone ?></td>
 											<td><?= $row->birthday ?></td>
 											<td><?= $row->speaking ?></td>
 											<td><?= $row->written ?></td>
+											<td><?= $row->is_complete == '1' ? 'DONE' : "" ?></td>
 											<td>
-												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>
+												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>','<?= $row->placement_test_result ?>','<?= $row->kind_of_test ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>
 												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')">Payment</a>
 											</td>
 										</tr>
@@ -301,22 +303,16 @@
 						<div class="form-group">
 							<label for="time" class="col-sm-3 control-label">Time</label>
 							<div class="col-sm-3">
-								<input type="number" class="form-control" name="timeprv">
+								<input type="time" class="form-control" name="timeprv">
 							</div>
-							<div class="col-sm-6">
-								<select name="ampmprv" id="" class="form-control">
-									<option value="AM">AM</option>
-									<option value="PM">PM</option>
-								</select>
+							<label for="attendance" class="col-sm-3 control-label">Attendance</label>
+							<div class="col-sm-3">
+								<input type="text" class="form-control" value="" id="attendance" name="attendance" data-role="tagsinput">
 							</div>
 						</div>
 
 
 						<div class="form-group">
-							<label for="attendance" class="col-sm-3 control-label">Attendance</label>
-							<div class="col-sm-9">
-								<input type="text" class="form-control" value="" id="attendance" name="attendance" data-role="tagsinput">
-							</div>
 						</div>
 
 						<div class="form-group">
@@ -378,19 +374,10 @@
 						<div class="form-group">
 							<label for="time" class="col-sm-3 control-label">Time</label>
 							<div class="col-sm-3">
-								<input type="number" class="form-control" name="timereg">
+								<input type="time" class="form-control" name="timereg">
 							</div>
-							<div class="col-sm-6">
-								<select name="ampmreg" id="" class="form-control">
-									<option value="AM">AM</option>
-									<option value="PM">PM</option>
-								</select>
-							</div>
-						</div>
-
-						<div class="form-group">
 							<label id="labelattn" for="attendance" class="col-sm-3 control-label">Attendance</label>
-							<div class="col-sm-9">
+							<div class="col-sm-3">
 								<input type="number" class="form-control" id="attendancereg" name="attendancereg">
 							</div>
 						</div>
@@ -590,7 +577,7 @@
 							<label for="category" class="control-label">Category</label>
 						</div>
 						<div class="col-sm-8">
-							<select class="form-control select2" style="width: 100%;" name="" id="categoryResult" onchange="changeCategoryResult()" required>
+							<select class="form-control" style="width: 100%;" name="" id="categoryResult" onchange="changeCategoryResult()" required>
 								<option disabled="disabled" value="">-- Choose Category --</option>
 								<option value="PRIVATE">PRIVATE</option>
 								<option value="REGULAR">REGULAR</option>
@@ -618,7 +605,7 @@
 							<label for="speaking" class="control-label">Speaking</label>
 						</div>
 						<div class="col-sm-4" style="margin-top: 15px;">
-							<select class="form-control select2" style="width: 100%;" id="speaking" name="speaking" required>
+							<select class="form-control" style="width: 100%;" id="speaking" name="speaking" required>
 								<option disabled="disabled" value="" selected>-- Choose Score --</option>
 								<?php
 								$options = array("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E");
@@ -635,7 +622,7 @@
 							<label for="staff" class="control-label">Staff</label>
 						</div>
 						<div class="col-sm-8" style="margin-top: 15px;">
-							<select class="form-control select2" style="width: 100%;" name="staff" id="staff" required>
+							<select class="form-control" style="width: 100%;" name="staff" id="staff" required>
 								<option disabled="disabled" value="" selected>-- Choose Staff --</option>
 								<?php
 								foreach ($staff->result() as $stf) {
@@ -1222,11 +1209,13 @@
 		$('#idModal').val(id);
 	}
 
-	function showModalResult(id, name, written, speaking, priceid) {
+	function showModalResult(id, name, written, speaking, priceid, placement, kind) {
 		$('.modal-title').html('Result Student Test ' + name);
 		$('#idModalResult').val(id);
 		$('#written').val(written);
 		$('#speaking').val(speaking);
+		$('#placement_test_result').val(placement);
+		$('#kind_of_test').val(kind);
 		// $.ajax({
 		// 	url: '<?php echo base_url(); ?>/mahasiswa/edit',
 		// 	method: 'post',
@@ -1247,8 +1236,9 @@
 				console.log('Something is wrong');
 			},
 			success: function(data) {
+				console.log(data);
 				// $("tbody").append("<tr><td>" + title + "</td><td>" + description + "</td></tr>");
-				var category = data[0].program != 'Private' ? 'REGULAR' : 'PRIVATE';
+				var category = data[0].level != 'Private' ? 'REGULAR' : 'PRIVATE';
 				$('#levelResult').val(data[0].id);
 				$('#categoryResult').val(category);
 				// $("#categoryResult").select2("val", category);

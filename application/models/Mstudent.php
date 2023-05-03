@@ -157,7 +157,7 @@ class Mstudent extends CI_Model
 		$this->db->join("day as daytwo", "student.day2 = daytwo.id", "left");
 		$this->db->where('status =', 'ACTIVE');
 		$this->db->where('is_online =', 1);
-		$this->db->where("is_complete", "0");
+		// $this->db->where("is_complete", "0");
 		$this->db->order_by('id', 'asc');
 		return $this->db->get();
 	}

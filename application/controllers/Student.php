@@ -534,14 +534,17 @@ class Student extends CI_Controller
 			$cekNo = substr((int)$student->phone, 0, 2);
 			$lastDate = date("Y-m-t", strtotime($arrDate[0]));
 			$exLastDate = explode("-", $lastDate);
+			$nextMonth = date('F', strtotime('+1 month', strtotime($arrDate[0])));
+			$nextMonthDay = $this->dayIndo(date('D', strtotime('+1 month', strtotime($arrDate[0]))));
 			if ($cekNo != '62') {
 				$number = (int)(62 . $phone);
 			} else {
 				$number = $phone;
 			}
-			$message = 'Selamat sore%0a%0aMau mengingatkan segera lakukan pembayaran spp ' . $arrDate[0] . ' ' . $student->name . ' sebesar 300.000%2Forang%0a%0a• Pembayaran melalui Frontdesk U%26I  terakhir hari Selasa  tgl *' . $exLastDate[2] . ' ' . $arrDate[0] . ' ' . $exLastDate[0] . '*%0a• Pembayaran melalui Transfer BCA 464 1327 187 an Lie Citro Dewi Ruslie terakhir tgl *31 ' . $arrDate[0] . '* ' . $exLastDate[0] . '%0a• *Pembayaran lebih dari tgl ' . $exLastDate[2] . ' ' . $arrDate[0] . ' ' . $exLastDate[0] . ' akan dikenakan denda keterlambatan sebesar 10%25*🙂🙏🏻%0a%0aTerima kasih 🙂🙏🏻';
+			$message = 'Selamat sore%0a%0aMau mengingatkan segera lakukan pembayaran spp ' . $nextMonth . ' ' . $student->name . ' sebesar 300.000%2Forang%0a%0a• Pembayaran melalui Frontdesk U%26I  terakhir hari ' . $nextMonthDay . '  tgl *' . $exLastDate[2] . ' ' . $nextMonth . ' ' . $exLastDate[0] . '*%0a• Pembayaran melalui Transfer BCA 464 1327 187 an Lie Citro Dewi Ruslie terakhir tgl *31 ' . $nextMonth . '* ' . $exLastDate[0] . '%0a• *Pembayaran lebih dari tgl ' . $exLastDate[2] . ' ' . $nextMonth . ' ' . $exLastDate[0] . ' akan dikenakan denda keterlambatan sebesar 10%25*🙂🙏🏻%0a%0aTerima kasih 🙂🙏🏻';
 			$this->sendwa($number, $message);
 		}
+		echo $message;
 		redirect(base_url('report/showLate'));
 	}
 
@@ -571,5 +574,26 @@ class Student extends CI_Controller
 		$data['listStudent'] = $this->mstudent->getOnlineStudent();
 		$data['listPrice'] = $this->mprice->getAllPrice();
 		$this->load->view('v_exportprospectivestudent', $data);
+	}
+
+	public function dayIndo($day)
+	{
+		$hari = '';
+		if ($day == 'Mon') {
+			$hari = 'Senin';
+		} else if ($day == 'Tue') {
+			$hari = 'Selasa';
+		} else if ($day == 'Wed') {
+			$hari = 'Rabu';
+		} else if ($day == 'Thu') {
+			$hari = 'Kamis';
+		} else if ($day == 'Fri') {
+			$hari = 'Jumat';
+		} else if ($day == 'Sat') {
+			$hari = 'Sabtu';
+		} else if ($day == 'Sun') {
+			$hari = 'Minggu';
+		}
+		return $hari;
 	}
 }

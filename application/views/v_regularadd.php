@@ -202,6 +202,7 @@ $url = base_url() . "cetak/printregular/";
 										<option value="AGENDA">Agenda</option>
 										<option value="REGISTRATION">Registration</option>
 										<option value="EXERCISE">Exercise Book</option>
+										<option value="BOOKLET">Booklet</option>
 									</select>
 								</div>
 							</div>
@@ -979,6 +980,12 @@ $url = base_url() . "cetak/printregular/";
 					$("#daydiv").hide(750);
 				} else if (document.getElementById("category").value === "EXERCISE") {
 					document.getElementById("amount").value = "Rp <?php echo number_format($price->exercisebook, 0, ".", "."); ?>";
+					$("#perioddiv").hide(750);
+					$("#penaltydiv").hide(750);
+					$("#monthdiv").hide(750);
+					$("#daydiv").hide(750);
+				} else if (document.getElementById("category").value === "BOOKLET") {
+					document.getElementById("amount").value = "Rp <?php echo number_format($price->booklet, 0, ".", "."); ?>";
 					$("#perioddiv").hide(750);
 					$("#penaltydiv").hide(750);
 					$("#monthdiv").hide(750);
