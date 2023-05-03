@@ -537,8 +537,7 @@ class Student extends CI_Controller
 			} else {
 				$number = $phone;
 			}
-			// $message = 'Selamat sore%0a%0aMau mengingatkan segera lakukan pembayaran spp ' . $arrDate[0] . ' ' . $student->name . ' sebesar 300.000/ orang%0a%0a• Pembayaran melalui Frontdesk U%26I  terakhir hari Selasa  tgl 31 Maret 2023%0a• Pembayaran melalui Transfer BCA 464 1327 187 an Lie Citro Dewi Ruslie terakhir tgl 31 Maret 2023%0a• Pembayaran lebih dari tgl 31 Maret 2023 akan dikenakan denda keterlambatan sebesar 10% 🙂🙏🏻';
-			$message = 'Selamat%20sore%0A%0AMau%20mengingatkan%20segera%20lakukan%20pembayaran%20spp%20' . $arrDate[0] . '%20' . $student->name . '%20sebesar%20300.000%2Forang%0A%0A%E2%80%A2%20Pembayaran%20melalui%20Frontdesk%20U%26I%20%20terakhir%20hari%20Selasa%20%20tgl%20*31%20Maret%202023*%0A%E2%80%A2%20Pembayaran%20melalui%20Transfer%20BCA%20464%201327%20187%20an%20Lie%20Citro%20Dewi%20Ruslie%20terakhir%20tgl%20*31%20Maret%202023*%0A%E2%80%A2%20*Pembayaran%20lebih%20dari%20tgl%2031%20Maret%202023%20akan%20dikenakan%20denda%20keterlambatan%20sebesar%2010%25*%20%F0%9F%99%82%F0%9F%99%8F%F0%9F%8F%BB%0A%0ATerima%20kasih%20%F0%9F%99%82%F0%9F%99%8F%F0%9F%8F%BB';
+			$message = 'Selamat sore%0a%0aMau mengingatkan segera lakukan pembayaran spp ' . $arrDate[0] . ' ' . $student->name . ' sebesar';
 			$this->sendwa($number, $message);
 		}
 		redirect(base_url('report/showLate'));
