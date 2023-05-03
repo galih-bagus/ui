@@ -537,7 +537,7 @@ class Student extends CI_Controller
 			} else {
 				$number = $phone;
 			}
-			$message = 'Selamat sore%0a%0aMau mengingatkan segera lakukan pembayaran spp ' . $arrDate[0] . ' ' . $student->name . ' sebesar 300.000orang%0a%0a• Pembayaran melalui Frontdesk U%26I  terakhir hari Selasa ';
+			$message = 'Selamat sore%0a%0aMau mengingatkan segera lakukan pembayaran spp ' . $arrDate[0] . ' ' . $student->name . ' sebesar 300.000orang%0a%0a• Pembayaran melalui Frontdesk U%26I  terakhir hari Selasa  tgl 31 Maret 2023%0a• Pembayaran melalui Transfer BCA 464 1327 187 an Lie Citro Dewi Ruslie terakhir tgl 31 Maret 2023%0a• Pembayaran lebih dari tgl *31 Maret 2023* akan dikenakan denda keterlambatan sebesar 10 🙂🙏🏻';
 			$this->sendwa($number, $message);
 		}
 		redirect(base_url('report/showLate'));
