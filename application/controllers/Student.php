@@ -509,7 +509,7 @@ class Student extends CI_Controller
 			CURLOPT_FOLLOWLOCATION => true,
 			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 			CURLOPT_CUSTOMREQUEST => 'POST',
-			CURLOPT_POSTFIELDS => 'api_key=2e4f34588aeb869e3282ad49004dcc9c&sender=6285236432780&number=6283847023896&message=' . $message,
+			CURLOPT_POSTFIELDS => 'api_key=2e4f34588aeb869e3282ad49004dcc9c&sender=6285236432780&number=' . $number . '&message=' . $message,
 			CURLOPT_HTTPHEADER => array(
 				'Content-Type: application/x-www-form-urlencoded'
 			),
