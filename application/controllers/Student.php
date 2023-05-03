@@ -537,7 +537,7 @@ class Student extends CI_Controller
 			} else {
 				$number = $phone;
 			}
-			$message = 'Selamat pagi. Kami dari u%26i english course mau mengingatkan bahwa tagihan untuk kursus bulan ' . $arrDate[0] . ' Tahun ' . $arrDate[1] . ' An. ' . $student->name . ' belum terbayarkan. Harap untuk segera melunasi biaya kursus. Terima kasih';
+			$message = 'Selamat sore%0aKami dari u%26i english course mau mengingatkan bahwa tagihan untuk kursus bulan ' . $arrDate[0] . ' Tahun ' . $arrDate[1] . ' An. ' . $student->name . ' belum terbayarkan. Harap untuk segera melunasi biaya kursus. Terima kasih';
 			$this->sendwa($number, $message);
 		}
 		redirect(base_url('report/showLate'));
