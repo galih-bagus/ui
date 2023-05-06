@@ -188,107 +188,101 @@ class Payment extends CI_Controller
 
 	public function addRegularDb()
 	{
-		// var_dump($this->input->post());
-		$total = $this->input->post('amount');
+		date_default_timezone_set("Asia/Jakarta");
+		$date = date('Y-m-d');
+		$time = date('Y-m-d h:i:s');
+
+		$total = $this->input->post('total');
 		$order   = array("Rp ", ".");
 		$replace = "";
 		$total = str_replace($order, $replace, $total);
-		echo json_encode($total);
-		// date_default_timezone_set("Asia/Jakarta");
-		// $date = date('Y-m-d');
-		// $time = date('Y-m-d h:i:s');
 
-		// $total = $this->input->post('total');
-		// $order   = array("Rp ", ".");
-		// $replace = "";
-		// $total = str_replace($order, $replace, $total);
+		$var = $this->input->post('trfdate');
+		if ($var != "") {
+			$parts = explode('/', $var);
+			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+			$data = array(
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'trfdate' => $trfdate,
+				'username' => $this->session->userdata('nama')
+			);
+			$latestRecord = $this->mpayment->addPayment($data);
+		} else {
+			$data = array(
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'username' => $this->session->userdata('nama')
+			);
+			$latestRecord = $this->mpayment->addPayment($data);
+		}
 
-		// $var = $this->input->post('trfdate');
-		// if ($var != "") {
-		// 	$parts = explode('/', $var);
-		// 	$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
-		// 	$data = array(
-		// 		'paydate' => $date,
-		// 		'paytime' => $time,
-		// 		'method' => $this->input->post('method'),
-		// 		'number' => $this->input->post('number'),
-		// 		'bank' => $this->input->post('bank'),
-		// 		'total' => $total,
-		// 		'trfdate' => $trfdate,
-		// 		'username' => $this->session->userdata('nama')
-		// 	);
-		// 	$latestRecord = $this->mpayment->addPayment($data);
-		// } else {
-		// 	$data = array(
-		// 		'paydate' => $date,
-		// 		'paytime' => $time,
-		// 		'method' => $this->input->post('method'),
-		// 		'number' => $this->input->post('number'),
-		// 		'bank' => $this->input->post('bank'),
-		// 		'total' => $total,
-		// 		'username' => $this->session->userdata('nama')
-		// 	);
-		// 	$latestRecord = $this->mpayment->addPayment($data);
-		// }
+		$recordnum = $this->input->post('recordnum');
+		for ($i = 1; $i <= $recordnum; $i++) {
+			$amount = $this->input->post('amount' . $i);
+			$order   = array("Rp ", ".");
+			$replace = "";
+			$amount = str_replace($order, $replace, $amount);
 
-		// $recordnum = $this->input->post('recordnum');
-		// for ($i = 1; $i <= $recordnum; $i++) {
-		// 	$amount = $this->input->post('amount' . $i);
-		// 	$order   = array("Rp ", ".");
-		// 	$replace = "";
-		// 	$amount = str_replace($order, $replace, $amount);
+			if ($this->input->post('payment' . $i) == "COURSE") {
+				$var = $this->input->post('month' . $i);
+				$parts = explode(' ', $var);
+				$montharr = date_parse($parts[0]);
+				if ($montharr['month'] < 10) {
+					$month = "0" . $montharr['month'];
+				} else {
+					$month = $montharr['month'];
+				}
+				$monthpay = $parts[1] . '-' . $month . '-' . '1';
+			}
 
-		// 	if ($this->input->post('payment' . $i) == "COURSE") {
-		// 		$var = $this->input->post('month' . $i);
-		// 		$parts = explode(' ', $var);
-		// 		$montharr = date_parse($parts[0]);
-		// 		if ($montharr['month'] < 10) {
-		// 			$month = "0" . $montharr['month'];
-		// 		} else {
-		// 			$month = $montharr['month'];
-		// 		}
-		// 		$monthpay = $parts[1] . '-' . $month . '-' . '1';
-		// 	}
+			if ($this->input->post('voucher' . $i) != "") {
+				$data = array(
+					'isused' => "NO"
+				);
+				$where['id'] = $this->input->post('voucher' . $i);
+				$this->mvoucher->updateVoucher($data, $where);
+			}
 
-		// 	if ($this->input->post('voucher' . $i) != "") {
-		// 		$data = array(
-		// 			'isused' => "NO"
-		// 		);
-		// 		$where['id'] = $this->input->post('voucher' . $i);
-		// 		$this->mvoucher->updateVoucher($data, $where);
-		// 	}
+			echo $this->input->post('studentid' . $i);
 
-		// 	echo $this->input->post('studentid' . $i);
+			if ($this->input->post('payment' . $i) == "COURSE") {
+				$data = array(
+					'paymentid' => $latestRecord['id'],
+					'studentid' => $this->input->post('studentid' . $i),
+					'voucherid' => $this->input->post('voucher' . $i),
+					'category' => $this->input->post('payment' . $i),
+					'monthpay' => $monthpay,
+					'amount' => $amount
+				);
+				$var = $this->mpaydetail->addPaydetail($data);
+			} else {
+				$data = array(
+					'paymentid' => $latestRecord['id'],
+					'studentid' => $this->input->post('studentid' . $i),
+					'voucherid' => $this->input->post('voucher' . $i),
+					'category' => $this->input->post('payment' . $i),
+					'amount' => $amount
+				);
+				$var = $this->mpaydetail->addPaydetail($data);
+			}
 
-		// 	if ($this->input->post('payment' . $i) == "COURSE") {
-		// 		$data = array(
-		// 			'paymentid' => $latestRecord['id'],
-		// 			'studentid' => $this->input->post('studentid' . $i),
-		// 			'voucherid' => $this->input->post('voucher' . $i),
-		// 			'category' => $this->input->post('payment' . $i),
-		// 			'monthpay' => $monthpay,
-		// 			'amount' => $amount
-		// 		);
-		// 		$var = $this->mpaydetail->addPaydetail($data);
-		// 	} else {
-		// 		$data = array(
-		// 			'paymentid' => $latestRecord['id'],
-		// 			'studentid' => $this->input->post('studentid' . $i),
-		// 			'voucherid' => $this->input->post('voucher' . $i),
-		// 			'category' => $this->input->post('payment' . $i),
-		// 			'amount' => $amount
-		// 		);
-		// 		$var = $this->mpaydetail->addPaydetail($data);
-		// 	}
+			// $nexturl = "payment/updateregular/".$latestRecord['id'];
+			// redirect(base_url($nexturl));
+		}
 
-		// 	// $nexturl = "payment/updateregular/".$latestRecord['id'];
-		// 	// redirect(base_url($nexturl));
-		// }
-
-		// // redirect(base_url("payment/addregular"));
-		// sleep(2);
-		// redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
-		// //redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
+		// redirect(base_url("payment/addregular"));
+		sleep(2);
+		redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
+		//redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
 	}
 
 	public function addPrivateDb()
