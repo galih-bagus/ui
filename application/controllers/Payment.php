@@ -1,43 +1,44 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-class Payment extends CI_Controller  {
-	function __construct(){
+<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+class Payment extends CI_Controller
+{
+	function __construct()
+	{
 		parent::__construct();
 		$this->load->model("mpayment");
 		$this->load->model("mstudent");
 		$this->load->model("mprice");
 		$this->load->model("mvoucher");
 		$this->load->model("mpaydetail");
-		if($this->session->userdata('status') != "login"){
+		if ($this->session->userdata('status') != "login") {
 			redirect(base_url("user"));
 		}
 	}
 
 	public function index()
 	{
-
 	}
 
 	public function addRegular()
 	{
 		$listLateStudent = $this->mstudent->getLatePaymentStudent();
 		foreach ($listLateStudent as $student) {
-			$monthpay = date("m",strtotime($student->monthpay));
+			$monthpay = date("m", strtotime($student->monthpay));
 			if (($monthpay < date('m')) || ($student->monthpay == '')) {
 				if ($student->condition == "DEFAULT") {
 					$data = array(
 						'penalty' => ($student->course * 10 / 100)
-						);
+					);
 				} else {
 					$data = array(
 						'penalty' => ($student->adjusment * 10 / 100)
-						);
+					);
 				}
 				$where['id'] = $student->id;
 				$this->mstudent->updateStudent($data, $where);
 			} else {
 				$data = array(
 					'penalty' => 0
-					);
+				);
 				$where['id'] = $student->id;
 				$this->mstudent->updateStudent($data, $where);
 			}
@@ -48,8 +49,8 @@ class Payment extends CI_Controller  {
 			$listVoucher = $this->mpayment->getUncompleteVoucher($uncomplete->id);
 			foreach ($listVoucher as $voucher) {
 				$data = array(
-						'isused' => "YES"
-						);
+					'isused' => "YES"
+				);
 				$where['id'] = $voucher->voucherid;
 				$this->mvoucher->updateVoucher($data, $where);
 			}
@@ -58,32 +59,32 @@ class Payment extends CI_Controller  {
 		}
 
 		$data['listStudent'] = $this->mstudent->getAllRegular()->result();
-		   
+
 		$data['allStudent'] = array();
-        foreach ($data['listStudent'] as $key => $value) {
-            $row = array();
-            $row['sid'] = $value->sid;
-            $row['priceid']= $value->priceid;
-            $row['name']= $value->name;
-            $row['program']= $value->program;
-            if($value->condition == "DEFAULT"){
-            	$row['course']='<span class="badge bg-yellow">Default: Rp '.number_format($value->course, 0, ".", ".").'</span>';
-            } elseif($value->condition == "CHANGE"){
-            	$row['course']='<span class="badge bg-light-blue">Change: Rp '.number_format($value->adjusment, 0, ".", ".").'</span>';
-            }else{
-				$row['course']='-';
+		foreach ($data['listStudent'] as $key => $value) {
+			$row = array();
+			$row['sid'] = $value->sid;
+			$row['priceid'] = $value->priceid;
+			$row['name'] = $value->name;
+			$row['program'] = $value->program;
+			if ($value->condition == "DEFAULT") {
+				$row['course'] = '<span class="badge bg-yellow">Default: Rp ' . number_format($value->course, 0, ".", ".") . '</span>';
+			} elseif ($value->condition == "CHANGE") {
+				$row['course'] = '<span class="badge bg-light-blue">Change: Rp ' . number_format($value->adjusment, 0, ".", ".") . '</span>';
+			} else {
+				$row['course'] = '-';
 			}
-            $data['allStudent'][] = $row;
-        }
-        // $output = array(
-        //         "draw" => 0,
-        //         "recordsTotal" => count($data1),
-        //         "recordsFiltered" => count($data1),
-        //         "data" => $data1,
-        // );
-// 		echo "<pre>";
-// 		print_r($data['allStudent']);
-// 		echo "</pre>";
+			$data['allStudent'][] = $row;
+		}
+		// $output = array(
+		//         "draw" => 0,
+		//         "recordsTotal" => count($data1),
+		//         "recordsFiltered" => count($data1),
+		//         "data" => $data1,
+		// );
+		// 		echo "<pre>";
+		// 		print_r($data['allStudent']);
+		// 		echo "</pre>";
 		$data['listPrice'] = $this->mprice->getAllPrice();
 		$data['listVoucher'] = $this->mvoucher->getAllVoucherYes();
 		// $data['listPaydetail'] = $this->mpaydetail->getPaydetailByPaymentId($latestRecord['id']);
@@ -91,34 +92,35 @@ class Payment extends CI_Controller  {
 		$this->load->view('v_regularadd', $data);
 		$this->load->view('v_footer');
 	}
-	public function getStudentRegular(){
+	public function getStudentRegular()
+	{
 		$data = $this->mstudent->getAllRegular()->result();
 		$data1 = array();
-        foreach ($data as $key => $value) {
-            $row = array();
-            $row['sid'] = $value->sid;
-            $row['priceid']= $value->priceid;
-            $row['name']= $value->name;
-            $row['program']= $value->program;
-            if($value->condition == "DEFAULT"){
-            	$row['course']='<span class="badge bg-yellow">Default: Rp '.number_format($value->course, 0, ".", ".").'</span>';
-            } elseif($value->condition == "CHANGE"){
-            	$row['course']='<span class="badge bg-light-blue">Change: Rp '.number_format($value->adjusment, 0, ".", ".").'</span>';
-            }else{
-				$row['course']='-';
+		foreach ($data as $key => $value) {
+			$row = array();
+			$row['sid'] = $value->sid;
+			$row['priceid'] = $value->priceid;
+			$row['name'] = $value->name;
+			$row['program'] = $value->program;
+			if ($value->condition == "DEFAULT") {
+				$row['course'] = '<span class="badge bg-yellow">Default: Rp ' . number_format($value->course, 0, ".", ".") . '</span>';
+			} elseif ($value->condition == "CHANGE") {
+				$row['course'] = '<span class="badge bg-light-blue">Change: Rp ' . number_format($value->adjusment, 0, ".", ".") . '</span>';
+			} else {
+				$row['course'] = '-';
 			}
-            $data1[] = $row;
-        }
-        $output = array(
-                "draw" => 0,
-                "recordsTotal" => count($data1),
-                "recordsFiltered" => count($data1),
-                "data" => $data1,
-        );
-        header('Content-Type: application/json');
-        echo json_encode($output);
+			$data1[] = $row;
+		}
+		$output = array(
+			"draw" => 0,
+			"recordsTotal" => count($data1),
+			"recordsFiltered" => count($data1),
+			"data" => $data1,
+		);
+		header('Content-Type: application/json');
+		echo json_encode($output);
 	}
-	
+
 	public function addPrivate()
 	{
 		$listUncomplete = $this->mpayment->getUncompletePayment();
@@ -126,8 +128,8 @@ class Payment extends CI_Controller  {
 			$listVoucher = $this->mpayment->getUncompleteVoucher($uncomplete->id);
 			foreach ($listVoucher as $voucher) {
 				$data = array(
-						'isused' => "YES"
-						);
+					'isused' => "YES"
+				);
 				$where['id'] = $voucher->voucherid;
 				$this->mvoucher->updateVoucher($data, $where);
 			}
@@ -148,23 +150,23 @@ class Payment extends CI_Controller  {
 	{
 		$listLateStudent = $this->mstudent->getLatePaymentStudent();
 		foreach ($listLateStudent as $student) {
-			$monthpay = date("m",strtotime($student->monthpay));
+			$monthpay = date("m", strtotime($student->monthpay));
 			if (($monthpay < date('m')) || ($student->monthpay == '')) {
 				if ($student->condition == "DEFAULT") {
 					$data = array(
 						'penalty' => ($student->course * 10 / 100)
-						);
+					);
 				} else {
 					$data = array(
 						'penalty' => ($student->adjusment * 10 / 100)
-						);
+					);
 				}
 				$where['id'] = $student->id;
 				$this->mstudent->updateStudent($data, $where);
 			} else {
 				$data = array(
 					'penalty' => 0
-					);
+				);
 				$where['id'] = $student->id;
 				$this->mstudent->updateStudent($data, $where);
 			}
@@ -186,101 +188,107 @@ class Payment extends CI_Controller  {
 
 	public function addRegularDb()
 	{
-		date_default_timezone_set("Asia/Jakarta");
-		$date = date('Y-m-d');
-		$time = date('Y-m-d h:i:s');
-
-		$total = $this->input->post('total');
+		// var_dump($this->input->post());
+		$total = $this->input->post('amount');
 		$order   = array("Rp ", ".");
 		$replace = "";
 		$total = str_replace($order, $replace, $total);
+		echo json_encode($total);
+		// date_default_timezone_set("Asia/Jakarta");
+		// $date = date('Y-m-d');
+		// $time = date('Y-m-d h:i:s');
 
-		$var = $this->input->post('trfdate');
-		if($var != "") {
-			$parts = explode('/',$var);
-			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
-			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'trfdate' => $trfdate,
-					'username' => $this->session->userdata('nama')
-					);
-			$latestRecord = $this->mpayment->addPayment($data);
-		} else {
-			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'username' => $this->session->userdata('nama')
-					);
-			$latestRecord = $this->mpayment->addPayment($data);
-		}
+		// $total = $this->input->post('total');
+		// $order   = array("Rp ", ".");
+		// $replace = "";
+		// $total = str_replace($order, $replace, $total);
 
-		$recordnum = $this->input->post('recordnum');
-		for ($i = 1; $i <= $recordnum; $i++) {
-			$amount = $this->input->post('amount'.$i);
-			$order   = array("Rp ", ".");
-			$replace = "";
-			$amount = str_replace($order, $replace, $amount);
+		// $var = $this->input->post('trfdate');
+		// if ($var != "") {
+		// 	$parts = explode('/', $var);
+		// 	$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
+		// 	$data = array(
+		// 		'paydate' => $date,
+		// 		'paytime' => $time,
+		// 		'method' => $this->input->post('method'),
+		// 		'number' => $this->input->post('number'),
+		// 		'bank' => $this->input->post('bank'),
+		// 		'total' => $total,
+		// 		'trfdate' => $trfdate,
+		// 		'username' => $this->session->userdata('nama')
+		// 	);
+		// 	$latestRecord = $this->mpayment->addPayment($data);
+		// } else {
+		// 	$data = array(
+		// 		'paydate' => $date,
+		// 		'paytime' => $time,
+		// 		'method' => $this->input->post('method'),
+		// 		'number' => $this->input->post('number'),
+		// 		'bank' => $this->input->post('bank'),
+		// 		'total' => $total,
+		// 		'username' => $this->session->userdata('nama')
+		// 	);
+		// 	$latestRecord = $this->mpayment->addPayment($data);
+		// }
 
-			if ($this->input->post('payment'.$i) == "COURSE") {
-				$var = $this->input->post('month'.$i);
-				$parts = explode(' ',$var);
-				$montharr = date_parse($parts[0]);
-				if ($montharr['month'] < 10) {
-					$month = "0".$montharr['month'];
-				} else {
-					$month = $montharr['month'];
-				}
-				$monthpay = $parts[1] . '-' . $month . '-' . '1';
-			}
+		// $recordnum = $this->input->post('recordnum');
+		// for ($i = 1; $i <= $recordnum; $i++) {
+		// 	$amount = $this->input->post('amount' . $i);
+		// 	$order   = array("Rp ", ".");
+		// 	$replace = "";
+		// 	$amount = str_replace($order, $replace, $amount);
 
-			if ($this->input->post('voucher'.$i) != "") {
-				$data = array(
-						'isused' => "NO"
-						);
-				$where['id'] = $this->input->post('voucher'.$i);
-				$this->mvoucher->updateVoucher($data, $where);
-			}
+		// 	if ($this->input->post('payment' . $i) == "COURSE") {
+		// 		$var = $this->input->post('month' . $i);
+		// 		$parts = explode(' ', $var);
+		// 		$montharr = date_parse($parts[0]);
+		// 		if ($montharr['month'] < 10) {
+		// 			$month = "0" . $montharr['month'];
+		// 		} else {
+		// 			$month = $montharr['month'];
+		// 		}
+		// 		$monthpay = $parts[1] . '-' . $month . '-' . '1';
+		// 	}
 
-			echo $this->input->post('studentid'.$i);
+		// 	if ($this->input->post('voucher' . $i) != "") {
+		// 		$data = array(
+		// 			'isused' => "NO"
+		// 		);
+		// 		$where['id'] = $this->input->post('voucher' . $i);
+		// 		$this->mvoucher->updateVoucher($data, $where);
+		// 	}
 
-			if ($this->input->post('payment'.$i) == "COURSE") {
-				$data = array(
-						'paymentid' => $latestRecord['id'],
-						'studentid' => $this->input->post('studentid'.$i),
-						'voucherid' => $this->input->post('voucher'.$i),
-						'category' => $this->input->post('payment'.$i),
-						'monthpay' => $monthpay,
-						'amount' => $amount
-						);
-				$var = $this->mpaydetail->addPaydetail($data);
-			} else {
-				$data = array(
-						'paymentid' => $latestRecord['id'],
-						'studentid' => $this->input->post('studentid'.$i),
-						'voucherid' => $this->input->post('voucher'.$i),
-						'category' => $this->input->post('payment'.$i),
-						'amount' => $amount
-						);
-				$var = $this->mpaydetail->addPaydetail($data);
-			}
+		// 	echo $this->input->post('studentid' . $i);
 
-			// $nexturl = "payment/updateregular/".$latestRecord['id'];
-			// redirect(base_url($nexturl));
-		}
+		// 	if ($this->input->post('payment' . $i) == "COURSE") {
+		// 		$data = array(
+		// 			'paymentid' => $latestRecord['id'],
+		// 			'studentid' => $this->input->post('studentid' . $i),
+		// 			'voucherid' => $this->input->post('voucher' . $i),
+		// 			'category' => $this->input->post('payment' . $i),
+		// 			'monthpay' => $monthpay,
+		// 			'amount' => $amount
+		// 		);
+		// 		$var = $this->mpaydetail->addPaydetail($data);
+		// 	} else {
+		// 		$data = array(
+		// 			'paymentid' => $latestRecord['id'],
+		// 			'studentid' => $this->input->post('studentid' . $i),
+		// 			'voucherid' => $this->input->post('voucher' . $i),
+		// 			'category' => $this->input->post('payment' . $i),
+		// 			'amount' => $amount
+		// 		);
+		// 		$var = $this->mpaydetail->addPaydetail($data);
+		// 	}
 
-		// redirect(base_url("payment/addregular"));
-		sleep(2);
-		redirect(base_url("payment/addregular?print=".$latestRecord['id']));
-		//redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
+		// 	// $nexturl = "payment/updateregular/".$latestRecord['id'];
+		// 	// redirect(base_url($nexturl));
+		// }
+
+		// // redirect(base_url("payment/addregular"));
+		// sleep(2);
+		// redirect(base_url("payment/addregular?print=" . $latestRecord['id']));
+		// //redirect(base_url("escpos/example/printregular.php?id=".$latestRecord['id']));
 	}
 
 	public function addPrivateDb()
@@ -295,69 +303,69 @@ class Payment extends CI_Controller  {
 		$total = str_replace($order, $replace, $total);
 
 		$var = $this->input->post('trfdate');
-		if($var != "") {
-			$parts = explode('/',$var);
+		if ($var != "") {
+			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'trfdate' => $trfdate,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'trfdate' => $trfdate,
+				'username' => $this->session->userdata('nama')
+			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		} else {
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'username' => $this->session->userdata('nama')
+			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		}
 
 		$recordnum = $this->input->post('recordnum');
 		for ($i = 1; $i <= $recordnum; $i++) {
-			$amount = $this->input->post('amount'.$i);
+			$amount = $this->input->post('amount' . $i);
 			$order   = array("Rp ", ".");
 			$replace = "";
 			$amount = str_replace($order, $replace, $amount);
 
-			$countattn = $this->input->post('attendance'.$i);
-			$attendance = $this->input->post('attntxt'.$i);
-			$priceattn = $this->input->post('priceattn'.$i);
+			$countattn = $this->input->post('attendance' . $i);
+			$attendance = $this->input->post('attntxt' . $i);
+			$priceattn = $this->input->post('priceattn' . $i);
 			$order   = array("Rp ", ".");
 			$replace = "";
 			$priceattn = str_replace($order, $replace, $priceattn);
-			$discount = $this->input->post('discount'.$i);
+			$discount = $this->input->post('discount' . $i);
 
 			$explanation = '(' . $attendance . ')' . ' ' . $countattn . 'x' . $priceattn;
-			if($discount != "") {
+			if ($discount != "") {
 				$explanation = $explanation . '-' . $discount . '%';
 			}
 
-			if ($this->input->post('voucher'.$i) != "") {
+			if ($this->input->post('voucher' . $i) != "") {
 				$data = array(
-						'isused' => "NO"
-						);
-				$where['id'] = $this->input->post('voucher'.$i);
+					'isused' => "NO"
+				);
+				$where['id'] = $this->input->post('voucher' . $i);
 				$this->mvoucher->updateVoucher($data, $where);
 			}
 
 			$data = array(
-					'paymentid' => $latestRecord['id'],
-					'studentid' => $this->input->post('studentid'.$i),
-					'voucherid' => $this->input->post('voucher'.$i),
-					'category' => "COURSE",
-					'explanation' => $explanation,
-					'amount' => $amount
-					);
+				'paymentid' => $latestRecord['id'],
+				'studentid' => $this->input->post('studentid' . $i),
+				'voucherid' => $this->input->post('voucher' . $i),
+				'category' => "COURSE",
+				'explanation' => $explanation,
+				'amount' => $amount
+			);
 			$var = $this->mpaydetail->addPaydetail($data);
 
 			// $nexturl = "payment/updateprivate/".$latestRecord['id'];
@@ -366,7 +374,7 @@ class Payment extends CI_Controller  {
 
 		// redirect(base_url("payment/addprivate"));
 		sleep(2);
-		redirect(base_url("payment/addprivate?print=".$latestRecord['id']));
+		redirect(base_url("payment/addprivate?print=" . $latestRecord['id']));
 		//redirect(base_url("escpos/example/printprivate.php?id=".$latestRecord['id']));
 	}
 
@@ -382,36 +390,36 @@ class Payment extends CI_Controller  {
 		$total = str_replace($order, $replace, $total);
 
 		$var = $this->input->post('trfdate');
-		if($var != "") {
-			$parts = explode('/',$var);
+		if ($var != "") {
+			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'trfdate' => $trfdate,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'trfdate' => $trfdate,
+				'username' => $this->session->userdata('nama')
+			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		} else {
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'username' => $this->session->userdata('nama')
+			);
 			$latestRecord = $this->mpayment->addPayment($data);
 		}
 
 		$recordnum = $this->input->post('recordnum');
 		for ($i = 1; $i <= $recordnum; $i++) {
-			$amount = $this->input->post('amount'.$i);
+			$amount = $this->input->post('amount' . $i);
 			$order   = array("Rp ", ".");
 			$replace = "";
 			$amount = str_replace($order, $replace, $amount);
@@ -419,19 +427,19 @@ class Payment extends CI_Controller  {
 			if ($this->input->post('category') == "PENALTY") {
 				$data = array(
 					'paymentid' => $latestRecord['id'],
-					'studentid' => $this->input->post('studentid'.$i),
-					'category' => $this->input->post('payment'.$i),
+					'studentid' => $this->input->post('studentid' . $i),
+					'category' => $this->input->post('payment' . $i),
 					'monthpay' => $date,
 					'amount' => $amount
-					);
+				);
 				$var = $this->mpaydetail->addPaydetail($data);
 			} else {
 				$data = array(
 					'paymentid' => $latestRecord['id'],
-					'studentid' => $this->input->post('studentid'.$i),
-					'category' => $this->input->post('payment'.$i),
+					'studentid' => $this->input->post('studentid' . $i),
+					'category' => $this->input->post('payment' . $i),
 					'amount' => $amount
-					);
+				);
 				$var = $this->mpaydetail->addPaydetail($data);
 			}
 
@@ -440,7 +448,7 @@ class Payment extends CI_Controller  {
 		}
 
 		// redirect(base_url("payment/addother"));
-		redirect(base_url("payment/addother?print=".$latestRecord['id']));
+		redirect(base_url("payment/addother?print=" . $latestRecord['id']));
 		sleep(2);
 		//redirect(base_url("escpos/example/printother.php?id=".$latestRecord['id']));
 	}
@@ -488,39 +496,39 @@ class Payment extends CI_Controller  {
 		$amount = str_replace($order, $replace, $amount);
 
 		$var = $this->input->post('monthpay');
-		$parts = explode('-',$var);
+		$parts = explode('-', $var);
 		$monthpay = $parts[1] . '-' . $parts[0] . '-' . '1';
 
 		if ($this->input->post('vid') != "") {
 			$data = array(
-					'isused' => "NO"
-					);
+				'isused' => "NO"
+			);
 			$where['id'] = $this->input->post('vid');
 			$this->mvoucher->updateVoucher($data, $where);
 		}
 
 		if ($this->input->post('category') == "COURSE") {
 			$data = array(
-					'paymentid' => $id,
-					'studentid' => $this->input->post('studentid'),
-					'voucherid' => $this->input->post('vid'),
-					'category' => $this->input->post('category'),
-					'monthpay' => $monthpay,
-					'amount' => $amount
-					);
+				'paymentid' => $id,
+				'studentid' => $this->input->post('studentid'),
+				'voucherid' => $this->input->post('vid'),
+				'category' => $this->input->post('category'),
+				'monthpay' => $monthpay,
+				'amount' => $amount
+			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		} else {
 			$data = array(
-					'paymentid' => $id,
-					'studentid' => $this->input->post('studentid'),
-					'voucherid' => $this->input->post('vid'),
-					'category' => $this->input->post('category'),
-					'amount' => $amount
-					);
+				'paymentid' => $id,
+				'studentid' => $this->input->post('studentid'),
+				'voucherid' => $this->input->post('vid'),
+				'category' => $this->input->post('category'),
+				'amount' => $amount
+			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		}
 
-		$nexturl = "payment/updateregular/".$id;
+		$nexturl = "payment/updateregular/" . $id;
 		redirect(base_url($nexturl));
 	}
 
@@ -532,7 +540,7 @@ class Payment extends CI_Controller  {
 		$amount = str_replace($order, $replace, $amount);
 
 		$var = $this->input->post('monthpay');
-		$parts = explode('-',$var);
+		$parts = explode('-', $var);
 		$monthpay = $parts[1] . '-' . $parts[0] . '-' . '1';
 
 		$countattn = $this->input->post('countattn');
@@ -544,29 +552,29 @@ class Payment extends CI_Controller  {
 		$discount = $this->input->post('discount');
 
 		$explanation = '(' . $attendance . ')' . ' ' . $countattn . 'x' . $priceattn;
-		if($discount != "") {
+		if ($discount != "") {
 			$explanation = $explanation . '-' . $discount . '%';
 		}
 
 		if ($this->input->post('vid') != "") {
 			$data = array(
-					'isused' => "NO"
-					);
+				'isused' => "NO"
+			);
 			$where['id'] = $this->input->post('vid');
 			$this->mvoucher->updateVoucher($data, $where);
 		}
 
 		$data = array(
-				'paymentid' => $id,
-				'studentid' => $this->input->post('studentid'),
-				'voucherid' => $this->input->post('vid'),
-				'category' => "COURSE",
-				'explanation' => $explanation,
-				'amount' => $amount
-				);
+			'paymentid' => $id,
+			'studentid' => $this->input->post('studentid'),
+			'voucherid' => $this->input->post('vid'),
+			'category' => "COURSE",
+			'explanation' => $explanation,
+			'amount' => $amount
+		);
 		$var = $this->mpaydetail->addPaydetail($data);
 
-		$nexturl = "payment/updateprivate/".$id;
+		$nexturl = "payment/updateprivate/" . $id;
 		redirect(base_url($nexturl));
 	}
 
@@ -586,7 +594,7 @@ class Payment extends CI_Controller  {
 				'category' => $this->input->post('category'),
 				'monthpay' => $date,
 				'amount' => $amount
-				);
+			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		} elseif ($this->input->post('category') == "OTHER") {
 			$data = array(
@@ -594,7 +602,7 @@ class Payment extends CI_Controller  {
 				'studentid' => $this->input->post('studentid'),
 				'category' => $this->input->post('other'),
 				'amount' => $amount
-				);
+			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		} else {
 			$data = array(
@@ -602,11 +610,11 @@ class Payment extends CI_Controller  {
 				'studentid' => $this->input->post('studentid'),
 				'category' => $this->input->post('category'),
 				'amount' => $amount
-				);
+			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		}
 
-		$nexturl = "payment/updateother/".$id;
+		$nexturl = "payment/updateother/" . $id;
 		redirect(base_url($nexturl));
 	}
 
@@ -622,38 +630,38 @@ class Payment extends CI_Controller  {
 		$total = str_replace($order, $replace, $total);
 
 		$var = $this->input->post('trfdate');
-		if($var != "") {
-			$parts = explode('/',$var);
+		if ($var != "") {
+			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'trfdate' => $trfdate,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'trfdate' => $trfdate,
+				'username' => $this->session->userdata('nama')
+			);
 			$where['id'] = $id;
 			$this->mpayment->updatePayment($data, $where);
 		} else {
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'username' => $this->session->userdata('nama')
+			);
 			$where['id'] = $id;
 			$this->mpayment->updatePayment($data, $where);
 		}
 
 		// redirect(base_url("payment/addregular"));
 
-		redirect(base_url("escpos/example/printregular.php?id=".$id));
+		redirect(base_url("escpos/example/printregular.php?id=" . $id));
 	}
 
 	public function submitPrivateDb($id)
@@ -668,37 +676,37 @@ class Payment extends CI_Controller  {
 		$total = str_replace($order, $replace, $total);
 
 		$var = $this->input->post('trfdate');
-		if($var != "") {
-			$parts = explode('/',$var);
+		if ($var != "") {
+			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'trfdate' => $trfdate,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'trfdate' => $trfdate,
+				'username' => $this->session->userdata('nama')
+			);
 			$where['id'] = $id;
 			$this->mpayment->updatePayment($data, $where);
 		} else {
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'username' => $this->session->userdata('nama')
+			);
 			$where['id'] = $id;
 			$this->mpayment->updatePayment($data, $where);
 		}
 
 		// redirect(base_url("payment/addprivate"));
-		redirect(base_url("escpos/example/printprivate.php?id=".$id));
+		redirect(base_url("escpos/example/printprivate.php?id=" . $id));
 	}
 
 	public function submitOtherDb($id)
@@ -713,60 +721,57 @@ class Payment extends CI_Controller  {
 		$total = str_replace($order, $replace, $total);
 
 		$var = $this->input->post('trfdate');
-		if($var != "") {
-			$parts = explode('/',$var);
+		if ($var != "") {
+			$parts = explode('/', $var);
 			$trfdate = $parts[2] . '-' . $parts[0] . '-' . $parts[1];
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'trfdate' => $trfdate,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'trfdate' => $trfdate,
+				'username' => $this->session->userdata('nama')
+			);
 			$where['id'] = $id;
 			$this->mpayment->updatePayment($data, $where);
 		} else {
 			$data = array(
-					'paydate' => $date,
-					'paytime' => $time,
-					'method' => $this->input->post('method'),
-					'number' => $this->input->post('number'),
-					'bank' => $this->input->post('bank'),
-					'total' => $total,
-					'username' => $this->session->userdata('nama')
-					);
+				'paydate' => $date,
+				'paytime' => $time,
+				'method' => $this->input->post('method'),
+				'number' => $this->input->post('number'),
+				'bank' => $this->input->post('bank'),
+				'total' => $total,
+				'username' => $this->session->userdata('nama')
+			);
 			$where['id'] = $id;
 			$this->mpayment->updatePayment($data, $where);
 		}
 
 		// redirect(base_url("payment/addother"));
-		redirect(base_url("escpos/example/printother.php?id=".$id));
+		redirect(base_url("escpos/example/printother.php?id=" . $id));
 	}
 
 	public function deletePaydetailDb($paymentid, $id)
 	{
 		$this->mpaydetail->deletePaydetail($id);
-		$nexturl = "payment/updateregular/".$paymentid;
+		$nexturl = "payment/updateregular/" . $paymentid;
 		redirect(base_url($nexturl));
 	}
 
 	public function deletePrvdetailDb($paymentid, $id)
 	{
 		$this->mpaydetail->deletePaydetail($id);
-		$nexturl = "payment/updateprivate/".$paymentid;
+		$nexturl = "payment/updateprivate/" . $paymentid;
 		redirect(base_url($nexturl));
 	}
 
 	public function deleteOtherdetailDb($paymentid, $id)
 	{
 		$this->mpaydetail->deletePaydetail($id);
-		$nexturl = "payment/updateother/".$paymentid;
+		$nexturl = "payment/updateother/" . $paymentid;
 		redirect(base_url($nexturl));
 	}
-
-
 }
-?>

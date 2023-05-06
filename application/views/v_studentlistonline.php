@@ -649,6 +649,60 @@
 </div>
 <!-- /.modal -->
 
+<!-- <div class="modal fade" id="showResultPayment">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form class="form-horizontal">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title">Result Test Student</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<p id="textModal"></p>
+						<div class="col-sm-4">
+							<label for="category" class="control-label">Category</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="categoryResult" readonly>
+						</div>
+						<div class="col-sm-4" style="margin-top:15px">
+							<label for="teacher" class="control-label">Teacher</label>
+						</div>
+						<div class="col-sm-8" style="margin-top:15px">
+							<input type="text" class="form-control" id="teacherResult" readonly>
+						</div>
+						<div class="col-sm-4" style="margin-top:15px">
+							<label for="level" class="control-label">Level</label>
+						</div>
+						<div class="col-sm-8" style="margin-top:15px">
+							<input type="text" class="form-control" id="levelResult" readonly>
+						</div>
+						<div class="col-sm-3" style="margin-top:15px">
+							<label for="day1" class="control-label">Day</label>
+						</div>
+						<div class="col-sm-4" style="margin-top:15px">
+							<input type="text" class="form-control" id="day1Result" readonly>
+						</div>
+						<div class="col-sm-1" style="margin-top:15px">
+							<label for="" class="control-label">-</label>
+						</div>
+						<div class="col-sm-4" style="margin-top:15px">
+							<input type="text" class="form-control" id="day2Result" readonly>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-primary pull-left">Submit</button>
+					<button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div> -->
+<!-- /.modal -->
+
 <script type="text/javascript">
 	var oldvoucher = 0;
 	var oldattnreg = 0;

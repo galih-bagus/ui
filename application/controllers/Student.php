@@ -338,6 +338,8 @@ class Student extends CI_Controller
 		$order   = array("Rp ", ".");
 		$replace = "";
 		$total = str_replace($order, $replace, $total);
+		$paycut = $this->input->post('paymentcut');
+		$paycut = str_replace($order, $replace, $paycut);
 		$day1 = "";
 		$day2 = "";
 		$coursetime = "";
@@ -374,7 +376,7 @@ class Student extends CI_Controller
 				'method' => $this->input->post('method'),
 				'number' => $this->input->post('number'),
 				'bank' => $this->input->post('bank'),
-				'total' => $total,
+				'total' => $total - $paycut,
 				'trfdate' => $trfdate,
 				'username' => $this->session->userdata('nama')
 			);
@@ -386,7 +388,7 @@ class Student extends CI_Controller
 				'method' => $this->input->post('method'),
 				'number' => $this->input->post('number'),
 				'bank' => $this->input->post('bank'),
-				'total' => $total,
+				'total' => $total - $paycut,
 				'username' => $this->session->userdata('nama')
 			);
 			$latestRecordPayment = $this->mpayment->addPayment($data);
@@ -467,7 +469,7 @@ class Student extends CI_Controller
 					'studentid' => $this->input->post('idstudent'),
 					'voucherid' => $this->input->post('vid'),
 					'category' => "COURSE",
-					'monthpay' => time("Y-m-d"),
+					'monthpay' => date("Y-m-d"),
 					'explanation' => $explanation,
 					'amount' => $this->input->post('vcourse')
 				);
