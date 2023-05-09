@@ -310,7 +310,7 @@
 							</div>
 							<label for="attendance" class="col-sm-3 control-label">Attendance</label>
 							<div class="col-sm-3">
-								<input type="text" class="form-control" value="" id="attendance" name="attendance" data-role="tagsinput">
+								<input type="number" class="form-control" value="" id="attendance" name="attendance">
 							</div>
 						</div>
 
@@ -321,7 +321,7 @@
 						<div class="form-group">
 							<label for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" id="priceattn" name="priceattn">
+								<input type="text" class="form-control" id="priceattn" name="priceattn" readonly>
 							</div>
 						</div>
 					</div>

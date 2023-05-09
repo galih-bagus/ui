@@ -401,10 +401,10 @@ class Report extends CI_Controller
 	public function exportExcel()
 	{
 		// fungsi header dengan mengirimkan raw data excel
-		// header("Content-type: application/vnd-ms-excel");
+		header("Content-type: application/vnd-ms-excel");
 
 		// membuat nama file ekspor "export-to-excel.xls"
-		// header("Content-Disposition: attachment; filename=UI Payment System.xls");
+		header("Content-Disposition: attachment; filename=UI Payment System.xls");
 
 		// tambahkan table
 		$from = $_GET['from']; //2022-11-01
