@@ -609,4 +609,11 @@ class Student extends CI_Controller
 		}
 		return $hari;
 	}
+
+	public function updateProspective($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->update('student', array('is_prospective_done' => '1'));
+		redirect(base_url('student/studentOnline'));
+	}
 }

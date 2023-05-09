@@ -189,6 +189,9 @@
 											<td>
 												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>','<?= $row->placement_test_result ?>','<?= $row->kind_of_test ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>
 												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')">Payment</a>
+												<?php if ($row->is_complete == true) { ?>
+													<a href="<?= base_url() . 'student/updateProspective/' . $row->id ?>" class="btn btn-danger">Delete</a>
+												<?php } ?>
 											</td>
 										</tr>
 									<?php
