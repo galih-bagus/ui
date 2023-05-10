@@ -234,7 +234,9 @@
 											}
 											?>
 											<td>
-												<a href="<?= base_url() ?>student/updateStudent/<?= $row->sid ?>" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i></a>
+												<?php if ($this->session->userdata('level') == 1) { ?>
+													<a href="<?= base_url() ?>student/updateStudent/<?= $row->sid ?>" class="btn btn-success btn-xs"><i class="fa fa-pencil"></i></a>
+												<?php } ?>
 												<a data-toggle="modal" data-target="#delModal" onclick="showModalData('<?= $row->sid ?>','<?= $row->name ?>')" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a>
 												<!-- <a data-toggle="modal" data-target="#delModal<?php echo $row->sid; ?>" href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></a> -->
 												<!-- <a data-toggle="modal" data-target="#showModal<?php echo $row->sid; ?>" href="#" class="btn btn-primary btn-xs"><i class="fa fa-file-text-o"></i></a> -->
