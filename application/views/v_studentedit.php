@@ -246,7 +246,7 @@
 								<div class="form-group">
 									<label for="program" class="col-sm-3 control-label">Level</label>
 									<div class="col-sm-9">
-										<select class="form-control select2" style="width: 100%;" name="program" required>
+										<select class="form-control select2" name="<?= $this->session->userdata('level') != 1 ? '' : 'program' ?>" <?= $this->session->userdata('level') != 1 ? 'disabled' : '' ?>>
 											<option disabled="disabled" value="">-- Choose Level --</option>
 											<?php
 											foreach ($listPrice->result() as $row) {
@@ -262,6 +262,11 @@
 											}
 											?>
 										</select>
+										<?php
+										if ($this->session->userdata('level') != 1) { ?>
+											<input type="hidden" name="program" value="<?= $student->priceid ?>">
+										<?php }
+										?>
 									</div>
 								</div>
 
@@ -368,6 +373,8 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$(".select['name=program']").attr("readonly", "readonly");
+		// $(".select2level").select2("readonly", true);
 		$("#newprice").maskMoney({
 			prefix: 'Rp ',
 			thousands: '.',
