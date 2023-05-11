@@ -11,6 +11,12 @@
 			<th rowspan="3">No.</th>
 			<th rowspan="3">Number of Guest Book</th>
 			<th rowspan="3">Name of Student</th>
+			<th rowspan="3">Parent Name</th>
+			<th rowspan="3">Phone Number</th>
+			<th rowspan="3">Address</th>
+			<th rowspan="3">School</th>
+			<th rowspan="3">Birth Day</th>
+			<th rowspan="3">How Do You Know U&I English Course</th>
 			<th rowspan="3">Grade</th>
 			<th rowspan="3">Kind of Test</th>
 			<th colspan="4">Placement Test</th>
@@ -37,6 +43,12 @@
 				<td><?= $no++ ?></td>
 				<td><?= $value->staff_name ?></td>
 				<td><?= $value->name ?></td>
+				<td><?= $value->parent_name ?></td>
+				<td><?= $value->parent_phone ?></td>
+				<td><?= $value->address ?></td>
+				<td><?= $value->school ?></td>
+				<td><?= $value->birthday ?></td>
+				<td><?= $value->know ?></td>
 				<td><?= $value->grade ?></td>
 				<td><?= $value->kind_of_test ?></td>
 				<td><?= $value->date_test != null ? date('d M', strtotime($value->date_test)) : '' ?></td>

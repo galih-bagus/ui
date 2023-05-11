@@ -148,13 +148,15 @@ class Mstudent extends CI_Model
 
 	function getOnlineStudent()
 	{
-		$this->db->select("student.*, staff.name as staff_name, price.program as result, dayone.day as dayone, daytwo.day as daytwo, teacher.name as teacher_name");
+		$this->db->select("student.*, staff.name as staff_name, price.program as result, dayone.day as dayone, daytwo.day as daytwo, teacher.name as teacher_name, parents.name as parent_name, parents.no_hp as parent_phone");
 		$this->db->from("student");
 		$this->db->join("teacher", "student.id_teacher = teacher.id", "left");
 		$this->db->join("staff", "student.id_staff = staff.id", "left");
 		$this->db->join("price", "student.priceid = price.id", "left");
 		$this->db->join("day as dayone", "student.day1 = dayone.id", "left");
 		$this->db->join("day as daytwo", "student.day2 = daytwo.id", "left");
+		$this->db->join("parent_students", "student.id = parent_students.student_id", "left");
+		$this->db->join("parents", "parents.id = parent_students.parent_id", "left");
 		$this->db->where('status =', 'ACTIVE');
 		$this->db->where('is_online =', 1);
 		$this->db->where("is_prospective_done", "0");
