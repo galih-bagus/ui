@@ -310,7 +310,7 @@
 							</div>
 							<label for="attendance" class="col-sm-3 control-label">Attendance</label>
 							<div class="col-sm-3">
-								<input type="number" class="form-control" value="" id="attendance" name="attendance">
+								<input type="number" class="form-control" value="" id="attendance" name="attendance" onkeyup="attendancePricePriv()">
 							</div>
 						</div>
 
@@ -322,6 +322,7 @@
 							<label for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control" id="priceattn" name="priceattn" readonly>
+								<input type="hidden" class="form-control" id="priceattnhidden">
 							</div>
 						</div>
 					</div>
@@ -381,7 +382,7 @@
 							</div>
 							<label id="labelattn" for="attendance" class="col-sm-3 control-label">Attendance</label>
 							<div class="col-sm-3">
-								<input type="number" class="form-control" id="attendancereg" name="attendancereg">
+								<input type="number" class="form-control" id="attendancereg" name="attendancereg" onkeyup="attendancePriceReg()">
 							</div>
 						</div>
 
@@ -389,6 +390,7 @@
 							<label id="labelprice" for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
 							<div class="col-sm-9">
 								<input type="text" class="form-control" id="priceattnreg" name="priceattnreg" readonly>
+								<input type="hidden" class="form-control" id="priceattnreghidden">
 							</div>
 						</div>
 					</div>
@@ -544,6 +546,7 @@
 					<input type="hidden" class="form-control" id="vbook" name="vbook" value="0">
 					<input type="hidden" class="form-control" id="vagenda" name="vagenda" value="0">
 					<input type="hidden" class="form-control" id="vbooklet" name="vbooklet" value="0">
+					<input type="hidden" class="form-control" id="vattendance" name="vattendance" value="0">
 					<!-- <input type="hidden" class="form-control" id="vexercise" name="vexercise"> -->
 					<input type="hidden" class="form-control" id="vcourse" name="vcourse" value="0">
 					<input type="hidden" class="form-control" id="vother" name="vother" value="0">
@@ -761,15 +764,20 @@
 		document.getElementById("vpointbook").value = 0
 		document.getElementById("vregistration").value = 0
 		document.getElementById("vcourse").value = 0
+		document.getElementById("vattendance").value = 0
+		document.getElementById("attendancereg").value = 0
+		document.getElementById("attendance").value = 0
 	}
 
 	function changeCategoryResult() {
-		if (document.getElementById("categoryResult").value == "PRIVATE") {
+		if (document.getElementById("category").value == "PRIVATE") {
 			$("#resultprivatediv").show(750);
 			$("#resultregulardiv").hide(750);
+			attendancePricePriv()
 		} else {
 			$("#resultprivatediv").hide(750);
 			$("#resultregulardiv").show(750);
+			attendancePriceReg()
 		}
 
 		document.getElementById("iother").value = 0
@@ -813,21 +821,52 @@
 		document.getElementById("vpointbook").value = 0
 		document.getElementById("vregistration").value = 0
 		document.getElementById("vcourse").value = 0
-
-		<?php
-		foreach ($listPrice->result() as $price) {
-		?>
-			if (document.getElementById("program").value == <?= $price->id ?>) {
-				document.getElementById("priceattnreg").value = parseInt(<?= $price->priceperday ?>);
-				document.getElementById("priceattnreg").value = "Rp " + FormatDuit(document.getElementById("priceattnreg").value);
+		document.getElementById("vattendance").value = 0
+		document.getElementById("attendancereg").value = 0
+		document.getElementById("attendance").value = 0
+		if (document.getElementById("category").value == "PRIVATE") {
+			<?php
+			foreach ($listPrice->result() as $price) {
+			?>
+				if (document.getElementById("programprv").value == <?= $price->id ?>) {
+					console.log(<?= $price->priceperday ?>);
+					document.getElementById("priceattn").value = parseInt(<?= $price->priceperday ?>);
+					document.getElementById("priceattnhidden").value = parseInt(<?= $price->priceperday ?>);
+					document.getElementById("priceattn").value = "Rp " + FormatDuit(document.getElementById("priceattn").value);
+				}
+			<?php
 			}
-		<?php
+			?>
+		} else {
+			<?php
+			foreach ($listPrice->result() as $price) {
+			?>
+				if (document.getElementById("program").value == <?= $price->id ?>) {
+					console.log(<?= $price->priceperday ?>);
+					document.getElementById("priceattnreg").value = parseInt(<?= $price->priceperday ?>);
+					document.getElementById("priceattnreghidden").value = parseInt(<?= $price->priceperday ?>);
+					document.getElementById("priceattnreg").value = "Rp " + FormatDuit(document.getElementById("priceattnreg").value);
+				}
+			<?php
+			}
+			?>
 		}
-		?>
+
+
 	}
 
-	function showDetailResult() {
-		console.log('asd');
+	function attendancePriceReg() {
+		var attendancereg = isNaN(parseInt($('#attendancereg').val())) == true ? 0 : parseInt($('#attendancereg').val());
+		var priceattnreg = isNaN(parseInt($('#priceattnreghidden').val())) == true ? 0 : parseInt($('#priceattnreghidden').val());
+		$('#vattendance').val(attendancereg * priceattnreg);
+		grandTotal()
+	}
+
+	function attendancePricePriv() {
+		var attendance = isNaN(parseInt($('#attendance').val())) == true ? 0 : parseInt($('#attendance').val());
+		var priceattn = isNaN(parseInt($('#priceattnhidden').val())) == true ? 0 : parseInt($('#priceattnhidden').val());
+		$('#vattendance').val(attendance * priceattn);
+		grandTotal()
 	}
 
 	function checkRegistration() {
@@ -1306,6 +1345,7 @@
 
 
 	function grandTotal() {
+		var attendance = 0;
 		if (document.getElementById("amount").value != "") {
 			var amount = document.getElementById("amount").value.replace(/\./g, '');
 			amount = amount.replace("Rp ", "");
@@ -1319,7 +1359,12 @@
 		var pointbook = document.getElementById("vpointbook").value
 		var registrasi = document.getElementById("vregistration").value
 		var course = document.getElementById("vcourse").value
-		document.getElementById("amount").value = parseInt(agenda) + parseInt(booklet) + parseInt(other) + parseInt(book) + parseInt(pointbook) + parseInt(registrasi) + parseInt(course);
+		if (course != 0) {
+			attendance = document.getElementById("vattendance").value
+		} else {
+			attendance = 0
+		}
+		document.getElementById("amount").value = parseInt(agenda) + parseInt(booklet) + parseInt(other) + parseInt(book) + parseInt(pointbook) + parseInt(registrasi) + parseInt(course) - parseInt(attendance);
 		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 	}
 </script>

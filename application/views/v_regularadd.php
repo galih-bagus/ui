@@ -1111,7 +1111,7 @@ $url = base_url() . "cetak/printregular/";
 			} else if (document.getElementById("bank").value != "") {
 				paymentcut = parseInt(amount) * 1 / 100;
 			}
-		} else if (document.getElementById("method").value == "CREDIT") {
+		} else if (document.getElementById("method").value == "CREDIT" || document.getElementById("method").value == "MASTER CARD" || document.getElementById("method").value == "VISA CARD" || document.getElementById("method").value == "BCA CARD") {
 			$("#dbank").show(750);
 			$("#dcut").show(750);
 			$("#dnumber").show(750);

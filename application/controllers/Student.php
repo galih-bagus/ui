@@ -475,12 +475,25 @@ class Student extends CI_Controller
 				);
 				$var = $this->mpaydetail->addPaydetail($data);
 			} else {
+				$countattn = $this->input->post('countattn');
+				$attendance = $this->input->post('attendancereg');
+				$priceattn = $this->input->post('priceattnreg');
+				$order   = array("Rp ", ".");
+				$replace = "";
+				$priceattn = str_replace($order, $replace, $priceattn);
+				$discount = $this->input->post('discount');
+
+				$explanation = '(' . $attendance . ')' . ' ' . $countattn . 'x' . $priceattn;
+				if ($discount != "") {
+					$explanation = $explanation . '-' . $discount . '%';
+				}
 				$data = array(
 					'paymentid' => $latestRecordPayment['id'],
 					'studentid' => $this->input->post('idstudent'),
 					'voucherid' => $this->input->post('vid'),
 					'category' => "COURSE",
 					'monthpay' => $date,
+					'explanation' => $explanation,
 					'amount' => $this->input->post('vcourse'),
 				);
 				$var = $this->mpaydetail->addPaydetail($data);
