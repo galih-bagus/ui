@@ -546,7 +546,7 @@
 					<input type="hidden" class="form-control" id="vbook" name="vbook" value="0">
 					<input type="hidden" class="form-control" id="vagenda" name="vagenda" value="0">
 					<input type="hidden" class="form-control" id="vbooklet" name="vbooklet" value="0">
-					<input type="hidden" class="form-control" id="vattendance" name="vattendance" value="0">
+					<input type="text" class="form-control" id="vattendance" name="vattendance" value="0">
 					<!-- <input type="hidden" class="form-control" id="vexercise" name="vexercise"> -->
 					<input type="hidden" class="form-control" id="vcourse" name="vcourse" value="0">
 					<input type="hidden" class="form-control" id="vother" name="vother" value="0">
@@ -829,7 +829,6 @@
 			foreach ($listPrice->result() as $price) {
 			?>
 				if (document.getElementById("programprv").value == <?= $price->id ?>) {
-					console.log(<?= $price->priceperday ?>);
 					document.getElementById("priceattn").value = parseInt(<?= $price->priceperday ?>);
 					document.getElementById("priceattnhidden").value = parseInt(<?= $price->priceperday ?>);
 					document.getElementById("priceattn").value = "Rp " + FormatDuit(document.getElementById("priceattn").value);
@@ -842,7 +841,6 @@
 			foreach ($listPrice->result() as $price) {
 			?>
 				if (document.getElementById("program").value == <?= $price->id ?>) {
-					console.log(<?= $price->priceperday ?>);
 					document.getElementById("priceattnreg").value = parseInt(<?= $price->priceperday ?>);
 					document.getElementById("priceattnreghidden").value = parseInt(<?= $price->priceperday ?>);
 					document.getElementById("priceattnreg").value = "Rp " + FormatDuit(document.getElementById("priceattnreg").value);
@@ -860,6 +858,7 @@
 		var priceattnreg = isNaN(parseInt($('#priceattnreghidden').val())) == true ? 0 : parseInt($('#priceattnreghidden').val());
 		$('#vattendance').val(attendancereg * priceattnreg);
 		grandTotal()
+		console.log(attendancereg * priceattnreg);
 	}
 
 	function attendancePricePriv() {
@@ -867,6 +866,7 @@
 		var priceattn = isNaN(parseInt($('#priceattnhidden').val())) == true ? 0 : parseInt($('#priceattnhidden').val());
 		$('#vattendance').val(attendance * priceattn);
 		grandTotal()
+		console.log(attendance * priceattn);
 	}
 
 	function checkRegistration() {
@@ -1157,7 +1157,7 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("vcourse").value = parseInt(<?= $price->course ?>);
+						document.getElementById("vcourse").value = parseInt(0);
 						grandTotal()
 					} else {
 						document.getElementById("vcourse").value = parseInt(0);
@@ -1170,7 +1170,7 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("vcourse").value = parseInt(<?= $price->course ?>);
+						document.getElementById("vcourse").value = parseInt(0);
 						grandTotal()
 					} else {
 						document.getElementById("vcourse").value = parseInt(0);
@@ -1359,12 +1359,12 @@
 		var pointbook = document.getElementById("vpointbook").value
 		var registrasi = document.getElementById("vregistration").value
 		var course = document.getElementById("vcourse").value
-		if (course != 0) {
-			attendance = document.getElementById("vattendance").value
-		} else {
-			attendance = 0
-		}
-		document.getElementById("amount").value = parseInt(agenda) + parseInt(booklet) + parseInt(other) + parseInt(book) + parseInt(pointbook) + parseInt(registrasi) + parseInt(course) - parseInt(attendance);
+		// if (course != 0) {
+		attendance = document.getElementById("vattendance").value
+		// } else {
+		// 	attendance = 0
+		// }
+		document.getElementById("amount").value = parseInt(agenda) + parseInt(booklet) + parseInt(other) + parseInt(book) + parseInt(pointbook) + parseInt(registrasi) + /* parseInt(course) - */ parseInt(attendance);
 		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
 	}
 </script>
