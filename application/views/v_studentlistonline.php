@@ -546,7 +546,7 @@
 					<input type="hidden" class="form-control" id="vbook" name="vbook" value="0">
 					<input type="hidden" class="form-control" id="vagenda" name="vagenda" value="0">
 					<input type="hidden" class="form-control" id="vbooklet" name="vbooklet" value="0">
-					<input type="text" class="form-control" id="vattendance" name="vattendance" value="0">
+					<input type="hidden" class="form-control" id="vattendance" name="vattendance" value="0">
 					<!-- <input type="hidden" class="form-control" id="vexercise" name="vexercise"> -->
 					<input type="hidden" class="form-control" id="vcourse" name="vcourse" value="0">
 					<input type="hidden" class="form-control" id="vother" name="vother" value="0">
