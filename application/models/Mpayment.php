@@ -1,9 +1,15 @@
 <?php
-	//File products_model.php
-	class Mpayment extends CI_Model  {
-		function __construct() { parent::__construct(); } function getAllPayment() {
+//File products_model.php
+class Mpayment extends CI_Model
+{
+	function __construct()
+	{
+		parent::__construct();
+	}
+	function getAllPayment()
+	{
 		//select semua data yang ada pada table msProduct $this--->db->select("*");
-        $this->db->select("*");
+		$this->db->select("*");
 		$this->db->from("payment");
 		return $this->db->get();
 	}
@@ -29,13 +35,13 @@
 	function updatePayment($data, $where)
 	{
 		$this->db->where($where);
-        $this->db->update('payment', $data);
+		$this->db->update('payment', $data);
 	}
 
 	function deletePayment($id)
 	{
 		$this->db->where('id', $id);
-        $this->db->delete('payment');
+		$this->db->delete('payment');
 	}
 
 	function getUncompletePayment()
@@ -54,5 +60,41 @@
 								   WHERE paymentid = '" . $id . "'");
 		$result = $query->result();
 		return $result;
+	}
+
+	function getPaymentReg($id)
+	{
+		$query = $this->db->query("SELECT *
+								   FROM payment_bill_detail
+								   WHERE category = 'COURSE'
+								   AND student_id = '" . $id . "'");
+		$result = $query->result();
+		return $result;
+	}
+
+	function updatePaymentReg($data, $where, $where1)
+	{
+		$this->db->where('student_id', $where);
+		$this->db->where('category', $where1);
+		$this->db->update('payment_bill_detail', $data);
+		// $this->db->affected_rows();
+	}
+
+	function addPaymentReg($data)
+	{
+		$this->db->insert('payment_bills', $data);
+		$id = $this->db->insert_id();
+		$query = $this->db->query("SELECT id FROM payment_bills where id=$id");
+		$result = $query->row_array();
+		return $result;
+	}
+
+	function addPaymentRegDetail($data)
+	{
+		$this->db->insert('payment_bill_detail', $data);
+		// $id = $this->db->insert_id();
+		// $query = $this->db->query("SELECT id FROM payment_bills where id=$id");
+		// $result = $query->row_array();
+		// return $result;
 	}
 }
