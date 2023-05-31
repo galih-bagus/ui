@@ -310,7 +310,7 @@
 							</div>
 							<label for="attendance" class="col-sm-3 control-label">Attendance</label>
 							<div class="col-sm-3">
-								<input type="number" class="form-control" value="" id="attendance" name="attendance" onkeyup="attendancePricePriv()">
+								<input type="text" class="form-control" value="" id="attendance" name="attendance" data-role="tagsinput">
 							</div>
 						</div>
 
@@ -321,7 +321,7 @@
 						<div class="form-group">
 							<label for="priceattn" class="col-sm-3 control-label">Price per Attendance</label>
 							<div class="col-sm-9">
-								<input type="text" class="form-control" id="priceattn" name="priceattn" readonly>
+								<input type="text" class="form-control" id="priceattn" name="priceattn">
 								<input type="hidden" class="form-control" id="priceattnhidden">
 							</div>
 						</div>
@@ -391,11 +391,12 @@
 							<div class="col-sm-9">
 								<input type="text" class="form-control" id="priceattnreg" name="priceattnreg" readonly>
 								<input type="hidden" class="form-control" id="priceattnreghidden">
+								<input type="hidden" class="form-control" id="discount" value='0'>
 							</div>
 						</div>
 					</div>
 
-					<div id="dpayment" style="display: none;">
+					<div id="dpaymentreg" style="display: none;">
 						<div class="form-group">
 							<label for="registration" class="col-sm-3 control-label"></label>
 							<div class="col-sm-9">
@@ -457,7 +458,6 @@
 							</div>
 						</div>
 					</div>
-
 					<div id="divpayment" style="display: none;">
 						<div class="form-group">
 							<label for="total" class="col-sm-3 control-label">Total Amount</label>
@@ -548,7 +548,7 @@
 					<input type="hidden" class="form-control" id="vbooklet" name="vbooklet" value="0">
 					<input type="hidden" class="form-control" id="vattendance" name="vattendance" value="0">
 					<!-- <input type="hidden" class="form-control" id="vexercise" name="vexercise"> -->
-					<input type="hidden" class="form-control" id="vcourse" name="vcourse" value="0">
+					<input type="text" class="form-control" id="vcourse" name="vcourse" value="0">
 					<input type="hidden" class="form-control" id="vother" name="vother" value="0">
 					<input type="hidden" class="form-control" id="countattn" name="countattn">
 				</div>
@@ -715,6 +715,159 @@
 	var oldpriceprv = 0;
 	var cashback = 0;
 	var paymentcut = 0.00;
+	var olddiscn = 0;
+	var totalpay = 0;
+	var selectedcell = 0;
+	var selectedamount = "";
+	var recordnum = 0;
+
+	$(document).ready(function() {
+		$("#amount").maskMoney({
+			prefix: 'Rp ',
+			thousands: '.',
+			decimal: ',',
+			precision: 0
+		});
+		$("#priceattn").maskMoney({
+			prefix: 'Rp ',
+			thousands: '.',
+			decimal: ',',
+			precision: 0
+		});
+		$("#total").maskMoney({
+			prefix: 'Rp ',
+			thousands: '.',
+			decimal: ',',
+			precision: 0
+		});
+		$("#cash").maskMoney({
+			prefix: 'Rp ',
+			thousands: '.',
+			decimal: ',',
+			precision: 0
+		});
+		$("#cashback").maskMoney({
+			prefix: '-Rp ',
+			thousands: '.',
+			decimal: ',',
+			precision: 0
+		});
+
+		document.getElementById("amount").value = 0;
+		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+		document.getElementById("priceattn").value = 0;
+		document.getElementById("priceattn").value = "Rp " + FormatDuit(document.getElementById("priceattn").value);
+		document.getElementById("cash").value = 0;
+		document.getElementById("cash").value = "Rp " + FormatDuit(document.getElementById("cash").value);
+		document.getElementById("cashback").value = 0;
+		document.getElementById("cashback").value = "Rp " + FormatDuit(document.getElementById("cashback").value);
+
+		$('#attendance').on('itemAdded', function(event) {
+			console.log('asd');
+			if (document.getElementById("amount").value != "") {
+				var amount = document.getElementById("amount").value.replace(/\./g, '');
+				amount = amount.replace("Rp ", "");
+				if (parseInt(amount) < 0) {
+					amount = 0;
+				}
+			} else {
+				var amount = 0;
+			}
+
+			<?php
+			foreach ($listPrice->result() as $price) {
+			?>
+				if (document.getElementById("programprv").value == <?= $price->id ?>) {
+					var vamount = document.getElementById("vamount").value.replace(/\./g, '');
+					vamount = vamount.replace("Rp ", "");
+					var priceattn = document.getElementById("priceattn").value.replace(/\./g, '');
+					priceattn = priceattn.replace("Rp ", "");
+					var discount = document.getElementById("discount").value;
+					var attendance = $("#attendance").tagsinput('items').length;
+					document.getElementById("countattn").value = attendance;
+					amount = parseInt(priceattn) * parseInt(attendance);
+					if (document.getElementById("vamount").value != "") {
+						amount = parseInt(amount) - parseInt(vamount);
+						oldvoucher = vamount;
+					}
+					document.getElementById("amount").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
+					document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+					document.getElementById("vcourse").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
+					olddiscn = Math.round(parseInt(discount) * parseInt(amount) / 100);
+				}
+			<?php
+			}
+			?>
+		});
+
+		$('#attendance').on('itemRemoved', function(event) {
+			if (document.getElementById("amount").value != "") {
+				var amount = document.getElementById("amount").value.replace(/\./g, '');
+				amount = amount.replace("Rp ", "");
+				if (parseInt(amount) < 0) {
+					amount = 0;
+				}
+			} else {
+				var amount = 0;
+			}
+
+			<?php
+			foreach ($listPrice->result() as $price) {
+			?>
+				if (document.getElementById("programprv").value == <?= $price->id ?>) {
+					var vamount = document.getElementById("vamount").value.replace(/\./g, '');
+					vamount = vamount.replace("Rp ", "");
+					var priceattn = document.getElementById("priceattn").value.replace(/\./g, '');
+					priceattn = priceattn.replace("Rp ", "");
+					var discount = document.getElementById("discount").value;
+					var attendance = $("#attendance").tagsinput('items').length;
+					document.getElementById("countattn").value = attendance;
+					amount = parseInt(priceattn) * parseInt(attendance);
+					if (document.getElementById("vamount").value != "") {
+						amount = parseInt(amount) - parseInt(vamount);
+						oldvoucher = vamount;
+					}
+					document.getElementById("amount").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
+					document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+					olddiscn = Math.round(parseInt(discount) * parseInt(amount) / 100);
+				}
+			<?php
+			}
+			?>
+		});
+	});
+
+	$("#priceattn").on('keyup', function(e) {
+		// if (e.keyCode == 13) {
+		if (document.getElementById("amount").value != "") {
+			var amount = document.getElementById("amount").value.replace(/\./g, '');
+			amount = amount.replace("Rp ", "");
+			if (parseInt(amount) < 0) {
+				amount = 0;
+			}
+		} else {
+			var amount = 0;
+		}
+				var vamount = document.getElementById("vamount").value.replace(/\./g, '');
+				vamount = vamount.replace("Rp ", "");
+				var priceattn = document.getElementById("priceattn").value.replace(/\./g, '');
+				priceattn = priceattn.replace("Rp ", "");
+				var discount = document.getElementById("discount").value;
+				var attendance = $("#attendance").tagsinput('items').length;
+				document.getElementById("countattn").value = attendance;
+				amount = parseInt(priceattn) * parseInt(attendance);
+				if (document.getElementById("vamount").value != "") {
+					amount = parseInt(amount) - parseInt(vamount);
+					oldvoucher = vamount;
+				}
+				document.getElementById("amount").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
+				document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+				olddiscn = Math.round(parseInt(discount) * parseInt(amount) / 100);
+				console.log( parseInt(amount));
+				console.log( Math.round(parseInt(discount)));
+				console.log(parseInt(amount) / 100);
+		// }
+	});
 
 	$("#example5").on('click', 'tr', function() {
 		$('#voucherModal').modal('hide');
@@ -745,13 +898,13 @@
 		if (document.getElementById("category").value == "PRIVATE") {
 			$("#privatediv").show(750);
 			$("#regulardiv").hide(750);
-			$("#dpayment").hide(750);
-			$("#divpayment").hide(750);
+			$("#dpaymentreg").hide(750);
+			$("#divpayment").show(750);
 			$("#voucherdiv").hide(750);
 		} else {
 			$("#privatediv").hide(750);
 			$("#regulardiv").show(750);
-			$("#dpayment").hide(750);
+			$("#dpaymentreg").hide(750);
 			$("#divpayment").hide(750);
 			$("#voucherdiv").hide(750);
 		}
@@ -805,13 +958,16 @@
 		//document.getElementById("method").text = "Cash";
 		document.getElementById("amount").value = 0;
 		oldvoucher = 0;
+		if (document.getElementById("category").value == "PRIVATE") {
+		$("#divpayment").show(750);
+		}else{
+		$("#dpaymentreg").show(750);
 		$("#dtrfdate").hide(750);
 		$("#dbank").hide(750);
 		$("#dnumber").hide(750);
-
-		$("#dpayment").show(750);
 		$("#divpayment").hide(750);
 		$("#voucherdiv").hide(750);
+		}
 
 		document.getElementById("iother").value = 0
 		document.getElementById("vother").value = 0
@@ -825,17 +981,9 @@
 		document.getElementById("attendancereg").value = 0
 		document.getElementById("attendance").value = 0
 		if (document.getElementById("category").value == "PRIVATE") {
-			<?php
-			foreach ($listPrice->result() as $price) {
-			?>
-				if (document.getElementById("programprv").value == <?= $price->id ?>) {
-					document.getElementById("priceattn").value = parseInt(<?= $price->priceperday ?>);
-					document.getElementById("priceattnhidden").value = parseInt(<?= $price->priceperday ?>);
-					document.getElementById("priceattn").value = "Rp " + FormatDuit(document.getElementById("priceattn").value);
-				}
-			<?php
-			}
-			?>
+			document.getElementById("priceattn").value = parseInt(0);
+			document.getElementById("priceattnhidden").value = parseInt(0);
+			document.getElementById("priceattn").value = "Rp " + FormatDuit(document.getElementById("priceattn").value);
 		} else {
 			<?php
 			foreach ($listPrice->result() as $price) {
@@ -1167,6 +1315,7 @@
 			} else {
 				if (document.getElementById("programprv").value == <?= $price->id ?>) {
 					var checkBox = document.getElementById("course");
+					checkBox.checked == true
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);

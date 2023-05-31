@@ -449,32 +449,34 @@ class Student extends CI_Controller
 			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		}
-		if (isset($_POST['course'])) {
-			if ($this->input->post('category') == "PRIVATE") {
-				$countattn = $this->input->post('countattn');
-				$attendance = $this->input->post('attendance');
-				$priceattn = $this->input->post('priceattn');
-				$order   = array("Rp ", ".");
-				$replace = "";
-				$priceattn = str_replace($order, $replace, $priceattn);
-				$discount = $this->input->post('discount');
-
-				$explanation = '(' . $attendance . ')' . ' ' . $countattn . 'x' . $priceattn;
-				if ($discount != "") {
-					$explanation = $explanation . '-' . $discount . '%';
-				}
-
-				$data = array(
-					'paymentid' => $latestRecordPayment['id'],
-					'studentid' => $this->input->post('idstudent'),
-					'voucherid' => $this->input->post('vid'),
-					'category' => "COURSE",
-					'monthpay' => date("Y-m-d"),
-					'explanation' => $explanation,
-					'amount' => $this->input->post('vcourse')
-				);
-				$var = $this->mpaydetail->addPaydetail($data);
+				if ($this->input->post('category') == "PRIVATE") {
+					$exAttendance = explode(',',$_POST['attendance']);
+					$countattn = count($exAttendance);
+					$attendance = $_POST['attendance'];
+					$priceattn = $this->input->post('priceattn');
+					$order   = array("Rp ", ".");
+					$replace = "";
+					$priceattn = str_replace($order, $replace, $priceattn);
+					$discount = $this->input->post('discount');
+	
+					$explanation = '(' . $attendance . ')' . ' ' . $countattn . 'x' . $priceattn;
+					if ($discount != "") {
+						$explanation = $explanation . '-' . $discount . '%';
+					}
+	
+					$data = array(
+						'paymentid' => $latestRecordPayment['id'],
+						'studentid' => $this->input->post('idstudent'),
+						'voucherid' => $this->input->post('vid'),
+						'category' => "COURSE",
+						'explanation' => $explanation,
+						'amount' => $total - $paycut
+					);
+					// var_dump($data);
+					$var = $this->mpaydetail->addPaydetail($data);
 			} else {
+				
+		if (isset($_POST['course'])) {
 				$countattn = $this->input->post('countattn');
 				$attendance = $this->input->post('attendancereg');
 				$priceattn = $this->input->post('priceattnreg');
