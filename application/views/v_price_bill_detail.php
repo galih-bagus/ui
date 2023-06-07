@@ -241,10 +241,11 @@
 						if ($detail[0]->status == 'To Be Confirm') {
 						?>
 							<div class="box-footer">
-								<form action="<?= base_url() . "billing/confirmBilling" ?>" method="POST">
+								<!-- <form action="<?= base_url() . "billing/confirmBilling" ?>" method="POST">
 									<input type="hidden" readonly name="unique_code" value="<?= $detail[0]->unique_code ?>">
 									<button type="submit" class="btn btn-primary">Confirm</button>
-								</form>
+								</form> -->
+								<a href="<?= base_url() . "billing/confirmBill?id=" . $detail[0]->student_id ?>" class="btn btn-primary">Confirm</a>
 							</div>
 						<?php
 						}

@@ -172,7 +172,7 @@ $url = base_url() . "cetak/printregular/";
 							<div class="form-group">
 								<label for="program" class="col-sm-3 control-label">Student ID</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="studentid" name="studentid">
+									<input type="text" class="form-control" id="studentid" name="studentid" value="<?php echo isset($_GET['id']) ? $_GET['id'] : ''  ?>">
 									<input type="hidden" class="form-control" id="spriceid" name="spriceid" readonly>
 								</div>
 							</div>

@@ -97,4 +97,12 @@ class Mpayment extends CI_Model
 		// $result = $query->row_array();
 		// return $result;
 	}
+
+
+	function updateHistyoryReg($data, $where)
+	{
+		$this->db->where('unique_code', $where);
+		$this->db->update('history_billing', $data);
+		// $this->db->affected_rows();
+	}
 }
