@@ -251,8 +251,6 @@ class Payment extends CI_Controller
 				$where['id'] = $this->input->post('voucher' . $i);
 				$this->mvoucher->updateVoucher($data, $where);
 			}
-
-			echo $this->input->post('studentid' . $i);
 			$exRegMonth = explode('-', $monthpay);
 			$regularBill = $this->mpayment->getPaymentReg($this->input->post('studentid' . $i));
 			$retRegularBill = $regularBill;
@@ -299,6 +297,15 @@ class Payment extends CI_Controller
 						$this->mpayment->updateHistyoryReg($historyRegPay, $retRegularBill[0]->unique_code);
 						$this->mpayment->updatePaymentReg($regPay, $this->input->post('studentid' . $i), $this->input->post('payment' . $i));
 					} else {
+						$data = array(
+							'paymentid' => $latestRecord['id'],
+							'studentid' => $this->input->post('studentid' . $i),
+							'voucherid' => $this->input->post('voucher' . $i),
+							'category' => $this->input->post('payment' . $i),
+							'monthpay' => $monthpay,
+							'amount' => $amount
+						);
+						$var = $this->mpaydetail->addPaydetail($data);
 						$paymentReg = array(
 							"total_price" => $amount,
 							'class_type' => 'Reguler',
