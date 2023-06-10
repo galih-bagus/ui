@@ -327,6 +327,15 @@ class Payment extends CI_Controller
 						$this->mpayment->addPaymentRegDetail($paymentRegDet);
 					}
 				} else {
+					$data = array(
+						'paymentid' => $latestRecord['id'],
+						'studentid' => $this->input->post('studentid' . $i),
+						'voucherid' => $this->input->post('voucher' . $i),
+						'category' => $this->input->post('payment' . $i),
+						'monthpay' => $monthpay,
+						'amount' => $amount
+					);
+					$var = $this->mpaydetail->addPaydetail($data);
 					$paymentReg = array(
 						"total_price" => $amount,
 						'class_type' => 'Reguler',
