@@ -218,6 +218,7 @@
 										<th>Transaction ID</th>
 										<th>Amount</th>
 										<th>Created By</th>
+										<th>Student Name</th>
 										<th>Status</th>
 										<th class="notPrintable">Action</th>
 									</tr>
@@ -230,6 +231,7 @@
 											<td><?= $row->unique_code ?></td>
 											<td>Rp <?= number_format($row->amount, 0, ".", ".") ?></td>
 											<td><?= $row->name ?></td>
+											<td><?= $row->student_name ?></td>
 											<td><?= $row->status ?></td>
 											<td>
 												<a href="<?= base_url() ?>billing/detailHistory/<?= $row->unique_code ?>" class="btn btn-success btn-xs"><i class="fa fa-eye"></i></a>

@@ -34,6 +34,7 @@ class Billing extends CI_Controller
 			$tmpStatus = $this->mbillingdetail->historyStatus($value->unique_code);
 			$tmpHistory = $value;
 			$tmpHistory->status = isset($tmpStatus->status) ? $tmpStatus->status : 'Submitted';
+			$tmpHistory->student_name = isset($tmpStatus->student_name) ? $tmpStatus->student_name : '';
 			array_push($tmpData, $tmpHistory);
 		}
 		$data['from_parent'] = $tmpData;

@@ -25,7 +25,7 @@ class Mbillingdetail extends CI_Model
 
 	function historyStatus($kode)
 	{
-		$query = $this->db->query("SELECT * FROM payment_bill_detail WHERE unique_code='$kode'");
+		$query = $this->db->query("SELECT payment_bill_detail.*, student.name as student_name FROM payment_bill_detail JOIN student ON payment_bill_detail.student_id=student.id WHERE unique_code='$kode'");
 		$result = $query->row();
 		return $result;
 	}
