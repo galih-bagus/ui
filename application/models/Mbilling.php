@@ -54,7 +54,7 @@ class Mbilling extends CI_Model
 
 	function history()
 	{
-		$query = $this->db->query("SELECT history_billing.*, parents.name FROM history_billing JOIN parents ON history_billing.created_by=parents.id");
+		$query = $this->db->query("SELECT history_billing.*, parents.name FROM history_billing LEFT JOIN parents ON history_billing.created_by=parents.id");
 		$result = $query->result();
 		return $result;
 	}

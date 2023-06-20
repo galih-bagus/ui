@@ -230,7 +230,7 @@
 										<tr>
 											<td><?= $row->unique_code ?></td>
 											<td>Rp <?= number_format($row->amount, 0, ".", ".") ?></td>
-											<td><?= $row->name ?></td>
+											<td><?= $row->name != null ? $row->name : $row->created_by_admin ?></td>
 											<td><?= $row->student_name ?></td>
 											<td><?= $row->status ?></td>
 											<td>

@@ -325,6 +325,14 @@ class Payment extends CI_Controller
 							'unique_code' => $latestRecord['id'],
 						);
 						$this->mpayment->addPaymentRegDetail($paymentRegDet);
+						$paymentRegHist = array(
+							'amount' => $amount,
+							'unique_code' => $latestRecord['id'],
+							'created_by_admin' => $this->session->userdata('nama'),
+							'created_at' => date('Y-m-d H:i:s'),
+							'updated_at' => date('Y-m-d H:i:s'),
+						);
+						$this->mpayment->addPaymentHistory($paymentRegHist);
 					}
 				} else {
 					$data = array(
@@ -355,6 +363,14 @@ class Payment extends CI_Controller
 						'unique_code' => $latestRecord['id'],
 					);
 					$this->mpayment->addPaymentRegDetail($paymentRegDet);
+					$paymentRegHist = array(
+						'amount' => $amount,
+						'unique_code' => $latestRecord['id'],
+						'created_by_admin' => $this->session->userdata('nama'),
+						'created_at' => date('Y-m-d H:i:s'),
+						'updated_at' => date('Y-m-d H:i:s'),
+					);
+					$this->mpayment->addPaymentHistory($paymentRegHist);
 				}
 			} else {
 				$data = array(
@@ -365,6 +381,33 @@ class Payment extends CI_Controller
 					'amount' => $amount
 				);
 				$var = $this->mpaydetail->addPaydetail($data);
+				$paymentReg = array(
+					"total_price" => $amount,
+					'class_type' => 'Reguler',
+					'created_by' => $this->session->userdata('nama'),
+					'updated_by' => $this->session->userdata('nama'),
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s'),
+				);
+				$lastIdReg = $this->mpayment->addPaymentReg($paymentReg);
+				$paymentRegDet = array(
+					'id_payment_bill' => $lastIdReg['id'],
+					'student_id' => $this->input->post('studentid' . $i),
+					'category' => $this->input->post('payment' . $i),
+					'price' => $amount,
+					'payment' => $this->input->post('payment' . $i) == "COURSE" ? $this->input->post('payment' . $i) . ' ' . $exRegMonth[1] . '-' . $exRegMonth[0] : $this->input->post('payment' . $i),
+					'status' => 'Paid',
+					'unique_code' => $latestRecord['id'],
+				);
+				$this->mpayment->addPaymentRegDetail($paymentRegDet);
+				$paymentRegHist = array(
+					'amount' => $amount,
+					'unique_code' => $latestRecord['id'],
+					'created_by_admin' => $this->session->userdata('nama'),
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s'),
+				);
+				$this->mpayment->addPaymentHistory($paymentRegHist);
 			}
 			// echo '<pre>';
 

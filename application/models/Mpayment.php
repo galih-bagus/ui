@@ -98,6 +98,15 @@ class Mpayment extends CI_Model
 		// return $result;
 	}
 
+	function addPaymentHistory($data)
+	{
+		$this->db->insert('history_billing', $data);
+		// $id = $this->db->insert_id();
+		// $query = $this->db->query("SELECT id FROM payment_bills where id=$id");
+		// $result = $query->row_array();
+		// return $result;
+	}
+
 
 	function updateHistyoryReg($data, $where)
 	{
