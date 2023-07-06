@@ -548,7 +548,7 @@
 					<input type="hidden" class="form-control" id="vbooklet" name="vbooklet" value="0">
 					<input type="hidden" class="form-control" id="vattendance" name="vattendance" value="0">
 					<!-- <input type="hidden" class="form-control" id="vexercise" name="vexercise"> -->
-					<input type="text" class="form-control" id="vcourse" name="vcourse" value="0">
+					<input type="hidden" class="form-control" id="vcourse" name="vcourse" value="0">
 					<input type="hidden" class="form-control" id="vother" name="vother" value="0">
 					<input type="hidden" class="form-control" id="countattn" name="countattn">
 				</div>
@@ -829,6 +829,7 @@
 					}
 					document.getElementById("amount").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
 					document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+					document.getElementById("vcourse").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
 					olddiscn = Math.round(parseInt(discount) * parseInt(amount) / 100);
 				}
 			<?php
@@ -848,24 +849,25 @@
 		} else {
 			var amount = 0;
 		}
-				var vamount = document.getElementById("vamount").value.replace(/\./g, '');
-				vamount = vamount.replace("Rp ", "");
-				var priceattn = document.getElementById("priceattn").value.replace(/\./g, '');
-				priceattn = priceattn.replace("Rp ", "");
-				var discount = document.getElementById("discount").value;
-				var attendance = $("#attendance").tagsinput('items').length;
-				document.getElementById("countattn").value = attendance;
-				amount = parseInt(priceattn) * parseInt(attendance);
-				if (document.getElementById("vamount").value != "") {
-					amount = parseInt(amount) - parseInt(vamount);
-					oldvoucher = vamount;
-				}
-				document.getElementById("amount").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
-				document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
-				olddiscn = Math.round(parseInt(discount) * parseInt(amount) / 100);
-				console.log( parseInt(amount));
-				console.log( Math.round(parseInt(discount)));
-				console.log(parseInt(amount) / 100);
+		var vamount = document.getElementById("vamount").value.replace(/\./g, '');
+		vamount = vamount.replace("Rp ", "");
+		var priceattn = document.getElementById("priceattn").value.replace(/\./g, '');
+		priceattn = priceattn.replace("Rp ", "");
+		var discount = document.getElementById("discount").value;
+		var attendance = $("#attendance").tagsinput('items').length;
+		document.getElementById("countattn").value = attendance;
+		amount = parseInt(priceattn) * parseInt(attendance);
+		if (document.getElementById("vamount").value != "") {
+			amount = parseInt(amount) - parseInt(vamount);
+			oldvoucher = vamount;
+		}
+		document.getElementById("amount").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
+		document.getElementById("amount").value = "Rp " + FormatDuit(document.getElementById("amount").value);
+		olddiscn = Math.round(parseInt(discount) * parseInt(amount) / 100);
+		document.getElementById("vcourse").value = parseInt(amount) - Math.round(parseInt(discount) * parseInt(amount) / 100);
+		// console.log(parseInt(amount));
+		// console.log(Math.round(parseInt(discount)));
+		// console.log(parseInt(amount) / 100);
 		// }
 	});
 
@@ -959,14 +961,14 @@
 		document.getElementById("amount").value = 0;
 		oldvoucher = 0;
 		if (document.getElementById("category").value == "PRIVATE") {
-		$("#divpayment").show(750);
-		}else{
-		$("#dpaymentreg").show(750);
-		$("#dtrfdate").hide(750);
-		$("#dbank").hide(750);
-		$("#dnumber").hide(750);
-		$("#divpayment").hide(750);
-		$("#voucherdiv").hide(750);
+			$("#divpayment").show(750);
+		} else {
+			$("#dpaymentreg").show(750);
+			$("#dtrfdate").hide(750);
+			$("#dbank").hide(750);
+			$("#dnumber").hide(750);
+			$("#divpayment").hide(750);
+			$("#voucherdiv").hide(750);
 		}
 
 		document.getElementById("iother").value = 0
@@ -1005,6 +1007,7 @@
 		var attendancereg = isNaN(parseInt($('#attendancereg').val())) == true ? 0 : parseInt($('#attendancereg').val());
 		var priceattnreg = isNaN(parseInt($('#priceattnreghidden').val())) == true ? 0 : parseInt($('#priceattnreghidden').val());
 		$('#vattendance').val(attendancereg * priceattnreg);
+		$('#vcourse').val(attendancereg * priceattnreg);
 		grandTotal()
 		console.log(attendancereg * priceattnreg);
 	}
@@ -1305,10 +1308,10 @@
 					if (checkBox.checked == true) {
 						$("#divpayment").show(750);
 						$("#voucherdiv").show(750);
-						document.getElementById("vcourse").value = parseInt(0);
+						document.getElementById("vattendance").value = parseInt(document.getElementById("vcourse").value);
 						grandTotal()
 					} else {
-						document.getElementById("vcourse").value = parseInt(0);
+						document.getElementById("vattendance").value = parseInt(0);
 						grandTotal()
 					}
 				}
