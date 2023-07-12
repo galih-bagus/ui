@@ -511,9 +511,11 @@ class Student extends CI_Controller
 			}
 		}
 		if ($this->input->post('category') == "PRIVATE") {
-			redirect(base_url("escpos/example/printregisterprv.php?id=" . $latestRecordPayment['id']));
+			sleep(2);
+			redirect(base_url("payment/addprivate?print=" . $latestRecordPayment['id']));
 		} else {
-			redirect(base_url("escpos/example/printregister.php?id=" . $latestRecordPayment['id']));
+			sleep(2);
+			redirect(base_url("payment/addregular?print=" . $latestRecordPayment['id']));
 		}
 	}
 
