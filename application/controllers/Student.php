@@ -79,6 +79,15 @@ class Student extends CI_Controller
 
 	public function updateStudentDb()
 	{
+		$mutasi = array(
+			'student_id' => $this->input->post('id'),
+			'price_id' => $this->input->post('programId'),
+			'user_name' => $this->session->userdata('nama'),
+			'from' => 'Payment',
+			'created_at' => date('Y-m-d H:i:s', strtotime('+7 hours')),
+			'updated_at' => date('Y-m-d H:i:s', strtotime('+7 hours')),
+		);
+		$this->mstudent->addMutasi($mutasi);
 		$adjusment = $this->input->post('adjusment');
 		$penalty = $this->input->post('penalty');
 		$balance = $this->input->post('balance');

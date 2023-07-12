@@ -268,6 +268,7 @@
 										<?php }
 										?>
 									</div>
+									<input type="hidden" name="programId" value="<?= $student->priceid ?>">
 								</div>
 
 								<div class="form-group">

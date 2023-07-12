@@ -172,4 +172,9 @@ class Mstudent extends CI_Model
 		$this->db->order_by('studentid', 'asc');
 		return $this->db->get();
 	}
+
+	function addMutasi($data)
+	{
+		$this->db->insert('mutasi_siswa', $data);
+	}
 }
