@@ -37,7 +37,7 @@
 					</a>
 				</li>
 
-				<li class="treeview">
+				<li class="treeview active">
 					<a href="#">
 						<i class="fa fa-money"></i> <span>Payment</span>
 						<span class="pull-right-container">
@@ -45,7 +45,7 @@
 						</span>
 					</a>
 					<ul class="treeview-menu">
-						<li><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
+						<li class="active"><a href="<?= base_url() ?>payment/addprivate"><i class="fa fa-circle-o"></i> <span>Private Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addregular"><i class="fa fa-circle-o"></i> <span>Regular Payment</span></a></li>
 						<li><a href="<?= base_url() ?>payment/addother"><i class="fa fa-circle-o"></i> <span>Other Payment</span></a></li>
 						<li><a href="<?= base_url() ?>expense/addexpense"><i class="fa fa-circle-o"></i> <span>Expense</span></a></li>
@@ -83,7 +83,7 @@
 				</ul>
 			</li>
 
-			<li class="active">
+			<li>
 				<a href="<?php echo base_url() ?>student">
 					<i class="fa fa-user"></i> <span>Student</span>
 				</a>
@@ -112,6 +112,7 @@
 					<i class="fa fa-dollar"></i> <span>Price</span>
 				</a>
 			</li>
+
 			<li class="treeview <?= $this->uri->segment(1) == 'billing' ? 'active' : '' ?>">
 				<a href="#">
 					<i class="fa fa-money"></i> <span>Payment Bills</span>
@@ -129,19 +130,17 @@
 	</section>
 	<!-- /.sidebar -->
 </aside>
-
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
 	<!-- Content Header (Page header) -->
 	<section class="content-header">
 		<h1>
-			Student
-			<small>Detail Payment</small>
+			Price
+			<small>List Prices</small>
 		</h1>
 		<ol class="breadcrumb">
 			<li><a href="#"><i class="fa fa-home"></i> Home</a></li>
-			<li><a href="<?php echo base_url() ?>student"><i class="fa fa-user"></i> Student</a></li>
-			<li class="active">Detail Payment</li>
+			<li class="active">Price</li>
 		</ol>
 	</section>
 
@@ -151,68 +150,38 @@
 			<div class="col-xs-12">
 				<div class="box box-primary">
 					<div class="box-header">
-						<h3 class="box-title"><?= urldecode($name) ?></h3>
+						<!-- <h3 class="box-title">List Prices</h3> -->
+
 					</div>
 					<!-- /.box-header -->
 					<div class="box-body">
-
 						<div class="table-responsive">
 							<table id="example1" class="table table-bordered table-striped table-hover">
 								<thead>
 									<tr>
-										<th>Nota</th>
+										<th>No</th>
+										<th>Name</th>
 										<th>Payment</th>
-										<th>Method</th>
-										<th>Pay Date</th>
-										<th>Amount</th>
-										<th>Voucher</th>
+										<th class="notPrintable">Action</th>
 									</tr>
 								</thead>
-								<tbody>
-									<?php
-									$sum = count($listStudentPayment->result());
-									if ($sum != 0) {
-										foreach ($listStudentPayment->result() as $payment) {
-									?>
-											<tr class="inactive">
-												<td><?= $payment->id ?></td>
-												<?php
-												if ($payment->category == "COURSE" && $payment->monthpay != "") {
-													$var = $payment->monthpay;
-													$parts = explode('-', $var);
-													$monthpay = $parts[1] . '/' . $parts[0];
-													$monthpay =  date("M", strtotime($payment->monthpay));
-													$yearpay =  date("y", strtotime($payment->monthpay));
-													$category = $payment->category . " (" . $monthpay . " " . $yearpay . ")";
-												} else {
-													$category = $payment->category;
-												}
-												?>
-												<td><?= $category ?></td>
-												<td><?= $payment->method ?></td>
-												<?php
-												$var = $payment->paydate;
-												$parts = explode('-', $var);
-												$paydate = $parts[2] . '/' . $parts[1] . '/' . $parts[0];
-												?>
-												<td><?= $paydate ?></td>
-												<td>Rp <?= number_format($payment->amount, 0, ".", ".") ?></td>
-												<?php
-												if ($payment->voucherid == "" || $payment->voucherid == "0") {
-													$voucherid = "NO";
-												} else {
-													$voucherid = $payment->voucherid;
-												}
-												?>
-												<td><?= $voucherid ?></td>
-											</tr>
-									<?php
-										}
-									}
-									?>
+								<?php
+								foreach ($data as $row) {
+								?>
+									<tr>
+										<td><?= $row->id ?></td>
+										<td><?= $row->name ? $row->name : '-' ?></td>
+										<td><?= $row->payment ?></td>
+										<td>
+											<a href="<?= base_url() ?>billing/removePenalty/<?= $row->id ?>" class="btn btn-success btn-xs">Remove Penalty</a>
+										</td>
+									</tr>
+								<?php
+								}
+								?>
 								</tbody>
+
 							</table>
-							<p id="tabel"></p>
 						</div>
 					</div>
 					<!-- /.box-body -->

@@ -193,6 +193,23 @@ class Billing extends CI_Controller
 		$this->load->view('v_footer');
 	}
 
+	public function removePenaltyBill()
+	{
+		$data['data'] =  $this->mbilling->penalty();
+		$this->load->view('v_header');
+		$this->load->view('v_remove_penalty', $data);
+		$this->load->view('v_footer');
+	}
+
+	public function removePenalty($id)
+	{
+		$data = array(
+			'is_penalty' => false,
+		);
+		$this->mbilling->removePenalty($data, $id);
+		redirect(base_url("billing/removePenaltyBill"));
+	}
+
 	public function savePrivateBill()
 	{
 		var_dump(json_encode($this->input->post('data')));

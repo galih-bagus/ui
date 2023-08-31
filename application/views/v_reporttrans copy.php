@@ -122,6 +122,7 @@
 				<ul class="treeview-menu">
 					<li class="<?= $this->uri->segment(2) == 'data' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
 					<li class="<?= $this->uri->segment(2) == 'addRegularBill' || $this->uri->segment(2) == 'studentByClass' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
+					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
 				</ul>
 			</li>
 		</ul>
@@ -252,16 +253,16 @@
 															<?php } ?>
 														</td>
 														<td style="display: none ;">
-															<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number?>
+															<?= $row->method == 'BANK TRANSFER' ? $row->trfdate : $row->number ?>
 														</td>
 														<td style="display: none;"><?= $row->program ?></td>
 														<td style="display: none;">
-															<?php if ($row->level != 'Private'){
-															foreach ($paydetail->result() as $key => $value) { ?>
-																<?= date('M', strtotime($value->monthpay)) ?> <?= ($key + 1 < $count) ? ',' : '' ?>
-															<?php 
+															<?php if ($row->level != 'Private') {
+																foreach ($paydetail->result() as $key => $value) { ?>
+																	<?= date('M', strtotime($value->monthpay)) ?> <?= ($key + 1 < $count) ? ',' : '' ?>
+															<?php
 																}
-															}else{
+															} else {
 																echo trim($exPrv[0], "()");
 															}
 															?>
@@ -423,4 +424,5 @@ if (isset($listTransaction)) {
 // $this->db->where('paydetail.category', "COURSE");
 // $this->db->where('paymentid', $row->id);
 // $q = $this->db->count_all_results();
-// echo $q; ?>
+// echo $q; 
+?>

@@ -122,6 +122,7 @@
 				<ul class="treeview-menu">
 					<li class="<?= $this->uri->segment(2) == 'data' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
 					<li class="<?= $this->uri->segment(2) == 'addRegularBill' || $this->uri->segment(2) == 'studentByClass' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
+					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
 				</ul>
 			</li>
 		</ul>
@@ -319,9 +320,9 @@
 				if (this.checked) {
 					tmpTotal += parseInt(course);
 				} else {
-					tmpTotal -=  parseInt(course);
+					tmpTotal -= parseInt(course);
 				}
-				
+
 				$('#valTotal' + id).val(tmpTotal);
 				$('#total' + id).text(formatCurrency(tmpTotal));
 			});
@@ -331,7 +332,7 @@
 				} else {
 					tmpTotal -= parseInt(pointbook);
 				}
-				
+
 				$('#valTotal' + id).val(tmpTotal);
 				$('#total' + id).text(formatCurrency(tmpTotal));
 			});
@@ -341,7 +342,7 @@
 				} else {
 					tmpTotal -= parseInt(book);
 				}
-				
+
 				$('#valTotal' + id).val(tmpTotal);
 				$('#total' + id).text(formatCurrency(tmpTotal));
 			});
@@ -351,7 +352,7 @@
 				} else {
 					tmpTotal -= parseInt(agenda);
 				}
-				
+
 				$('#valTotal' + id).val(tmpTotal);
 				$('#total' + id).text(formatCurrency(tmpTotal));
 			});

@@ -122,7 +122,8 @@
 				</a>
 				<ul class="treeview-menu">
 					<li class=""><a href="<?= base_url() ?>billing/data"><i class="fa fa-circle-o"></i> <span>Billing Data</span></a></li>
-					<li class="<?= $this->uri->segment(3) == 'addRegularBill' ? 'active' :'' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
+					<li class="<?= $this->uri->segment(3) == 'addRegularBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/addRegularBill"><i class="fa fa-circle-o"></i> <span>Regular Billing Payment</span></a></li>
+					<li class="<?= $this->uri->segment(3) == 'removePenaltyBill' ? 'active' : '' ?>"><a href="<?= base_url() ?>billing/removePenaltyBill"><i class="fa fa-circle-o"></i> <span>Remove Penalty</span></a></li>
 				</ul>
 			</li>
 		</ul>

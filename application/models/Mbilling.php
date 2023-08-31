@@ -58,4 +58,17 @@ class Mbilling extends CI_Model
 		$result = $query->result();
 		return $result;
 	}
+
+	function penalty()
+	{
+		$query = $this->db->query("SELECT payment_bill_detail.*, student.name FROM payment_bill_detail LEFT JOIN student ON payment_bill_detail.student_id=student.id WHERE is_penalty = 'true'");
+		$result = $query->result();
+		return $result;
+	}
+
+	function removePenalty($data, $id)
+	{
+		$this->db->where('id', $id);
+		$this->db->update('payment_bill_detail', $data);
+	}
 }
