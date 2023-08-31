@@ -62,21 +62,30 @@ class Mpayment extends CI_Model
 		return $result;
 	}
 
-	function getPaymentReg($id)
+	function getPaymentReg($id, $year, $month)
 	{
 		$query = $this->db->query("SELECT *
 								   FROM payment_bill_detail
 								   WHERE category = 'COURSE'
-								   AND student_id = '" . $id . "'");
+								   AND student_id = '" . $id . "' AND payment = 'COURSE " . $month . '-' . $year);
 		$result = $query->result();
 		return $result;
 	}
 
-	function updatePaymentReg($data, $where, $where1)
+	function updatePaymentReg($data, $where, $where1, $where2)
 	{
 		$this->db->where('student_id', $where);
 		$this->db->where('category', $where1);
+		$this->db->where('payment', $where2);
 		$this->db->update('payment_bill_detail', $data);
+		// $this->db->affected_rows();
+	}
+
+	function test($data, $where, $where1, $where2)
+	{
+		$query = $this->db->query("SELECT id FROM payment_bill_detail where student_id='$where' AND category='$where1' and payment='$where2'");
+		$result = $query->result();
+		return $result;
 		// $this->db->affected_rows();
 	}
 
