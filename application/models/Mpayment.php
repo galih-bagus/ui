@@ -67,7 +67,7 @@ class Mpayment extends CI_Model
 		$query = $this->db->query("SELECT *
 								   FROM payment_bill_detail
 								   WHERE category = 'COURSE'
-								   AND student_id = '" . $id . "' AND payment = 'COURSE " . $month . '-' . $year);
+								   AND student_id = '" . $id . "' AND payment = 'COURSE " . $month . '-' . $year . "'");
 		$result = $query->result();
 		return $result;
 	}
