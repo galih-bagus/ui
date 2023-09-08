@@ -18,7 +18,11 @@ class Student extends CI_Controller
 
 	public function index()
 	{
-		$data['listStudent'] = $this->mstudent->getAllStudent();
+		// echo "<pre>";
+		// print_r($this->mstudent->getAllStudent()->result());
+		$getStudent = $this->db->query("SELECT s.id as sid, s.priceid, s.name, s.phone, s.birthday, s.entrydate, s.adjusment, s.balance, s.penalty, s.status, s.condition, p.id, p.program, p.course, p.level  FROM student s INNER JOIN price p ON s.priceid = p.id  ORDER BY `sid` ASC");
+		// print_r($asd->result());
+		$data['listStudent'] = $getStudent;
 		$data['listStudentPayment'] = $this->mstudent->getStudentPayment();
 		$this->load->view('v_header');
 		$this->load->view('v_studentlist', $data);
@@ -458,34 +462,34 @@ class Student extends CI_Controller
 			);
 			$var = $this->mpaydetail->addPaydetail($data);
 		}
-				if ($this->input->post('category') == "PRIVATE") {
-					$exAttendance = explode(',',$_POST['attendance']);
-					$countattn = count($exAttendance);
-					$attendance = $_POST['attendance'];
-					$priceattn = $this->input->post('priceattn');
-					$order   = array("Rp ", ".");
-					$replace = "";
-					$priceattn = str_replace($order, $replace, $priceattn);
-					$discount = $this->input->post('discount');
-	
-					$explanation = '(' . $attendance . ')' . ' ' . $countattn . 'x' . $priceattn;
-					if ($discount != "") {
-						$explanation = $explanation . '-' . $discount . '%';
-					}
-	
-					$data = array(
-						'paymentid' => $latestRecordPayment['id'],
-						'studentid' => $this->input->post('idstudent'),
-						'voucherid' => $this->input->post('vid'),
-						'category' => "COURSE",
-						'explanation' => $explanation,
-						'amount' => $total - $paycut
-					);
-					// var_dump($data);
-					$var = $this->mpaydetail->addPaydetail($data);
-			} else {
-				
-		if (isset($_POST['course'])) {
+		if ($this->input->post('category') == "PRIVATE") {
+			$exAttendance = explode(',', $_POST['attendance']);
+			$countattn = count($exAttendance);
+			$attendance = $_POST['attendance'];
+			$priceattn = $this->input->post('priceattn');
+			$order   = array("Rp ", ".");
+			$replace = "";
+			$priceattn = str_replace($order, $replace, $priceattn);
+			$discount = $this->input->post('discount');
+
+			$explanation = '(' . $attendance . ')' . ' ' . $countattn . 'x' . $priceattn;
+			if ($discount != "") {
+				$explanation = $explanation . '-' . $discount . '%';
+			}
+
+			$data = array(
+				'paymentid' => $latestRecordPayment['id'],
+				'studentid' => $this->input->post('idstudent'),
+				'voucherid' => $this->input->post('vid'),
+				'category' => "COURSE",
+				'explanation' => $explanation,
+				'amount' => $total - $paycut
+			);
+			// var_dump($data);
+			$var = $this->mpaydetail->addPaydetail($data);
+		} else {
+
+			if (isset($_POST['course'])) {
 				$countattn = $this->input->post('countattn');
 				$attendance = $this->input->post('attendancereg');
 				$priceattn = $this->input->post('priceattnreg');

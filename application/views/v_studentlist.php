@@ -210,7 +210,7 @@
 												<?php
 												} elseif ($row->condition == "CHANGE") {
 												?>
-													<td><span class="badge bg-light-blue">Change: Rp <?= number_format($row->adjusment, 0, ".", ".") ?></span></td>
+													<td><span class="badge bg-light-blue">Change: Rp <?= number_format($row->course, 0, ".", ".") ?></span></td>
 												<?php
 												} else {
 													echo "<td>-</td>";
