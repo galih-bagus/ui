@@ -375,7 +375,8 @@ class Student extends CI_Controller
 			'is_complete' => '1',
 			'day1' => $day1,
 			'day2' => $day2,
-			'course_time' => $coursetime
+			'course_time' => $coursetime,
+			'id_teacher	' => $this->input->post('id_teacher'),
 		);
 		$this->mstudent->updateStudent($form, $where);
 
