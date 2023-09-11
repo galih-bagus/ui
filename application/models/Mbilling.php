@@ -61,7 +61,7 @@ class Mbilling extends CI_Model
 
 	function penalty()
 	{
-		$query = $this->db->query("SELECT payment_bill_detail.*, student.name FROM payment_bill_detail LEFT JOIN student ON payment_bill_detail.student_id=student.id WHERE is_penalty = 'true'");
+		$query = $this->db->query("SELECT payment_bill_detail.*, student.name FROM payment_bill_detail LEFT JOIN student ON payment_bill_detail.student_id=student.id WHERE is_penalty = 'true' AND is_penalty_payment = 'true'");
 		$result = $query->result();
 		return $result;
 	}

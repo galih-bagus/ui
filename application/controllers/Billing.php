@@ -205,6 +205,7 @@ class Billing extends CI_Controller
 	{
 		$data = array(
 			'is_penalty' => false,
+			'is_penalty_payment' => false,
 		);
 		$this->mbilling->removePenalty($data, $id);
 		redirect(base_url("billing/removePenaltyBill"));
