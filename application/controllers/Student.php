@@ -373,10 +373,10 @@ class Student extends CI_Controller
 		$form = array(
 			'priceId' => $program,
 			'is_complete' => '1',
-			'day1' => $day1,
-			'day2' => $day2,
-			'course_time' => $coursetime,
-			'id_teacher	' => $this->input->post('id_teacher'),
+			// 'day1' => $day1,
+			// 'day2' => $day2,
+			// 'course_time' => $coursetime,
+			// 'id_teacher	' => $this->input->post('id_teacher'),
 		);
 		$this->mstudent->updateStudent($form, $where);
 
@@ -489,7 +489,6 @@ class Student extends CI_Controller
 			// var_dump($data);
 			$var = $this->mpaydetail->addPaydetail($data);
 		} else {
-
 			if (isset($_POST['course'])) {
 				$countattn = $this->input->post('countattn');
 				$attendance = $this->input->post('attendancereg');
@@ -503,6 +502,7 @@ class Student extends CI_Controller
 				if ($discount != "") {
 					$explanation = $explanation . '-' . $discount . '%';
 				}
+				$exRegMonth = explode('-', $date);
 				$data = array(
 					'paymentid' => $latestRecordPayment['id'],
 					'studentid' => $this->input->post('idstudent'),
@@ -513,6 +513,27 @@ class Student extends CI_Controller
 					'amount' => $this->input->post('vcourse'),
 				);
 				$var = $this->mpaydetail->addPaydetail($data);
+
+				$var = $this->mpaydetail->addPaydetail($data);
+				$paymentReg = array(
+					"total_price" => $this->input->post('vcourse'),
+					'class_type' => 'Reguler',
+					'created_by' => $this->session->userdata('nama'),
+					'updated_by' => $this->session->userdata('nama'),
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s'),
+				);
+				$lastIdReg = $this->mpayment->addPaymentReg($paymentReg);
+				$paymentRegDet = array(
+					'id_payment_bill' => $lastIdReg['id'],
+					'student_id' => $this->input->post('idstudent'),
+					'category' => 'COURSE',
+					'price' => $this->input->post('vcourse'),
+					'payment' => 'COURSE'  . ' ' . $exRegMonth[1] . '-' . $exRegMonth[0],
+					'status' => 'Paid',
+					'unique_code' => $latestRecordPayment['id'],
+				);
+				$this->mpayment->addPaymentRegDetail($paymentRegDet);
 			}
 		}
 		if ($this->input->post('category') == "PRIVATE") {

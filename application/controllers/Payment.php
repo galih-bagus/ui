@@ -283,7 +283,6 @@ class Payment extends CI_Controller
 				// print_r($this->input->post('month' . $i));
 				// print_r($this->input->post('studentid' . $i));
 				if ($retRegularBill != null) {
-					print_r('asd');
 					$exRegBill = explode(' ', $retRegularBill[0]->payment);
 					if ($exRegBill[1] == $exRegMonth[1] . '-' . $exRegMonth[0]) {
 						print_r('ccd');
@@ -306,7 +305,6 @@ class Payment extends CI_Controller
 						$this->mpayment->updateHistyoryReg($historyRegPay, $retRegularBill[0]->unique_code);
 						$this->mpayment->updatePaymentReg($regPay, $this->input->post('studentid' . $i), $this->input->post('payment' . $i), $retRegularBill[0]->payment);
 					} else {
-						// print_r('qw123');
 						$data = array(
 							'paymentid' => $latestRecord['id'],
 							'studentid' => $this->input->post('studentid' . $i),
@@ -345,7 +343,6 @@ class Payment extends CI_Controller
 						$this->mpayment->addPaymentHistory($paymentRegHist);
 					}
 				} else {
-					// print_r('ccd123');
 					$data = array(
 						'paymentid' => $latestRecord['id'],
 						'studentid' => $this->input->post('studentid' . $i),
