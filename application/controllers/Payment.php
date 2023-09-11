@@ -70,7 +70,7 @@ class Payment extends CI_Controller
 			if ($value->condition == "DEFAULT") {
 				$row['course'] = '<span class="badge bg-yellow">Default: Rp ' . number_format($value->course, 0, ".", ".") . '</span>';
 			} elseif ($value->condition == "CHANGE") {
-				$row['course'] = '<span class="badge bg-light-blue">Change: Rp ' . number_format($value->adjusment, 0, ".", ".") . '</span>';
+				$row['course'] = '<span class="badge bg-light-blue">Change: Rp ' . number_format($value->course, 0, ".", ".") . '</span>';
 			} else {
 				$row['course'] = '-';
 			}

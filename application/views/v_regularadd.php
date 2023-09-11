@@ -643,7 +643,6 @@ $url = base_url() . "cetak/printregular/";
 		document.getElementById("cash").value = "Rp " + FormatDuit(document.getElementById("cash").value);
 		document.getElementById("cashback").value = 0;
 		document.getElementById("cashback").value = "Rp " + FormatDuit(document.getElementById("cashback").value);
-
 		$('input[type=radio][name=period]').change(function() {
 			fillAmount();
 		});
@@ -916,7 +915,8 @@ $url = base_url() . "cetak/printregular/";
 							if (condition == "DEFAULT") {
 								document.getElementById("amount").value = "Rp <?php echo number_format($price->course, 0, ".", "."); ?>";
 							} else {
-								document.getElementById("amount").value = "Rp " + FormatDuit(adjusment);
+								// document.getElementById("amount").value = "Rp " + FormatDuit(adjusment);
+								document.getElementById("amount").value = "Rp <?php echo number_format($price->course, 0, ".", "."); ?>";
 							}
 						} else if (selected_penalty == "yes") {
 							var amount = document.getElementById("amount").value.replace(/\./g, '');
