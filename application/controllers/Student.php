@@ -514,7 +514,6 @@ class Student extends CI_Controller
 				);
 				$var = $this->mpaydetail->addPaydetail($data);
 
-				$var = $this->mpaydetail->addPaydetail($data);
 				$paymentReg = array(
 					"total_price" => $this->input->post('vcourse'),
 					'class_type' => 'Reguler',
