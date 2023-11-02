@@ -17,6 +17,14 @@ class OnlineRegistration extends CI_Controller
 	public function store()
 	{
 		$this->form_validation->set_rules('signature', 'signature', 'required');
+		$this->form_validation->set_rules(
+			'phone',
+			'phone',
+			'required|max_length[14]',
+			array(
+				'max_length'      => 'Max phone number is 14 digit',
+			)
+		);
 		if ($this->form_validation->run() == FALSE) {
 			$this->load->view('v_register_online');
 		} else {

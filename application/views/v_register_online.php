@@ -77,8 +77,11 @@
 				</div>
 				<div class="form-group has-feedback">
 					<label for="">Phone Number</label>
-					<input type="text" class="form-control" placeholder="Enter Phone" name="phone" value="62<?php echo set_value('phone'); ?>" required>
+					<input type="number" class="form-control" placeholder="Enter Phone" name="phone" value="<?php echo set_value('phone') ? set_value('phone') : '62'; ?>" required>
 					<span class="glyphicon glyphicon-phone form-control-feedback"></span>
+					<div style="color:red">
+						<?php echo form_error('phone'); ?>
+					</div>
 				</div>
 				<div class="form-group has-feedback">
 					<label for="">Address</label>

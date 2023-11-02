@@ -19,18 +19,13 @@
 			<th rowspan="3">How Do You Know U&I English Course</th>
 			<th rowspan="3">Grade</th>
 			<th rowspan="3">Kind of Test</th>
-			<th colspan="4">Placement Test</th>
+			<th colspan="2">Placement Test</th>
 			<th rowspan="3">Result</th>
 			<th rowspan="3">Reg.Date</th>
 		</tr>
 		<tr>
 			<th rowspan="2">Date</th>
-			<th colspan="2">Score</th>
 			<th rowspan="2">Recomended Level</th>
-		</tr>
-		<tr>
-			<th>Written</th>
-			<th>Speaking</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -52,8 +47,6 @@
 				<td><?= $value->grade ?></td>
 				<td><?= $value->kind_of_test ?></td>
 				<td><?= $value->date_test != null ? date('d M', strtotime($value->date_test)) : '' ?></td>
-				<td><?= $value->written ?></td>
-				<td><?= $value->speaking ?></td>
 				<td><?= $value->placement_test_result ?></td>
 				<td><?= $value->result . " " . substr($value->dayone, 0, 3) . " " . substr($value->daytwo, 0, 3) . " " . $value->course_time . " " . $value->teacher_name ?></td>
 				<td><?php

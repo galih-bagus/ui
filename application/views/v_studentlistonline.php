@@ -168,8 +168,7 @@
 										<th>Name</th>
 										<th>Telephone</th>
 										<th>Birthday</th>
-										<th>Speaking</th>
-										<th>Written</th>
+										<th>Date Registration</th>
 										<th>Status</th>
 										<th class="notPrintable">Action</th>
 									</tr>
@@ -184,15 +183,13 @@
 											<td><?= $row->name ?></td>
 											<td><?= $row->phone ?></td>
 											<td><?= $row->birthday ?></td>
-											<td><?= $row->speaking ?></td>
-											<td><?= $row->written ?></td>
+											<td><?= date('l, d F Y', strtotime($row->entrydate)) ?></td>
 											<td><?= $row->is_complete == '1' ? 'DONE' : "" ?></td>
 											<td>
 												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showResult" onclick="showModalResult('<?= $row->id ?>', '<?= $row->name ?>', '<?= $row->written ?>', '<?= $row->speaking ?>', '<?= $row->priceid ?>','<?= $row->placement_test_result ?>','<?= $row->kind_of_test ?>')"><?= $row->written == null ? 'Result Test' : 'Edit Result Test' ?></a>
 												<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#showModal" onclick="showModalData('<?= $row->id ?>', '<?= $row->name ?>')">Payment</a>
-												<?php if ($row->is_complete == true) { ?>
-													<a href="<?= base_url() . 'student/updateProspective/' . $row->id ?>" class="btn btn-danger">Delete</a>
-												<?php } ?>
+
+												<a href="<?= base_url() . 'student/updateProspective/' . $row->id ?>" class="btn btn-danger">Delete</a>
 											</td>
 										</tr>
 									<?php
@@ -591,39 +588,10 @@
 							</select>
 						</div>
 						<div class="col-sm-4" style="margin-top: 15px;">
-							<label for="placement_test_result" class="control-label">Placement Test Result</label>
-						</div>
-						<div class="col-sm-8" style="margin-top: 15px;">
-							<input type="text" class="form-control" value="" id="placement_test_result" name="placement_test_result" required>
-						</div>
-						<div class="col-sm-4" style="margin-top: 15px;">
 							<label for="kind_of_test" class="control-label">Kind Of Test</label>
 						</div>
 						<div class="col-sm-8" style="margin-top: 15px;">
 							<input type="text" class="form-control" value="" id="kind_of_test" name="kind_of_test" required>
-						</div>
-						<div class="col-sm-4" style="margin-top: 15px;">
-							<label for="written" class="control-label">Written</label>
-						</div>
-						<div class="col-sm-2" style="margin-top: 15px;">
-							<input type="number" max="100" class="form-control" value="" id="written" name="written" required>
-						</div>
-						<div class="col-sm-2" style="margin-top: 15px;">
-							<label for="speaking" class="control-label">Speaking</label>
-						</div>
-						<div class="col-sm-4" style="margin-top: 15px;">
-							<select class="form-control" style="width: 100%;" id="speaking" name="speaking" required>
-								<option disabled="disabled" value="" selected>-- Choose Score --</option>
-								<?php
-								$options = array("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "E");
-								foreach ($options as $opt) {
-									$selected = set_value('speaking') == $opt ? 'selected' : '';
-								?>
-									<option value="<?= $opt ?>" <?= $selected ?>><?= $opt ?></option>
-								<?php
-								}
-								?>
-							</select>
 						</div>
 						<div class="col-sm-4" style="margin-top: 15px;">
 							<label for="staff" class="control-label">Staff</label>

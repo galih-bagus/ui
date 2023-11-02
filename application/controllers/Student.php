@@ -548,11 +548,8 @@ class Student extends CI_Controller
 	{
 		$where['id'] = $this->input->post('idstudent');
 		$form = array(
-			'written' => $this->input->post('written'),
-			'speaking' => $this->input->post('speaking'),
 			'id_staff' => $this->input->post('staff'),
 			'id_teacher' => $this->input->post('id_teacher'),
-			'placement_test_result' => $this->input->post('placement_test_result'),
 			'kind_of_test' => $this->input->post('kind_of_test'),
 			'date_test' => date("Y-m-d"),
 		);
@@ -631,10 +628,10 @@ class Student extends CI_Controller
 	public function exportStudentOnline()
 	{
 		// fungsi header dengan mengirimkan raw data excel
-		header("Content-type: application/vnd-ms-excel");
+		// header("Content-type: application/vnd-ms-excel");
 
 		// membuat nama file ekspor "export-to-excel.xls"
-		header("Content-Disposition: attachment; filename=U&I Prospective Student.xls");
+		// header("Content-Disposition: attachment; filename=U&I Prospective Student.xls");
 		$data['listStudent'] = $this->mstudent->getOnlineStudent();
 		$data['listPrice'] = $this->mprice->getAllPrice();
 		$this->load->view('v_exportprospectivestudent', $data);
